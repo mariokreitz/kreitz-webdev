@@ -2,7 +2,14 @@
   "name": "kreitz-webdev",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "nx": "nx",
+    "serve": "nx run-many -t serve -p api,frontend,portal",
+    "serve:api": "nx serve api",
+    "serve:frontend": "nx serve frontend",
+    "serve:portal": "nx serve portal",
+    "build": "nx run-many -t build --all"
+  },
   "private": true,
   "dependencies": {
     "@angular-devkit/build-angular": "22.0.6",
