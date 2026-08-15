@@ -2,7 +2,7 @@
   "name": "portal",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "prefix": "app",
+  "prefix": "kwd-portal",
   "sourceRoot": "apps/portal/src",
   "tags": [],
   "targets": {
@@ -14,6 +14,7 @@
         "outputPath": "dist/apps/portal",
         "browser": "apps/portal/src/main.ts",
         "tsConfig": "apps/portal/tsconfig.app.json",
+        "inlineStyleLanguage": "css",
         "assets": [
           {
             "glob": "**/*",
@@ -49,6 +50,10 @@
       "continuous": true,
       "executor": "@angular/build:dev-server",
       "defaultConfiguration": "development",
+      "options": {
+        "port": 4201,
+        "proxyConfig": "proxy.conf.json"
+      },
       "configurations": {
         "production": {
           "buildTarget": "portal:build:production"
@@ -58,15 +63,12 @@
         }
       }
     },
-    "lint": {
-      "executor": "@nx/eslint:lint"
-    },
     "serve-static": {
       "continuous": true,
       "executor": "@nx/web:file-server",
       "options": {
         "buildTarget": "portal:build",
-        "port": 4200,
+        "port": 4201,
         "staticFilePath": "dist/apps/portal/browser",
         "spa": true
       }

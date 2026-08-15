@@ -1,13 +1,10 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { NxWelcome } from './nx-welcome';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
-  imports: [NxWelcome, RouterModule],
-  selector: 'app-root',
+  imports: [RouterOutlet],
+  selector: 'kwd-frontend-root',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './app.html',
-  styleUrl: './app.css',
 })
-export class App {
-  protected title = 'frontend';
-}
+export class App {}
