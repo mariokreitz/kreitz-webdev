@@ -1,9 +1,12 @@
+import { ApiModule } from '@app/api.module';
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app/app.module';
+import type { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(ApiModule, {
+    bufferLogs: true,
+  });
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
   // eslint-disable-next-line no-restricted-properties

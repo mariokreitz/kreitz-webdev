@@ -12,7 +12,6 @@
   ],
   "compilerOptions": {
     "erasableSyntaxOnly": false,
-    "noImplicitThis": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
