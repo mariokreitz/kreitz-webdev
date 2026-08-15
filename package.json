@@ -19,7 +19,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "graph": "nx graph",
-    "projects": "nx show projects"
+    "projects": "nx show projects",
+    "typecheck": "nx run-many --target=tsc --all"
   },
   "private": true,
   "dependencies": {

@@ -6,6 +6,12 @@
   "sourceRoot": "apps/frontend/src",
   "tags": [],
   "targets": {
+    "tsc": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --project apps/frontend/tsconfig.app.json"
+      }
+    },
     "build": {
       "executor": "@angular/build:application",
       "outputs": ["{options.outputPath}"],

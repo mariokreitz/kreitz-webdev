@@ -1,6 +1,9 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "noUncheckedSideEffectImports": true,
+    "erasableSyntaxOnly": true,
+    "noErrorTruncation": false,
     "rootDir": ".",
     "sourceMap": true,
     "declaration": false,
@@ -16,6 +19,7 @@
     "skipDefaultLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "noImplicitAny": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
@@ -29,7 +33,10 @@
     "paths": {}
   },
   "angularCompilerOptions": {
-    "strictStandalone": true
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": ["node_modules", "dist", "coverage", ".tsbuildinfo"]
 }

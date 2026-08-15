@@ -6,6 +6,12 @@
   "sourceRoot": "apps/portal/src",
   "tags": [],
   "targets": {
+    "tsc": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --project apps/portal/tsconfig.app.json"
+      }
+    },
     "build": {
       "executor": "@angular/build:application",
       "outputs": ["{options.outputPath}"],
