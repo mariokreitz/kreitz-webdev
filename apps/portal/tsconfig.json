@@ -5,6 +5,12 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true,
+    "strictAttributeTypes": true,
+    "strictSafeNavigationTypes": true,
+    "strictDomLocalRefTypes": true,
+    "strictOutputEventTypes": true,
+    "strictDomEventTypes": true,
+    "strictContextTypes": true,
     "typeCheckHostBindings": true,
     "extendedDiagnostics": {
       "defaultCategory": "error"

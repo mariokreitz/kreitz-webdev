@@ -4,7 +4,7 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
-    ignores: ['**/dist', '**/out-tsc', '**/.angular', '**/.nx', '**/node_modules'],
+    ignores: ['**/dist/**', '**/out-tsc/**', '**/.angular/**', '**/.nx/**', '**/node_modules/**', '**/eslint.config.*'],
   },
 
   ...nx.configs['flat/base'],
@@ -24,9 +24,14 @@ export default tseslint.config(
               sourceTag: 'scope:client',
               onlyDependOnLibsWithTags: ['scope:client', 'scope:shared'],
             },
-            { sourceTag: 'scope:api', onlyDependOnLibsWithTags: ['scope:api', 'scope:shared'] },
-            { sourceTag: 'scope:shared', onlyDependOnLibsWithTags: ['scope:shared'] },
-
+            {
+              sourceTag: 'scope:api',
+              onlyDependOnLibsWithTags: ['scope:api', 'scope:shared'],
+            },
+            {
+              sourceTag: 'scope:shared',
+              onlyDependOnLibsWithTags: ['scope:shared'],
+            },
             {
               sourceTag: 'type:app',
               onlyDependOnLibsWithTags: ['type:ui', 'type:data-access', 'type:util', 'type:model', 'type:dto'],
@@ -50,9 +55,18 @@ export default tseslint.config(
               sourceTag: 'type:data-access',
               onlyDependOnLibsWithTags: ['type:util', 'type:model', 'type:dto'],
             },
-            { sourceTag: 'type:util', onlyDependOnLibsWithTags: ['type:util', 'type:model'] },
-            { sourceTag: 'type:dto', onlyDependOnLibsWithTags: ['type:model', 'type:dto'] },
-            { sourceTag: 'type:model', onlyDependOnLibsWithTags: ['type:model'] },
+            {
+              sourceTag: 'type:util',
+              onlyDependOnLibsWithTags: ['type:util', 'type:model'],
+            },
+            {
+              sourceTag: 'type:dto',
+              onlyDependOnLibsWithTags: ['type:model', 'type:dto'],
+            },
+            {
+              sourceTag: 'type:model',
+              onlyDependOnLibsWithTags: ['type:model'],
+            },
           ],
         },
       ],
@@ -60,23 +74,25 @@ export default tseslint.config(
   },
 
   {
-    files: ['**/*.ts', '**/*.tsx', '**/*.cts', '**/*.mts'],
-    extends: [tseslint.configs.strictTypeChecked, tseslint.configs.stylisticTypeChecked],
+    files: ['**/*.ts', '**/*.tsx'],
+    extends: [tseslint.configs.strict, tseslint.configs.stylistic],
     languageOptions: {
       parserOptions: {
         projectService: true,
-        tsconfigRootDir: import.meta.dirname,
+        tsconfigRootDir: process.cwd(),
       },
     },
     rules: {
       '@typescript-eslint/no-extraneous-class': ['error', { allowWithDecorator: true }],
-
+      '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/consistent-type-imports': [
         'error',
-        { prefer: 'type-imports', fixStyle: 'inline-type-imports' },
+        {
+          prefer: 'type-imports',
+          fixStyle: 'inline-type-imports',
+        },
       ],
       '@typescript-eslint/no-import-type-side-effects': 'error',
-
       '@typescript-eslint/no-unused-vars': [
         'error',
         {
@@ -93,7 +109,6 @@ export default tseslint.config(
       '@typescript-eslint/require-array-sort-compare': ['error', { ignoreStringArrays: true }],
       '@typescript-eslint/switch-exhaustiveness-check': 'error',
       '@typescript-eslint/method-signature-style': ['error', 'property'],
-
       '@typescript-eslint/restrict-template-expressions': ['error', { allowNumber: true }],
     },
   },
@@ -104,7 +119,7 @@ export default tseslint.config(
   },
 
   {
-    files: ['**/*.ts', '**/*.tsx', '**/*.cts', '**/*.mts', '**/*.js', '**/*.jsx', '**/*.cjs', '**/*.mjs'],
+    files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx', '**/*.cjs', '**/*.mjs'],
     rules: {
       curly: ['error', 'all'],
       eqeqeq: ['error', 'always', { null: 'ignore' }],

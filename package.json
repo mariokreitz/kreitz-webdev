@@ -20,7 +20,8 @@
     "format:check": "prettier --check .",
     "graph": "nx graph",
     "projects": "nx show projects",
-    "typecheck": "nx run-many --target=tsc --all"
+    "typecheck": "nx run-many --target=tsc --all",
+    "docker:db:up": "docker-compose up --build -d"
   },
   "private": true,
   "dependencies": {
