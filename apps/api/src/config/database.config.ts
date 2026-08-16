@@ -1,5 +1,5 @@
 import { type DatabaseEnv, databaseSchema } from '@app/config/schemas/database.schema';
-import { registerAs } from '@nestjs/config';
+import { type ConfigType, registerAs } from '@nestjs/config';
 
 export const databaseConfig = registerAs('database', () => {
   const env: DatabaseEnv = databaseSchema.parse(process.env);
@@ -15,3 +15,5 @@ export const databaseConfig = registerAs('database', () => {
     logQueries: env.DATABASE_LOG_QUERIES,
   };
 });
+
+export type DatabaseConfig = ConfigType<typeof databaseConfig>;

@@ -8,6 +8,7 @@ export class RequestIdMiddleware implements NestMiddleware {
     const incoming = req.headers['x-request-id'];
     const id = typeof incoming === 'string' && incoming.length <= 64 ? incoming : randomUUID();
 
+    // eslint-disable-next-line no-param-reassign -- Request-Objekt anreichern ist der vorgesehene Weg in Express-/Nest-Middleware.
     req.id = id;
     res.setHeader('x-request-id', id);
     next();

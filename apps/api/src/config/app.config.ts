@@ -1,5 +1,5 @@
 import { type AppEnv, appSchema } from '@app/config/schemas/app.schema';
-import { registerAs } from '@nestjs/config';
+import { type ConfigType, registerAs } from '@nestjs/config';
 
 export const appConfig = registerAs('app', () => {
   const env: AppEnv = appSchema.parse(process.env);
@@ -11,3 +11,5 @@ export const appConfig = registerAs('app', () => {
     isProduction: env.NODE_ENV === 'production',
   };
 });
+
+export type AppConfig = ConfigType<typeof appConfig>;

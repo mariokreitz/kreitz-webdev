@@ -1,4 +1,5 @@
 import { type GithubEnv, githubSchema } from '@app/config/schemas/github.schema';
+import type { ConfigType } from '@nestjs/config';
 import { registerAs } from '@nestjs/config';
 
 export const githubConfig = registerAs('github', () => {
@@ -12,3 +13,5 @@ export const githubConfig = registerAs('github', () => {
     allowedReturnPaths: env.GITHUB_ALLOWED_RETURN_PATHS,
   };
 });
+
+export type GithubConfig = ConfigType<typeof githubConfig>;

@@ -1,5 +1,5 @@
 import { type ThrottleEnv, throttleSchema } from '@app/config/schemas/throttle.schema';
-import { registerAs } from '@nestjs/config';
+import { type ConfigType, registerAs } from '@nestjs/config';
 
 export const throttleConfig = registerAs('throttle', () => {
   const env: ThrottleEnv = throttleSchema.parse(process.env);
@@ -16,3 +16,5 @@ export const throttleConfig = registerAs('throttle', () => {
     ],
   };
 });
+
+export type ThrottleConfig = ConfigType<typeof throttleConfig>;

@@ -1,5 +1,5 @@
 import { type HealthEnv, healthSchema } from '@app/config/schemas/health.schema';
-import { registerAs } from '@nestjs/config';
+import { type ConfigType, registerAs } from '@nestjs/config';
 
 export const healthConfig = registerAs('health', () => {
   const env: HealthEnv = healthSchema.parse(process.env);
@@ -9,3 +9,5 @@ export const healthConfig = registerAs('health', () => {
     dbTimeoutMs: env.HEALTH_DB_TIMEOUT_MS,
   };
 });
+
+export type HealthConfig = ConfigType<typeof healthConfig>;

@@ -1,5 +1,5 @@
 import { type RedisEnv, redisSchema } from '@app/config/schemas/redis.schema';
-import { registerAs } from '@nestjs/config';
+import { type ConfigType, registerAs } from '@nestjs/config';
 
 export const redisConfig = registerAs('redis', () => {
   const env: RedisEnv = redisSchema.parse(process.env);
@@ -15,3 +15,5 @@ export const redisConfig = registerAs('redis', () => {
     queuePrefix: env.QUEUE_PREFIX,
   };
 });
+
+export type RedisConfig = ConfigType<typeof redisConfig>;

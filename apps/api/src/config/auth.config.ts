@@ -1,5 +1,5 @@
 import { type AuthEnv, authSchema } from '@app/config/schemas/auth.schema';
-import { registerAs } from '@nestjs/config';
+import { type ConfigType, registerAs } from '@nestjs/config';
 
 export const authConfig = registerAs('auth', () => {
   const env: AuthEnv = authSchema.parse(process.env);
@@ -14,3 +14,5 @@ export const authConfig = registerAs('auth', () => {
     lockoutMs: env.LOCKOUT_MS,
   };
 });
+
+export type AuthConfig = ConfigType<typeof authConfig>;

@@ -16,6 +16,15 @@ export const securitySchema = z.object({
   BODY_LIMIT: z.string().default('100kb'),
   COOKIE_SECRET: z.string().min(32),
   ENABLE_SWAGGER: boolFromEnv,
+  TRUST_PROXY: boolFromEnv,
+  PROXY_HOPS: z
+    .string()
+    .default('0')
+    .transform((value) => {
+      const parsed = Number(value);
+
+      return Number.isInteger(parsed) && parsed >= 0 ? parsed : 0;
+    }),
 });
 
 export type SecurityEnv = z.infer<typeof securitySchema>;

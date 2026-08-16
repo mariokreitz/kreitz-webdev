@@ -1,5 +1,5 @@
 import { type SecurityEnv, securitySchema } from '@app/config/schemas/security.schema';
-import { registerAs } from '@nestjs/config';
+import { type ConfigType, registerAs } from '@nestjs/config';
 
 export const securityConfig = registerAs('security', () => {
   const env: SecurityEnv = securitySchema.parse(process.env);
@@ -10,5 +10,9 @@ export const securityConfig = registerAs('security', () => {
     bodyLimit: env.BODY_LIMIT,
     cookieSecret: env.COOKIE_SECRET,
     enableSwagger: env.ENABLE_SWAGGER,
+    trustProxy: env.TRUST_PROXY,
+    proxyHops: env.PROXY_HOPS,
   };
 });
+
+export type SecurityConfig = ConfigType<typeof securityConfig>;

@@ -1,5 +1,5 @@
 import { type VerificationEnv, verificationSchema } from '@app/config/schemas/verification.schema';
-import { registerAs } from '@nestjs/config';
+import { type ConfigType, registerAs } from '@nestjs/config';
 
 export const verificationConfig = registerAs('verification', () => {
   const env: VerificationEnv = verificationSchema.parse(process.env);
@@ -11,3 +11,5 @@ export const verificationConfig = registerAs('verification', () => {
     gracePeriodMs: env.VERIFICATION_GRACE_PERIOD_MS,
   };
 });
+
+export type VerificationConfig = ConfigType<typeof verificationConfig>;
