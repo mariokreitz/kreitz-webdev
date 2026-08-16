@@ -13,6 +13,7 @@ import {
 } from '@app/config';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { PrismaModule } from './prisma/prisma.module';
 
 const NODE_ENV = process.env['NODE_ENV'] ?? 'development';
 
@@ -39,7 +40,8 @@ const NODE_ENV = process.env['NODE_ENV'] ?? 'development';
         verificationConfig,
       ],
     }),
+    PrismaModule,
   ],
-  exports: [ConfigModule],
+  exports: [ConfigModule, PrismaModule],
 })
 export class CoreModule {}
