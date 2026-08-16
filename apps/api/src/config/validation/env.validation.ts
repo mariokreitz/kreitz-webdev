@@ -1,10 +1,11 @@
 import { type Env, envSchema } from '@app/config/schemas/schemas';
+import { z } from 'zod';
 
 export function validateEnv(raw: Record<string, unknown>): Env {
   const result = envSchema.safeParse(raw);
 
   if (!result.success) {
-    const details = result.error.issues.map((issue) => `  ${issue.path.join('.')}: ${issue.message}`).join('\n');
+    const details = z.prettifyError(result.error);
 
     throw new Error(`Invalid environment variables:\n${details}`);
   }

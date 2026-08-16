@@ -1,9 +1,20 @@
-import { appConfig } from '@app/config/app.config';
-import { validateEnv } from '@app/config/validation/env.validation';
+import {
+  appConfig,
+  authConfig,
+  databaseConfig,
+  githubConfig,
+  healthConfig,
+  redisConfig,
+  resetConfig,
+  securityConfig,
+  throttleConfig,
+  validateEnv,
+  verificationConfig,
+} from '@app/config';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
-const NODE_ENV = process.env.NODE_ENV ?? 'development';
+const NODE_ENV = process.env['NODE_ENV'] ?? 'development';
 
 @Module({
   imports: [
@@ -11,10 +22,22 @@ const NODE_ENV = process.env.NODE_ENV ?? 'development';
       isGlobal: true,
       cache: true,
       expandVariables: true,
+      skipProcessEnv: true,
       ignoreEnvFile: NODE_ENV === 'production',
       envFilePath: [`.env.${NODE_ENV}`, '.env.local', '.env'],
       validate: validateEnv,
-      load: [appConfig],
+      load: [
+        appConfig,
+        authConfig,
+        databaseConfig,
+        githubConfig,
+        healthConfig,
+        redisConfig,
+        resetConfig,
+        securityConfig,
+        throttleConfig,
+        verificationConfig,
+      ],
     }),
   ],
   exports: [ConfigModule],

@@ -1,0 +1,8 @@
+# RFC 9116
+# Expires MUSS gepflegt werden, sonst gilt die Datei als abgelaufen.
+
+Contact: mailto:security@example.com
+Expires: 2027-01-01T00:00:00.000Z
+Preferred-Languages: de, en
+Canonical: https://example.com/.well-known/security.txt
+Policy: https://example.com/security-policy

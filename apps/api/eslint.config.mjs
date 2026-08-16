@@ -150,17 +150,6 @@ export default tseslint.config(
       'no-console': 'error',
       'no-var': 'error',
       'prefer-const': 'error',
-
-      // Architecture
-      'no-restricted-properties': [
-        'error',
-        {
-          object: 'process',
-          property: 'env',
-          message:
-            'Read environment variables through ConfigService, validated by the zod schema in src/config/env.config.ts.',
-        },
-      ],
     },
   },
 

@@ -1,8 +1,8 @@
-import { appSchema } from '@app/config/schemas/schemas';
+import { type AppEnv, appSchema } from '@app/config/schemas/app.schema';
 import { registerAs } from '@nestjs/config';
 
 export const appConfig = registerAs('app', () => {
-  const env = appSchema.parse(process.env);
+  const env: AppEnv = appSchema.parse(process.env);
 
   return {
     env: env.NODE_ENV,
