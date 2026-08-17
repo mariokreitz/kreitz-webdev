@@ -33,8 +33,11 @@
     "docker:db:up": "docker-compose up --build -d",
     "prisma:generate": "dotenv -e .env.local -- prisma generate --config apps/api/prisma.config.ts",
     "prisma:migrate": "dotenv -e .env.local -- prisma migrate dev --config apps/api/prisma.config.ts",
+    "prisma:migrate:deploy": "prisma migrate deploy --config apps/api/prisma.config.ts",
     "prisma:studio": "dotenv -e .env.local -- prisma studio --config apps/api/prisma.config.ts",
-    "auth:generate": "cd apps/api && dotenv -e ../../.env.local -- better-auth generate --config src/core/auth/auth-cli.config.ts --output prisma/schema.prisma"
+    "prisma:reset": "dotenv -e .env.local -- prisma migrate reset --config apps/api/prisma.config.ts",
+    "auth:generate": "cd apps/api && dotenv -e ../../.env.local -- better-auth generate --config src/core/auth/auth-cli.config.ts --output prisma/schema.prisma",
+    "postinstall": "dotenv -e .env.local -- prisma generate --config apps/api/prisma.config.ts"
   },
   "private": true,
   "overrides": {
