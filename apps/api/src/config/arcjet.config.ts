@@ -7,6 +7,7 @@ export const arcjetConfig = registerAs('arcjet', () => {
 
   return {
     key: env.ARCJET_KEY,
+    trustedProxies: env.ARCJET_TRUSTED_PROXIES,
   };
 });
 

@@ -1,6 +1,7 @@
 import { ApiModule } from '@app/api.module';
 import {
   API_GLOBAL_PREFIX,
+  AUTH_REFERENCE_PATH,
   type BootstrapContext,
   configureApplication,
   setupSwagger,
@@ -27,12 +28,15 @@ async function bootstrap(): Promise<void> {
   const swaggerEnabled: boolean = setupSwagger(app, context);
 
   await app.listen(context.config.port);
-  Logger.log(`🚀 Application is running on: http://localhost:${context.config.port}/${API_GLOBAL_PREFIX}`);
+  Logger.log(`Application is running on: http://localhost:${context.config.port}/${API_GLOBAL_PREFIX}`);
   Logger.log(
     swaggerEnabled
-      ? `📚 API documentation: http://localhost:${context.config.port}/${SWAGGER_PATH}`
-      : '📚 API documentation is disabled (SWAGGER_ENABLED)',
+      ? `API documentation: http://localhost:${context.config.port}/${SWAGGER_PATH}`
+      : 'API documentation is disabled (SWAGGER_ENABLED)',
   );
+  if (swaggerEnabled) {
+    Logger.log(`Auth API reference: http://localhost:${context.config.port}${AUTH_REFERENCE_PATH}`);
+  }
 }
 
 bootstrap().catch((err: unknown) => {

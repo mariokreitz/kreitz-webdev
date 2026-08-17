@@ -1,15 +1,20 @@
 import type { AppConfig, SecurityConfig } from '@app/config';
 import { ArcjetAuthMiddleware } from '@app/core/auth/arcjet-auth.middleware';
-import { type INestApplication, ValidationPipe } from '@nestjs/common';
+import { AUTH_REFERENCE_CSP_NONCE, AUTH_REFERENCE_PATH } from '@app/core/auth/auth-reference.constants';
+import { type INestApplication, ValidationPipe, VersioningType } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 import type { Express, NextFunction, Request, Response } from 'express';
 import express from 'express';
 import helmet from 'helmet';
 import { join } from 'node:path';
 
+export { AUTH_REFERENCE_PATH };
+
 export const API_GLOBAL_PREFIX = 'api';
+export const API_DEFAULT_VERSION = '1';
 export const ROBOTS_PATH = '/robots.txt';
 export const ROBOTS_DISALLOW_ALL_BODY = 'User-agent: *\nDisallow: /\n';
+const SCALAR_CDN_ORIGIN = 'https://cdn.jsdelivr.net';
 
 export interface BootstrapContext {
   config: AppConfig;
@@ -25,8 +30,10 @@ export function configureApplication(app: INestApplication, context: BootstrapCo
   applyArcjetAuthProtection(app, expressApp);
 
   app.setGlobalPrefix(API_GLOBAL_PREFIX);
+  applyVersioning(app);
 
   applySecurityHeaders(app, config.isProduction);
+  applyAuthReferenceCsp(expressApp, security.enableSwagger);
   applyCookies(app, security);
   serveWellKnownAssets(expressApp);
   applyCors(app, security);
@@ -42,6 +49,14 @@ function hardenExpressInstance(expressApp: Express, security: SecurityConfig): v
   if (security.trustProxy) {
     expressApp.set('trust proxy', security.proxyHops);
   }
+}
+
+function applyVersioning(app: INestApplication): void {
+  app.enableVersioning({
+    type: VersioningType.URI,
+    prefix: 'v',
+    defaultVersion: API_DEFAULT_VERSION,
+  });
 }
 
 function applyArcjetAuthProtection(app: INestApplication, expressApp: Express): void {
@@ -71,6 +86,32 @@ function applySecurityHeaders(app: INestApplication, isProduction: boolean): voi
       hsts: isProduction ? { maxAge: 31_536_000, includeSubDomains: true, preload: true } : false,
       crossOriginResourcePolicy: { policy: 'same-site' },
       referrerPolicy: { policy: 'no-referrer' },
+    }),
+  );
+}
+
+function applyAuthReferenceCsp(expressApp: Express, enabled: boolean): void {
+  if (!enabled) {
+    return;
+  }
+
+  expressApp.use(
+    AUTH_REFERENCE_PATH,
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'", `'nonce-${AUTH_REFERENCE_CSP_NONCE}'`, SCALAR_CDN_ORIGIN],
+          styleSrc: ["'self'", "'unsafe-inline'", 'https:'],
+          imgSrc: ["'self'", 'data:', 'https:'],
+          fontSrc: ["'self'", 'https:', 'data:'],
+          connectSrc: ["'self'", SCALAR_CDN_ORIGIN],
+          workerSrc: ["'self'", 'blob:'],
+          frameAncestors: ["'none'"],
+          baseUri: ["'none'"],
+          formAction: ["'none'"],
+        },
+      },
     }),
   );
 }

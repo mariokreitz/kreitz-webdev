@@ -1,3 +1,4 @@
+import { type AppConfig, appConfig } from '@app/config';
 import {
   ARCJET,
   type ArcjetDecision,
@@ -9,6 +10,8 @@ import {
 } from '@arcjet/nest';
 import { Inject, Injectable, Logger, type NestMiddleware } from '@nestjs/common';
 import express, { type NextFunction, type Request, type Response } from 'express';
+
+type ArcjetRuleMode = 'LIVE' | 'DRY_RUN';
 
 const AUTH_BASE_PATH = '/api/auth';
 const SIGN_UP_EMAIL_PATH = '/api/auth/sign-up/email';
@@ -34,18 +37,23 @@ export class ArcjetAuthMiddleware implements NestMiddleware {
   private readonly signUpWithEmail: ArcjetNest;
   private readonly signIn: ArcjetNest;
 
-  constructor(@Inject(ARCJET) private readonly arcjet: ArcjetNest) {
+  constructor(
+    @Inject(ARCJET) private readonly arcjet: ArcjetNest,
+    @Inject(appConfig.KEY) app: AppConfig,
+  ) {
+    const mode: ArcjetRuleMode = app.env === 'development' ? 'DRY_RUN' : 'LIVE';
+
     this.signUpBase = this.arcjet
-      .withRule(detectBot({ mode: 'DRY_RUN', allow: [] }))
-      .withRule(tokenBucket({ mode: 'DRY_RUN', refillRate: 5, interval: 60, capacity: 5 }));
+      .withRule(detectBot({ mode, allow: [] }))
+      .withRule(tokenBucket({ mode, refillRate: 5, interval: 60, capacity: 5 }));
 
     this.signUpWithEmail = this.signUpBase.withRule(
-      validateEmail({ mode: 'DRY_RUN', deny: ['DISPOSABLE', 'INVALID', 'NO_MX_RECORDS'] }),
+      validateEmail({ mode, deny: ['DISPOSABLE', 'INVALID', 'NO_MX_RECORDS'] }),
     );
 
     this.signIn = this.arcjet
-      .withRule(detectBot({ mode: 'DRY_RUN', allow: [] }))
-      .withRule(tokenBucket({ mode: 'DRY_RUN', refillRate: 10, interval: 60, capacity: 10 }));
+      .withRule(detectBot({ mode, allow: [] }))
+      .withRule(tokenBucket({ mode, refillRate: 10, interval: 60, capacity: 10 }));
   }
 
   public async use(req: Request, res: Response, next: NextFunction): Promise<void> {

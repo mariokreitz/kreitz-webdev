@@ -1,6 +1,6 @@
 import { type HealthConfig, healthConfig } from '@app/config/health.config';
 import { PrismaService } from '@app/core/prisma/prisma.service';
-import { Controller, Get, Inject } from '@nestjs/common';
+import { Controller, Get, Inject, VERSION_NEUTRAL } from '@nestjs/common';
 import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
 import {
   HealthCheck,
@@ -12,7 +12,7 @@ import {
 } from '@nestjs/terminus';
 import { RedisHealthIndicator } from './redis-health.indicator';
 
-@Controller('health')
+@Controller({ path: 'health', version: VERSION_NEUTRAL })
 @AllowAnonymous()
 export class HealthController {
   constructor(

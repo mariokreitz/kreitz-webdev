@@ -1,7 +1,7 @@
 import { EmailConfig, emailConfig } from '@app/config/email.config';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Resend } from 'resend';
-import { SendMailInput, SendVerificationEmailInput } from './types/email.types';
+import { SendExistingAccountNoticeInput, SendMailInput, SendVerificationEmailInput } from './types/email.types';
 
 @Injectable()
 export class EmailService {
@@ -47,6 +47,14 @@ export class EmailService {
       to,
       subject: 'Verify your email address',
       html: `<p>Please verify your email address by clicking the link below.</p><p><a href="${url}">${url}</a></p>`,
+    });
+  }
+
+  public async sendExistingAccountNotice({ to }: SendExistingAccountNoticeInput): Promise<void> {
+    await this.sendMail({
+      to,
+      subject: 'Someone tried to sign up with your email',
+      html: "<p>Someone tried to create an account with this email address.</p><p>If it was you, sign in instead — or request a new verification link if you never confirmed your address.</p><p>If it wasn't you, you can safely ignore this message; no account was created and no password was changed.</p>",
     });
   }
 }

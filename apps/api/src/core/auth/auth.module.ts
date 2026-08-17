@@ -40,7 +40,9 @@ import { createAuth } from './auth.factory';
           githubClientSecret: github.clientSecret,
           trustedOrigins: security.corsOrigins,
           sendVerificationEmail: async ({ to, url }) => email.sendVerificationEmail({ to, url }),
+          sendExistingAccountNotice: async ({ to }) => email.sendExistingAccountNotice({ to }),
           verificationTokenTtlMs: verification.tokenTtlMs,
+          enableDocs: security.enableSwagger,
         }),
         bodyParser: {
           json: { limit: security.bodyLimit },

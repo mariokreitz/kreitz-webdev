@@ -1,9 +1,11 @@
 import { redisStorage } from '@better-auth/redis-storage';
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
+import { openAPI } from 'better-auth/plugins';
 import type { Redis } from 'ioredis';
 
 import type { PrismaClient } from '../../../generated/prisma/client';
+import { AUTH_REFERENCE_CSP_NONCE } from './auth-reference.constants';
 
 export interface CreateAuthOptions {
   readonly prisma: PrismaClient;
@@ -14,7 +16,9 @@ export interface CreateAuthOptions {
   readonly githubClientSecret: string;
   readonly trustedOrigins: string[];
   readonly sendVerificationEmail: (input: { to: string; url: string; token: string }) => Promise<void>;
+  readonly sendExistingAccountNotice: (input: { to: string }) => Promise<void>;
   readonly verificationTokenTtlMs: number;
+  readonly enableDocs: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/explicit-module-boundary-types -- return type must stay inferred; betterAuth()'s return type is a generic conditional type keyed off the literal options object, so annotating it with ReturnType<typeof betterAuth> (or any manual type) widens it and breaks assignability (see `Auth<T>` context/adapter generics).
@@ -28,7 +32,9 @@ export function createAuth(options: CreateAuthOptions) {
     githubClientSecret,
     trustedOrigins,
     sendVerificationEmail,
+    sendExistingAccountNotice,
     verificationTokenTtlMs,
+    enableDocs,
   } = options;
 
   return betterAuth({
@@ -37,6 +43,7 @@ export function createAuth(options: CreateAuthOptions) {
     trustedOrigins,
     database: prismaAdapter(prisma, { provider: 'postgresql' }),
     secondaryStorage: redisClient ? redisStorage({ client: redisClient }) : undefined,
+    plugins: enableDocs ? [openAPI({ nonce: AUTH_REFERENCE_CSP_NONCE })] : [],
     socialProviders: {
       github: {
         clientId: githubClientId,
@@ -46,6 +53,7 @@ export function createAuth(options: CreateAuthOptions) {
     emailAndPassword: {
       enabled: true,
       requireEmailVerification: true,
+      onExistingUserSignUp: async ({ user }) => sendExistingAccountNotice({ to: user.email }),
     },
     emailVerification: {
       sendVerificationEmail: async ({ user, url, token }) => sendVerificationEmail({ to: user.email, url, token }),

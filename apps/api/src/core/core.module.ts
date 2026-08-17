@@ -56,6 +56,7 @@ const NODE_ENV = process.env['NODE_ENV'] ?? 'development';
       useFactory: (arcjet: ArcjetConfig) => ({
         key: arcjet.key,
         rules: [shield({ mode: 'LIVE' })],
+        ...(arcjet.trustedProxies.length > 0 ? { proxies: arcjet.trustedProxies } : {}),
       }),
     }),
     PrismaModule,

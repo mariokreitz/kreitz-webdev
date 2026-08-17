@@ -8,3 +8,7 @@ export interface SendVerificationEmailInput {
   readonly to: string;
   readonly url: string;
 }
+
+export interface SendExistingAccountNoticeInput {
+  readonly to: string;
+}

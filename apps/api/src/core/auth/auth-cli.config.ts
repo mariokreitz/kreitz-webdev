@@ -21,5 +21,8 @@ export const auth = createAuth({
   trustedOrigins: security.corsOrigins,
   // eslint-disable-next-line @typescript-eslint/require-await -- no-op placeholder, only needs to satisfy the async Promise<void> signature for CLI schema generation.
   sendVerificationEmail: async () => undefined,
+  // eslint-disable-next-line @typescript-eslint/require-await -- no-op placeholder, only needs to satisfy the async Promise<void> signature for CLI schema generation.
+  sendExistingAccountNotice: async () => undefined,
   verificationTokenTtlMs: verification.tokenTtlMs,
+  enableDocs: security.enableSwagger,
 });
