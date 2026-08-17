@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { appSchema } from './app.schema';
+import { arcjetSchema } from './arcjet.schema';
 import { authSchema } from './auth.schema';
 import { databaseSchema } from './database.schema';
 import { emailSchema } from './email.schema';
@@ -13,6 +14,7 @@ import { throttleSchema } from './throttle.schema';
 import { verificationSchema } from './verification.schema';
 
 export * from './app.schema';
+export * from './arcjet.schema';
 export * from './auth.schema';
 export * from './database.schema';
 export * from './email.schema';
@@ -26,6 +28,7 @@ export * from './verification.schema';
 
 export const envSchema = z.object({
   ...appSchema.shape,
+  ...arcjetSchema.shape,
   ...databaseSchema.shape,
   ...authSchema.shape,
   ...redisSchema.shape,

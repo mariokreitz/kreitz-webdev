@@ -1,5 +1,7 @@
 import {
   appConfig,
+  arcjetConfig,
+  type ArcjetConfig,
   authConfig,
   databaseConfig,
   emailConfig,
@@ -12,6 +14,7 @@ import {
   validateEnv,
   verificationConfig,
 } from '@app/config';
+import { ArcjetModule, shield } from '@arcjet/nest';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
@@ -33,6 +36,7 @@ const NODE_ENV = process.env['NODE_ENV'] ?? 'development';
       validate: validateEnv,
       load: [
         appConfig,
+        arcjetConfig,
         authConfig,
         databaseConfig,
         emailConfig,
@@ -44,6 +48,14 @@ const NODE_ENV = process.env['NODE_ENV'] ?? 'development';
         throttleConfig,
         verificationConfig,
       ],
+    }),
+    ArcjetModule.forRootAsync({
+      isGlobal: true,
+      inject: [arcjetConfig.KEY],
+      useFactory: (arcjet: ArcjetConfig) => ({
+        key: arcjet.key,
+        rules: [shield({ mode: 'LIVE' })],
+      }),
     }),
     PrismaModule,
     RedisModule,

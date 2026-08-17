@@ -1,7 +1,8 @@
 import type { AppConfig, SecurityConfig } from '@app/config';
+import { ArcjetAuthMiddleware } from '@app/core/auth/arcjet-auth.middleware';
 import { type INestApplication, ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
-import type { Express, Request, Response } from 'express';
+import type { Express, NextFunction, Request, Response } from 'express';
 import express from 'express';
 import helmet from 'helmet';
 import { join } from 'node:path';
@@ -21,6 +22,7 @@ export function configureApplication(app: INestApplication, context: BootstrapCo
 
   hardenExpressInstance(expressApp, security);
   registerRobotsRoute(expressApp);
+  applyArcjetAuthProtection(app, expressApp);
 
   app.setGlobalPrefix(API_GLOBAL_PREFIX);
 
@@ -40,6 +42,12 @@ function hardenExpressInstance(expressApp: Express, security: SecurityConfig): v
   if (security.trustProxy) {
     expressApp.set('trust proxy', security.proxyHops);
   }
+}
+
+function applyArcjetAuthProtection(app: INestApplication, expressApp: Express): void {
+  const arcjetAuthMiddleware = app.get(ArcjetAuthMiddleware);
+
+  expressApp.use(async (req: Request, res: Response, next: NextFunction) => arcjetAuthMiddleware.use(req, res, next));
 }
 
 function registerRobotsRoute(expressApp: Express): void {

@@ -1,4 +1,5 @@
 export { appConfig, type AppConfig } from './app.config';
+export { arcjetConfig, type ArcjetConfig } from './arcjet.config';
 export { authConfig, type AuthConfig } from './auth.config';
 export { databaseConfig, type DatabaseConfig } from './database.config';
 export { emailConfig, type EmailConfig } from './email.config';

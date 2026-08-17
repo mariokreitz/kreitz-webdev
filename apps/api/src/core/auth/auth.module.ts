@@ -7,6 +7,7 @@ import { PrismaService } from '@app/core/prisma/prisma.service';
 import { RedisService } from '@app/core/redis/redis.service';
 import { Module } from '@nestjs/common';
 import { AuthModule as BetterAuthNestModule } from '@thallesp/nestjs-better-auth';
+import { ArcjetAuthMiddleware } from './arcjet-auth.middleware';
 import { createAuth } from './auth.factory';
 
 @Module({
@@ -48,5 +49,6 @@ import { createAuth } from './auth.factory';
       }),
     }),
   ],
+  providers: [ArcjetAuthMiddleware],
 })
 export class AuthModule {}
