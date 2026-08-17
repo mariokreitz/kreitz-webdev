@@ -1,9 +1,8 @@
-import type { AppConfig, SecurityConfig, securityConfig } from '@app/config';
+import type { AppConfig, SecurityConfig } from '@app/config';
 import { type INestApplication, ValidationPipe } from '@nestjs/common';
-import type { ConfigType } from '@nestjs/config';
 import cookieParser from 'cookie-parser';
 import type { Express, Request, Response } from 'express';
-import express, { json, urlencoded } from 'express';
+import express from 'express';
 import helmet from 'helmet';
 import { join } from 'node:path';
 
@@ -26,7 +25,7 @@ export function configureApplication(app: INestApplication, context: BootstrapCo
   app.setGlobalPrefix(API_GLOBAL_PREFIX);
 
   applySecurityHeaders(app, config.isProduction);
-  applyCookiesAndBodyParsers(app, security);
+  applyCookies(app, security);
   serveWellKnownAssets(expressApp);
   applyCors(app, security);
   applyValidation(app, config.isProduction);
@@ -34,7 +33,7 @@ export function configureApplication(app: INestApplication, context: BootstrapCo
   app.enableShutdownHooks();
 }
 
-function hardenExpressInstance(expressApp: Express, security: ConfigType<typeof securityConfig>): void {
+function hardenExpressInstance(expressApp: Express, security: SecurityConfig): void {
   expressApp.set('etag', false);
   expressApp.disable('x-powered-by');
 
@@ -67,17 +66,15 @@ function applySecurityHeaders(app: INestApplication, isProduction: boolean): voi
   );
 }
 
-function applyCookiesAndBodyParsers(app: INestApplication, security: ConfigType<typeof securityConfig>): void {
+function applyCookies(app: INestApplication, security: SecurityConfig): void {
   app.use(cookieParser(security.cookieSecret));
-  app.use(json({ limit: security.bodyLimit }));
-  app.use(urlencoded({ extended: false, limit: security.bodyLimit }));
 }
 
 function serveWellKnownAssets(expressApp: Express): void {
   expressApp.use('/.well-known', express.static(join(__dirname, '..', 'public'), { index: false, dotfiles: 'allow' }));
 }
 
-function applyCors(app: INestApplication, security: ConfigType<typeof securityConfig>): void {
+function applyCors(app: INestApplication, security: SecurityConfig): void {
   if (security.corsOrigins.length === 0) {
     return;
   }

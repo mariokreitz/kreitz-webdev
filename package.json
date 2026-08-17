@@ -33,9 +33,15 @@
     "docker:db:up": "docker-compose up --build -d",
     "prisma:generate": "dotenv -e .env.local -- prisma generate --config apps/api/prisma.config.ts",
     "prisma:migrate": "dotenv -e .env.local -- prisma migrate dev --config apps/api/prisma.config.ts",
-    "prisma:studio": "dotenv -e .env.local -- prisma studio --config apps/api/prisma.config.ts"
+    "prisma:studio": "dotenv -e .env.local -- prisma studio --config apps/api/prisma.config.ts",
+    "auth:generate": "cd apps/api && dotenv -e ../../.env.local -- better-auth generate --config src/core/auth/auth-cli.config.ts --output prisma/schema.prisma"
   },
   "private": true,
+  "overrides": {
+    "@better-auth/redis-storage": {
+      "ioredis": "^6.0.0"
+    }
+  },
   "dependencies": {
     "@angular/cdk": "^22.1.1",
     "@angular/common": "~22.0.4",
@@ -46,6 +52,7 @@
     "@angular/platform-server": "~22.0.8",
     "@angular/router": "~22.0.4",
     "@angular/ssr": "~22.0.9",
+    "@better-auth/redis-storage": "^1.6.29",
     "@nestjs/common": "^11.0.0",
     "@nestjs/config": "^4.0.4",
     "@nestjs/core": "^11.0.0",
@@ -53,14 +60,18 @@
     "@nestjs/swagger": "^11.4.6",
     "@prisma/adapter-pg": "^7.9.1",
     "@prisma/client": "^7.9.1",
+    "@thallesp/nestjs-better-auth": "^2.7.0",
     "argon2": "^0.45.1",
+    "better-auth": "^1.6.29",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
     "cookie-parser": "^1.4.7",
     "express": "^5.2.1",
     "globals": "^17.11.0",
     "helmet": "^8.3.0",
+    "ioredis": "^6.0.0",
     "reflect-metadata": "^0.2.0",
+    "resend": "^6.20.0",
     "rimraf": "^6.1.3",
     "rxjs": "~7.8.0",
     "tsx": "^4.23.12",
@@ -73,6 +84,7 @@
     "@angular/cli": "~22.0.4",
     "@angular/compiler-cli": "~22.0.4",
     "@angular/language-service": "~22.0.4",
+    "@better-auth/cli": "^1.4.21",
     "@eslint/js": "^9.8.0",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.0",

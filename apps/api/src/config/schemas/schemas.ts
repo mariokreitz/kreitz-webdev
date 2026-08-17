@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { appSchema } from './app.schema';
 import { authSchema } from './auth.schema';
 import { databaseSchema } from './database.schema';
+import { emailSchema } from './email.schema';
 import { githubSchema } from './github.schema';
 import { healthSchema } from './health.schema';
 import { redisSchema } from './redis.schema';
@@ -14,6 +15,7 @@ import { verificationSchema } from './verification.schema';
 export * from './app.schema';
 export * from './auth.schema';
 export * from './database.schema';
+export * from './email.schema';
 export * from './github.schema';
 export * from './health.schema';
 export * from './redis.schema';
@@ -33,6 +35,7 @@ export const envSchema = z.object({
   ...resetSchema.shape,
   ...verificationSchema.shape,
   ...githubSchema.shape,
+  ...emailSchema.shape,
 });
 
 export type Env = z.infer<typeof envSchema>;

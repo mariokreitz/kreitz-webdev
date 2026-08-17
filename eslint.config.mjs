@@ -4,7 +4,15 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
-    ignores: ['**/dist/**', '**/out-tsc/**', '**/.angular/**', '**/.nx/**', '**/node_modules/**', '**/eslint.config.*'],
+    ignores: [
+      '**/dist/**',
+      '**/out-tsc/**',
+      '**/.angular/**',
+      '**/.nx/**',
+      '**/node_modules/**',
+      '**/eslint.config.*',
+      'apps/api/generated/**',
+    ],
   },
 
   ...nx.configs['flat/base'],

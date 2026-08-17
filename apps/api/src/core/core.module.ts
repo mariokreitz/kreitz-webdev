@@ -2,6 +2,7 @@ import {
   appConfig,
   authConfig,
   databaseConfig,
+  emailConfig,
   githubConfig,
   healthConfig,
   redisConfig,
@@ -13,7 +14,10 @@ import {
 } from '@app/config';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
+import { EmailModule } from './email/email.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { RedisModule } from './redis/redis.module';
 
 const NODE_ENV = process.env['NODE_ENV'] ?? 'development';
 
@@ -31,6 +35,7 @@ const NODE_ENV = process.env['NODE_ENV'] ?? 'development';
         appConfig,
         authConfig,
         databaseConfig,
+        emailConfig,
         githubConfig,
         healthConfig,
         redisConfig,
@@ -41,7 +46,10 @@ const NODE_ENV = process.env['NODE_ENV'] ?? 'development';
       ],
     }),
     PrismaModule,
+    RedisModule,
+    EmailModule,
+    AuthModule,
   ],
-  exports: [ConfigModule, PrismaModule],
+  exports: [ConfigModule, PrismaModule, RedisModule, EmailModule],
 })
 export class CoreModule {}

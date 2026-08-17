@@ -8,7 +8,7 @@ export default tseslint.config(
   ...baseConfig,
 
   {
-    ignores: ['eslint.config.mjs', 'dist/**', 'coverage/**'],
+    ignores: ['eslint.config.mjs', 'dist/**', 'coverage/**', 'generated/**'],
   },
 
   eslint.configs.recommended,

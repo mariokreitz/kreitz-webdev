@@ -1,6 +1,7 @@
 export { appConfig, type AppConfig } from './app.config';
 export { authConfig, type AuthConfig } from './auth.config';
 export { databaseConfig, type DatabaseConfig } from './database.config';
+export { emailConfig, type EmailConfig } from './email.config';
 export { githubConfig, type GithubConfig } from './github.config';
 export { healthConfig, type HealthConfig } from './health.config';
 export { redisConfig, type RedisConfig } from './redis.config';
