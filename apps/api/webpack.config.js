@@ -19,6 +19,7 @@ module.exports = {
       outputHashing: 'none',
       generatePackageJson: true,
       sourceMap: true,
+      assets: [{ input: './public', glob: '.well-known/**', output: './public' }],
       transformers: [
         {
           name: '@nestjs/swagger/plugin',

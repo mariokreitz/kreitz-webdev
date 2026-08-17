@@ -71,7 +71,7 @@ function applyCookies(app: INestApplication, security: SecurityConfig): void {
 }
 
 function serveWellKnownAssets(expressApp: Express): void {
-  expressApp.use('/.well-known', express.static(join(__dirname, '..', 'public'), { index: false, dotfiles: 'allow' }));
+  expressApp.use(express.static(join(__dirname, 'public'), { index: false, dotfiles: 'allow' }));
 }
 
 function applyCors(app: INestApplication, security: SecurityConfig): void {
