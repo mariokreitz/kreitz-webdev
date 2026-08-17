@@ -65,6 +65,7 @@ function applySecurityHeaders(app: INestApplication, isProduction: boolean): voi
           frameAncestors: ["'none'"],
           baseUri: ["'none'"],
           formAction: ["'none'"],
+          connectSrc: ["'self'"],
         },
       },
       hsts: isProduction ? { maxAge: 31_536_000, includeSubDomains: true, preload: true } : false,
