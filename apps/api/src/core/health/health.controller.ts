@@ -1,7 +1,7 @@
 import { type HealthConfig, healthConfig } from '@app/config/health.config';
-import { PrismaService } from '@app/core/prisma/prisma.service';
+import { RedisHealthIndicator } from '@app/core/health/indicators/redis-health.indicator';
+import { PrismaService } from '@app/core/prisma';
 import { Controller, Get, Inject, VERSION_NEUTRAL } from '@nestjs/common';
-import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
 import {
   HealthCheck,
   HealthCheckResult,
@@ -10,7 +10,7 @@ import {
   MemoryHealthIndicator,
   PrismaHealthIndicator,
 } from '@nestjs/terminus';
-import { RedisHealthIndicator } from './redis-health.indicator';
+import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
 
 @Controller({ path: 'health', version: VERSION_NEUTRAL })
 @AllowAnonymous()

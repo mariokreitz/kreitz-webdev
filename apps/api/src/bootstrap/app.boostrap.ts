@@ -1,6 +1,5 @@
 import type { AppConfig, SecurityConfig } from '@app/config';
-import { ArcjetAuthMiddleware } from '@app/core/auth/arcjet-auth.middleware';
-import { AUTH_REFERENCE_CSP_NONCE, AUTH_REFERENCE_PATH } from '@app/core/auth/auth-reference.constants';
+import { ArcjetAuthMiddleware, AUTH_REFERENCE_CSP_NONCE, AUTH_REFERENCE_PATH } from '@app/core/auth';
 import { type INestApplication, ValidationPipe, VersioningType } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 import type { Express, NextFunction, Request, Response } from 'express';

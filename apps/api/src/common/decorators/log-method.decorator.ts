@@ -1,6 +1,6 @@
-import { getLogger } from '@app/core/logging/logger-registry';
-import { getRequestId } from '@app/core/logging/request-context';
-import { sanitizeArgs } from '@app/core/logging/sanitize';
+import { getRequestId, sanitizeArgs } from '@app/core/logging';
+import { PinoLogger } from 'nestjs-pino';
+import type { Logger } from 'pino';
 
 export interface LogMethodOptions {
   redactArgs?: string[];
@@ -16,6 +16,18 @@ function isThenable(value: unknown): value is PromiseLike<unknown> {
   return typeof value === 'object' && value !== null && typeof (value as { then?: unknown }).then === 'function';
 }
 
+/**
+ * `PinoLogger.root` is nestjs-pino's own static handle to the base pino
+ * instance, set once when `LoggingModule`'s `configure()` runs during
+ * bootstrap — before any request (and so any decorated method call) can
+ * happen. Read defensively anyway rather than throw: unlike the singleton
+ * this replaces, a method decorator that can't log should never be able to
+ * take the wrapped call down with it.
+ */
+function getRootLogger(): Logger | undefined {
+  return PinoLogger.root;
+}
+
 export function LogMethod(options?: LogMethodOptions): MethodDecorator {
   return function decorate(
     target: object,
@@ -27,9 +39,7 @@ export function LogMethod(options?: LogMethodOptions): MethodDecorator {
     const methodName = String(propertyKey);
 
     function onSuccess(startedAt: bigint, result: unknown): unknown {
-      const logger = getLogger();
-
-      logger.debug({
+      getRootLogger()?.debug({
         event: 'method.end',
         class: className,
         method: methodName,
@@ -41,9 +51,7 @@ export function LogMethod(options?: LogMethodOptions): MethodDecorator {
     }
 
     function onError(startedAt: bigint, err: unknown): never {
-      const logger = getLogger();
-
-      logger.error({
+      getRootLogger()?.error({
         event: 'method.error',
         class: className,
         method: methodName,
@@ -56,10 +64,9 @@ export function LogMethod(options?: LogMethodOptions): MethodDecorator {
     }
 
     function wrapped(this: unknown, ...args: unknown[]): unknown {
-      const logger = getLogger();
       const startedAt = process.hrtime.bigint();
 
-      logger.debug({
+      getRootLogger()?.debug({
         event: 'method.start',
         class: className,
         method: methodName,

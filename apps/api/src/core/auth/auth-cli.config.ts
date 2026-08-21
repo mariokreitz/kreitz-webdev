@@ -2,7 +2,7 @@ import { authConfig, databaseConfig, githubConfig, securityConfig, verificationC
 import { PrismaPg } from '@prisma/adapter-pg';
 
 import { PrismaClient } from '../../../generated/prisma/client';
-import { createAuth } from './auth.factory';
+import { createAuth } from './strategies/auth.factory';
 
 const database = databaseConfig();
 const authCfg = authConfig();

@@ -17,12 +17,12 @@ import {
 import { ArcjetModule, shield } from '@arcjet/nest';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AuthModule } from './auth/auth.module';
-import { EmailModule } from './email/email.module';
-import { HealthModule } from './health/health.module';
-import { LoggingModule } from './logging/logging.module';
-import { PrismaModule } from './prisma/prisma.module';
-import { RedisModule } from './redis/redis.module';
+import { AuthModule } from './auth';
+import { EmailModule } from './email';
+import { HealthModule } from './health';
+import { LoggingModule } from './logging';
+import { PrismaModule } from './prisma';
+import { RedisModule } from './redis';
 
 const NODE_ENV = process.env['NODE_ENV'] ?? 'development';
 

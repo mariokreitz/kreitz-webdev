@@ -2,13 +2,13 @@ import { type AuthConfig, authConfig } from '@app/config/auth.config';
 import { type GithubConfig, githubConfig } from '@app/config/github.config';
 import { type SecurityConfig, securityConfig } from '@app/config/security.config';
 import { type VerificationConfig, verificationConfig } from '@app/config/verification.config';
-import { EmailService } from '@app/core/email/email.service';
-import { PrismaService } from '@app/core/prisma/prisma.service';
-import { RedisService } from '@app/core/redis/redis.service';
+import { ArcjetAuthMiddleware } from '@app/core/auth/middlewares/arcjet-auth.middleware';
+import { EmailService } from '@app/core/email';
+import { PrismaService } from '@app/core/prisma';
+import { RedisService } from '@app/core/redis';
 import { Module } from '@nestjs/common';
 import { AuthModule as BetterAuthNestModule } from '@thallesp/nestjs-better-auth';
-import { ArcjetAuthMiddleware } from './arcjet-auth.middleware';
-import { createAuth } from './auth.factory';
+import { createAuth } from './strategies/auth.factory';
 
 @Module({
   imports: [

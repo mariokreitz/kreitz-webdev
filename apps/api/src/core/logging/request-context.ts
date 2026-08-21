@@ -1,8 +1,5 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
-
-export interface RequestContextStore {
-  requestId: string;
-}
+import type { RequestContextStore } from './interfaces/request-context.interface';
 
 export const requestContext = new AsyncLocalStorage<RequestContextStore>();
 
