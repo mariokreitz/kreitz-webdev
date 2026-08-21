@@ -22,7 +22,7 @@ export function resolveRequestId(req: Pick<IncomingMessage, 'headers'> & { id?: 
 
 @Injectable()
 export class RequestIdMiddleware implements NestMiddleware {
-  public use(req: Request, res: Response, next: NextFunction): void {
+  use(req: Request, res: Response, next: NextFunction): void {
     const id = resolveRequestId(req);
 
     // eslint-disable-next-line no-param-reassign -- enriching the request object is the idiomatic way to attach data in Express/Nest middleware.

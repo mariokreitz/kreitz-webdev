@@ -1,4 +1,4 @@
-import { resolveRequestId } from '@app/core/logging/middlewares/request-id.middleware';
+import { resolveRequestId } from '@app/core/logging/request-id.middleware';
 import type { Request } from 'express';
 import type { Params } from 'nestjs-pino';
 import type { IncomingMessage, ServerResponse } from 'node:http';

@@ -37,27 +37,29 @@ describe('RequestIdMiddleware', () => {
     return { headers } as unknown as Request;
   }
 
-  function buildResponse(): Response & { setHeader: jest.Mock } {
-    return { setHeader: jest.fn() } as unknown as Response & { setHeader: jest.Mock };
+  function buildResponse(): { response: Response; setHeader: jest.Mock } {
+    const setHeader = jest.fn();
+
+    return { response: { setHeader } as unknown as Response, setHeader };
   }
 
   it('echoes the resolved id as the x-request-id response header', () => {
     const middleware = new RequestIdMiddleware();
     const req = buildRequest({ 'x-request-id': 'incoming-id' });
-    const res = buildResponse();
+    const { response: res, setHeader } = buildResponse();
     const next = jest.fn();
 
     middleware.use(req, res, next);
 
     expect(req.id).toBe('incoming-id');
-    expect(res.setHeader).toHaveBeenCalledWith('x-request-id', 'incoming-id');
+    expect(setHeader).toHaveBeenCalledWith('x-request-id', 'incoming-id');
     expect(next).toHaveBeenCalledTimes(1);
   });
 
   it('runs next() inside the request-context ALS store carrying the same id', () => {
     const middleware = new RequestIdMiddleware();
     const req = buildRequest({ 'x-request-id': 'ctx-id' });
-    const res = buildResponse();
+    const { response: res } = buildResponse();
     let observedRequestId: string | undefined;
 
     middleware.use(req, res, () => {

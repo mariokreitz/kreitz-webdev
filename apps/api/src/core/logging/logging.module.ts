@@ -1,5 +1,5 @@
 import { appConfig, type AppConfig } from '@app/config';
-import { RequestIdMiddleware } from '@app/core/logging/middlewares/request-id.middleware';
+import { RequestIdMiddleware } from '@app/core/logging/request-id.middleware';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { LoggerModule, type Params } from 'nestjs-pino';
 import { createPinoHttpOptions } from './strategies/pino-options.factory';
@@ -14,7 +14,7 @@ import { createPinoHttpOptions } from './strategies/pino-options.factory';
   ],
 })
 export class LoggingModule implements NestModule {
-  public configure(consumer: MiddlewareConsumer): void {
+  configure(consumer: MiddlewareConsumer): void {
     consumer.apply(RequestIdMiddleware).forRoutes('*path');
   }
 }

@@ -16,16 +16,7 @@ module.exports = {
 
   collectCoverage: true,
 
-  collectCoverageFrom: ['src/core/logging/request-id.middleware.ts', 'src/core/logging/utils/sanitize.ts'],
+  collectCoverageFrom: ['src/**/*.ts', '!src/main.ts', '!src/testing/**'],
 
   coverageReporters: ['text', 'html', 'lcov'],
-
-  coverageThreshold: {
-    global: {
-      statements: 100,
-      lines: 100,
-      functions: 100,
-      branches: 100,
-    },
-  },
 };

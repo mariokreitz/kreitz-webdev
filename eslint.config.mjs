@@ -12,6 +12,7 @@ export default tseslint.config(
       '**/node_modules/**',
       '**/eslint.config.*',
       'apps/api/generated/**',
+      '.agents/**',
     ],
   },
 

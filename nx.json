@@ -55,7 +55,8 @@
       "plugin": "@nx/eslint/plugin",
       "options": {
         "targetName": "lint"
-      }
+      },
+      "exclude": [".agents/**"]
     },
     {
       "plugin": "@nx/docker",
