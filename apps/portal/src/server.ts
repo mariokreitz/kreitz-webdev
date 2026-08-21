@@ -13,7 +13,7 @@ const browserDistFolder = resolve(serverDistFolder, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine({
-  allowedHosts: ['http://localhost:4201/'],
+  allowedHosts: ['localhost:4201'],
 });
 
 app.use(
