@@ -3,6 +3,7 @@ dist
 coverage
 tmp
 out-tsc
+*.tsbuildinfo
 .git
 .idea
 .vscode
