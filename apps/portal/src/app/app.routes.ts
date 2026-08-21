@@ -2,11 +2,20 @@ import type { Route } from '@angular/router';
 
 export const appRoutes: Route[] = [
   {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full',
+  },
+  {
+    path: 'login',
+    loadComponent: () => import('./pages/login/login.component'),
+  },
+  {
     path: 'imprint',
-    loadComponent: () => import('./pages/imprint/imprint').then((m) => m.Imprint),
+    loadComponent: () => import('./pages/imprint/imprint.component'),
   },
   {
     path: 'terms-of-service',
-    loadComponent: () => import('./pages/terms-of-service/terms-of-service').then((m) => m.TermsOfService),
+    loadComponent: () => import('./pages/terms-of-service/terms-of-service.component'),
   },
 ];

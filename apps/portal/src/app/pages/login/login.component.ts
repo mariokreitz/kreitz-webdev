@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'kwd-portal-imprint',
+  selector: 'kwd-portal-login',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './imprint.html',
+  templateUrl: './login.component.html',
 })
-export class Imprint {}
+export default class Login {}

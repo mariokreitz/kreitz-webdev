@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'kwd-portal-terms-of-service',
+  selector: 'kwd-frontend-terms-of-service',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './terms-of-service.html',
+  templateUrl: './terms-of-service.component.html',
 })
 export class TermsOfService {}
