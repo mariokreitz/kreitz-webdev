@@ -1,0 +1,70 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/kwd.api.Dockerfile
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      API_PORT: ${API_PORT}
+      FRONTEND_PORT: ${FRONTEND_PORT}
+      PORTAL_PORT: ${PORTAL_PORT}
+      LOG_LEVEL: ${LOG_LEVEL}
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      COOKIE_SECRET: ${COOKIE_SECRET}
+      BETTER_AUTH_API_KEY: ${BETTER_AUTH_API_KEY}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL}
+      APP_BASE_URL: ${APP_BASE_URL}
+      CORS_ORIGINS: ${CORS_ORIGINS}
+      CORS_CREDENTIALS: ${CORS_CREDENTIALS}
+      TRUST_PROXY: ${TRUST_PROXY}
+      PROXY_HOPS: ${PROXY_HOPS}
+      ENABLE_SWAGGER: ${ENABLE_SWAGGER}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
+      RESEND_API_KEY: ${RESEND_API_KEY}
+      RESEND_FROM: ${RESEND_FROM}
+      ARCJET_KEY: ${ARCJET_KEY}
+    ports:
+      - '${API_PORT:-3000}:3000'
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-kreitz_webdev}
+    ports:
+      - '${POSTGRES_PORT:-5432}:5432'
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-postgres}']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:8-alpine
+    ports:
+      - '${REDIS_PORT:-6379}:6379'
+    restart: always
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  postgres_data:
+  redis_data:
