@@ -10,7 +10,6 @@ import {
   redisConfig,
   resetConfig,
   securityConfig,
-  throttleConfig,
   validateEnv,
   verificationConfig,
 } from '@app/config';
@@ -47,7 +46,6 @@ const NODE_ENV = process.env['NODE_ENV'] ?? 'development';
         redisConfig,
         resetConfig,
         securityConfig,
-        throttleConfig,
         verificationConfig,
       ],
     }),

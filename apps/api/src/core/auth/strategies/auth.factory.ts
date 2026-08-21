@@ -11,7 +11,6 @@ const APP_NAME = 'Kreitz WebDev';
 
 // betterAuth()'s return type is generic over the exact literal options object; naming it explicitly
 // breaks structural assignability (DBAdapter<T> invariance), so the return type is left to inference.
-
 export function createAuth(options: CreateAuthOptions) {
   const {
     prisma,
@@ -42,6 +41,7 @@ export function createAuth(options: CreateAuthOptions) {
     session: {
       storeSessionInDatabase: true,
     },
+    rateLimit: redisClient ? { storage: 'secondary-storage' } : undefined,
     plugins: enableDocs ? [openAPI({ nonce: AUTH_REFERENCE_CSP_NONCE }), ...DEFAULT_PLUGINS] : [...DEFAULT_PLUGINS],
     socialProviders: {
       github: {

@@ -8,7 +8,6 @@ export { healthConfig, type HealthConfig } from './health.config';
 export { redisConfig, type RedisConfig } from './redis.config';
 export { resetConfig, type ResetConfig } from './reset.config';
 export { securityConfig, type SecurityConfig } from './security.config';
-export { throttleConfig, type ThrottleConfig } from './throttle.config';
 export { validateEnv } from './validation/env.validation';
 export { verificationConfig, type VerificationConfig } from './verification.config';
 export type { Env } from './schemas/schemas';
