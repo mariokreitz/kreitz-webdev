@@ -1,0 +1,99 @@
+@if (isRegister()) {
+  <form class="flex flex-col gap-4" (submit)="onRegisterSubmit($event)">
+    <div class="flex flex-col gap-1">
+      <label class="text-sm font-medium text-[var(--color-text)]" for="register-name">Name</label>
+      <input
+        autocomplete="name"
+        class="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-brand-500"
+        id="register-name"
+        type="text"
+        [formField]="registerForm.name" />
+      @if (registerForm.name().touched() && registerForm.name().errors().length) {
+        <p class="text-sm text-red-600">{{ registerForm.name().errors()[0]?.message }}</p>
+      }
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label class="text-sm font-medium text-[var(--color-text)]" for="register-email">Email</label>
+      <input
+        autocomplete="email"
+        class="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-brand-500"
+        id="register-email"
+        type="email"
+        [formField]="registerForm.email" />
+      @if (registerForm.email().touched() && registerForm.email().errors().length) {
+        <p class="text-sm text-red-600">{{ registerForm.email().errors()[0]?.message }}</p>
+      }
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label class="text-sm font-medium text-[var(--color-text)]" for="register-password">Password</label>
+      <input
+        autocomplete="new-password"
+        class="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-brand-500"
+        id="register-password"
+        type="password"
+        [formField]="registerForm.password" />
+      @if (registerForm.password().touched() && registerForm.password().errors().length) {
+        <p class="text-sm text-red-600">{{ registerForm.password().errors()[0]?.message }}</p>
+      }
+    </div>
+
+    @if (errorMessage()) {
+      <p class="text-sm text-red-600">{{ errorMessage() }}</p>
+    }
+
+    <button
+      class="rounded-md bg-brand-600 px-4 py-2 font-medium text-white transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
+      type="submit"
+      [disabled]="registerForm().invalid() || loading()">
+      {{ loading() ? 'Creating account…' : 'Create account' }}
+    </button>
+  </form>
+} @else {
+  <form class="flex flex-col gap-4" (submit)="onLoginSubmit($event)">
+    <div class="flex flex-col gap-1">
+      <label class="text-sm font-medium text-[var(--color-text)]" for="login-email">Email</label>
+      <input
+        autocomplete="email"
+        class="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-brand-500"
+        id="login-email"
+        type="email"
+        [formField]="loginForm.email" />
+      @if (loginForm.email().touched() && loginForm.email().errors().length) {
+        <p class="text-sm text-red-600">{{ loginForm.email().errors()[0]?.message }}</p>
+      }
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label class="text-sm font-medium text-[var(--color-text)]" for="login-password">Password</label>
+      <input
+        autocomplete="current-password"
+        class="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-brand-500"
+        id="login-password"
+        type="password"
+        [formField]="loginForm.password" />
+      @if (loginForm.password().touched() && loginForm.password().errors().length) {
+        <p class="text-sm text-red-600">{{ loginForm.password().errors()[0]?.message }}</p>
+      }
+    </div>
+
+    @if (errorMessage()) {
+      <p class="text-sm text-red-600">{{ errorMessage() }}</p>
+    }
+
+    <button
+      class="rounded-md bg-brand-600 px-4 py-2 font-medium text-white transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
+      type="submit"
+      [disabled]="loginForm().invalid() || loading()">
+      {{ loading() ? 'Signing in…' : 'Sign in' }}
+    </button>
+  </form>
+}
+
+<button
+  class="mt-4 text-sm text-[var(--color-text-muted)] underline-offset-2 hover:underline"
+  type="button"
+  (click)="onToggleMode()">
+  {{ isRegister() ? 'Already have an account? Sign in' : "Don't have an account? Create one" }}
+</button>

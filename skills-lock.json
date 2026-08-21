@@ -181,6 +181,18 @@
       "skillPath": "skills/algorithmic-art/SKILL.md",
       "computedHash": "b2ca295de7f9c86c444f1fa21239e22e0eb7013ced1c652169b9402cc96ff744"
     },
+    "angular-developer": {
+      "source": "angular/skills",
+      "sourceType": "github",
+      "skillPath": "angular-developer/SKILL.md",
+      "computedHash": "b347918e4684319dabde773c882cce231a738454166a221684f991a6197749eb"
+    },
+    "angular-new-app": {
+      "source": "angular/skills",
+      "sourceType": "github",
+      "skillPath": "angular-new-app/SKILL.md",
+      "computedHash": "49bd84ab08bd3498c52f476bed48fbb942dc6dbc0925607e84549adbed34bccf"
+    },
     "anti-ui-slop": {
       "source": "github/awesome-copilot",
       "sourceType": "github",
