@@ -39,6 +39,9 @@ export function createAuth(options: CreateAuthOptions) {
     trustedOrigins,
     database: prismaAdapter(prisma, { provider: 'postgresql' }),
     secondaryStorage: redisClient ? redisStorage({ client: redisClient }) : undefined,
+    session: {
+      storeSessionInDatabase: true,
+    },
     plugins: enableDocs ? [openAPI({ nonce: AUTH_REFERENCE_CSP_NONCE }), ...DEFAULT_PLUGINS] : [...DEFAULT_PLUGINS],
     socialProviders: {
       github: {
