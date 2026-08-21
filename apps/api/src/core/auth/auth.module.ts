@@ -1,5 +1,7 @@
+import { type ArcjetConfig, arcjetConfig } from '@app/config/arcjet.config';
 import { type AuthConfig, authConfig } from '@app/config/auth.config';
 import { type GithubConfig, githubConfig } from '@app/config/github.config';
+import { type ResetConfig, resetConfig } from '@app/config/reset.config';
 import { type SecurityConfig, securityConfig } from '@app/config/security.config';
 import { type VerificationConfig, verificationConfig } from '@app/config/verification.config';
 import { ArcjetAuthMiddleware } from '@app/core/auth/middlewares/arcjet-auth.middleware';
@@ -21,6 +23,8 @@ import { createAuth } from './strategies/auth.factory';
         securityConfig.KEY,
         EmailService,
         verificationConfig.KEY,
+        arcjetConfig.KEY,
+        resetConfig.KEY,
       ],
       useFactory: (
         prisma: PrismaService,
@@ -30,6 +34,8 @@ import { createAuth } from './strategies/auth.factory';
         security: SecurityConfig,
         email: EmailService,
         verification: VerificationConfig,
+        arcjet: ArcjetConfig,
+        reset: ResetConfig,
       ) => ({
         auth: createAuth({
           apiKey: auth.apiKey,
@@ -40,6 +46,8 @@ import { createAuth } from './strategies/auth.factory';
           githubClientId: github.clientId,
           githubClientSecret: github.clientSecret,
           trustedOrigins: security.corsOrigins,
+          trustedProxies: arcjet.trustedProxies,
+          errorUrl: `${reset.baseUrl}/auth/error`,
           sendVerificationEmail: async ({ to, url }) => email.sendVerificationEmail({ to, url }),
           sendExistingAccountNotice: async ({ to }) => email.sendExistingAccountNotice({ to }),
           verificationTokenTtlMs: verification.tokenTtlMs,

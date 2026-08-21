@@ -1,4 +1,12 @@
-import { authConfig, databaseConfig, githubConfig, securityConfig, verificationConfig } from '@app/config';
+import {
+  arcjetConfig,
+  authConfig,
+  databaseConfig,
+  githubConfig,
+  resetConfig,
+  securityConfig,
+  verificationConfig,
+} from '@app/config';
 import { PrismaPg } from '@prisma/adapter-pg';
 
 import { PrismaClient } from '../../../generated/prisma/client';
@@ -9,6 +17,8 @@ const authCfg = authConfig();
 const github = githubConfig();
 const security = securityConfig();
 const verification = verificationConfig();
+const arcjet = arcjetConfig();
+const reset = resetConfig();
 
 const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: database.url }) });
 
@@ -20,10 +30,16 @@ export const auth = createAuth({
   githubClientId: github.clientId,
   githubClientSecret: github.clientSecret,
   trustedOrigins: security.corsOrigins,
+  trustedProxies: arcjet.trustedProxies,
+  errorUrl: `${reset.baseUrl}/auth/error`,
 
-  sendVerificationEmail: async () => undefined,
+  sendVerificationEmail: async () => {
+    await Promise.resolve();
+  },
 
-  sendExistingAccountNotice: async () => undefined,
+  sendExistingAccountNotice: async () => {
+    await Promise.resolve();
+  },
   verificationTokenTtlMs: verification.tokenTtlMs,
   enableDocs: security.enableSwagger,
 });

@@ -27,7 +27,9 @@ WORKDIR /app
 
 COPY --from=build /app/dist/apps/api/package.json /app/dist/apps/api/package-lock.json ./
 
-RUN npm ci --omit=dev --no-audit --no-fund --legacy-peer-deps
+RUN npm ci --omit=dev --no-audit --no-fund --legacy-peer-deps \
+  && npm install --no-save --no-audit --no-fund --legacy-peer-deps \
+    prisma@$(node -p "require('./package.json').dependencies['@prisma/client']")
 
 FROM ${NODE_IMAGE} AS runtime
 
@@ -37,11 +39,14 @@ ENV NODE_ENV=production
 
 COPY --from=prod-deps --chown=node:node /app/node_modules ./node_modules
 COPY --from=build --chown=node:node /app/dist/apps/api ./
+COPY --from=build --chown=node:node /app/apps/api/prisma.config.ts ./prisma.config.ts
+COPY --from=build --chown=node:node /app/apps/api/prisma/schema.prisma ./prisma/schema.prisma
+COPY --from=build --chown=node:node /app/apps/api/prisma/migrations ./prisma/migrations
 USER node
 
 EXPOSE 3000
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
   CMD node -e "fetch('http://localhost:'+(process.env.API_PORT||3000)+'/api/health/live').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
 
-CMD ["node", "main.js"]
+CMD ["sh", "-c", "./node_modules/.bin/prisma migrate deploy --config prisma.config.ts && node main.js"]

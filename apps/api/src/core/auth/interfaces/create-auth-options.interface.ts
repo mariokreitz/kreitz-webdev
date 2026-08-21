@@ -11,6 +11,8 @@ export interface CreateAuthOptions {
   readonly githubClientId: string;
   readonly githubClientSecret: string;
   readonly trustedOrigins: string[];
+  readonly trustedProxies: string[];
+  readonly errorUrl: string;
   readonly sendVerificationEmail: (input: { to: string; url: string; token: string }) => Promise<void>;
   readonly sendExistingAccountNotice: (input: { to: string }) => Promise<void>;
   readonly verificationTokenTtlMs: number;
