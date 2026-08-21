@@ -11,6 +11,7 @@ const APP_NAME = 'Kreitz WebDev';
 
 // betterAuth()'s return type is generic over the exact literal options object; naming it explicitly
 // breaks structural assignability (DBAdapter<T> invariance), so the return type is left to inference.
+
 export function createAuth(options: CreateAuthOptions) {
   const {
     prisma,
