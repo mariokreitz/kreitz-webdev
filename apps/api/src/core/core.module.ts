@@ -20,6 +20,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { EmailModule } from './email/email.module';
 import { HealthModule } from './health/health.module';
+import { LoggingModule } from './logging/logging.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { RedisModule } from './redis/redis.module';
 
@@ -64,6 +65,7 @@ const NODE_ENV = process.env['NODE_ENV'] ?? 'development';
     EmailModule,
     AuthModule,
     HealthModule,
+    LoggingModule,
   ],
   exports: [ConfigModule, PrismaModule, RedisModule, EmailModule],
 })
