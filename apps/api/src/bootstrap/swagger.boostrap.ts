@@ -15,17 +15,22 @@ export function setupSwagger(app: INestApplication, context: BootstrapContext): 
 
   const localApiOrigin = `http://localhost:${config.port}`;
 
-  const documentConfig = new DocumentBuilder()
+  const documentBuilder = new DocumentBuilder()
     .setTitle('kreitz-webdev API')
     .setDescription(
       "HTTP surface for Mario Kreitz's kreitz-webdev platform: JWT and GitHub OAuth authentication and user " +
         'account management for the kreitz-webdev Angular clients. Request and response shapes come from this ' +
         "API's own class-validator DTOs.",
     )
-    .setVersion('0.0.1')
-    .addServer(PRODUCTION_API_ORIGIN, 'Production')
-    .addServer(localApiOrigin, 'Local development')
-    .build();
+    .setVersion('0.0.1');
+
+  if (config.isProduction) {
+    documentBuilder.addServer(PRODUCTION_API_ORIGIN, 'Production');
+  }
+
+  documentBuilder.addServer(localApiOrigin, 'Local development');
+
+  const documentConfig = documentBuilder.build();
 
   SwaggerModule.setup(SWAGGER_PATH, app, () => SwaggerModule.createDocument(app, documentConfig));
 
