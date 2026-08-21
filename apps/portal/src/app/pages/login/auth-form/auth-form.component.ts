@@ -28,6 +28,7 @@ export class AuthForm {
   public readonly login = output<LoginPayload>();
   public readonly register = output<RegisterPayload>();
   public readonly toggleMode = output();
+  public readonly githubLogin = output();
 
   public readonly isRegister = computed(() => this.mode() === 'register');
 
@@ -68,5 +69,13 @@ export class AuthForm {
 
   public onToggleMode(): void {
     this.toggleMode.emit();
+  }
+
+  public onGithubLogin(): void {
+    if (this.loading()) {
+      return;
+    }
+
+    this.githubLogin.emit();
   }
 }

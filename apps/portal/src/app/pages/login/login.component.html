@@ -1,25 +1,20 @@
 <div class="flex min-h-screen items-center justify-center bg-[var(--color-surface-muted)] px-4">
   <div class="w-full max-w-sm rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-sm">
-    @if (successState(); as state) {
-      @if (state.kind === 'signed-in') {
-        <p class="text-center text-[var(--color-text)]">Signed in as {{ state.email }}</p>
-      } @else {
-        <p class="text-center text-[var(--color-text)]">
-          Check your email at <strong>{{ state.email }}</strong> to verify your account.
-        </p>
-      }
-    } @else {
-      <h1 class="mb-6 text-center text-xl font-semibold text-[var(--color-text)]">
-        {{ mode() === 'register' ? 'Create an account' : 'Sign in' }}
-      </h1>
+    <h1 class="mb-6 text-center text-xl font-semibold text-[var(--color-text)]">
+      {{ mode() === 'register' ? 'Create an account' : 'Sign in' }}
+    </h1>
 
-      <kwd-portal-auth-form
-        [mode]="mode()"
-        [loading]="loading()"
-        [errorMessage]="errorMessage()"
-        (login)="onLogin($event)"
-        (register)="onRegister($event)"
-        (toggleMode)="onToggleMode()" />
+    @if (infoMessage()) {
+      <p class="mb-4 text-center text-sm text-[var(--color-text)]">{{ infoMessage() }}</p>
     }
+
+    <kwd-portal-auth-form
+      [mode]="mode()"
+      [loading]="loading()"
+      [errorMessage]="errorMessage()"
+      (login)="onLogin($event)"
+      (register)="onRegister($event)"
+      (toggleMode)="onToggleMode()"
+      (githubLogin)="onGithubLogin()" />
   </div>
 </div>
