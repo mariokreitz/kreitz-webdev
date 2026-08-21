@@ -1,5 +1,6 @@
 import {
   AngularNodeAppEngine,
+  type AngularNodeAppEngineOptions,
   createNodeRequestHandler,
   isMainModule,
   writeResponseToNodeResponse,
@@ -13,9 +14,39 @@ const browserDistFolder = resolve(serverDistFolder, '../browser');
 
 const app = express();
 const port = Number(process.env['PORTAL_PORT']) || 4201;
-const angularApp = new AngularNodeAppEngine({
-  allowedHosts: ['localhost', `localhost:${port}`, '127.0.0.1', `127.0.0.1:${port}`, '[::1]', `[::1]:${port}`],
-});
+const allowedHostsEnv = process.env['NG_ALLOWED_HOSTS'] || process.env['APP_BASE_URL'];
+const parsedHosts: string[] = [];
+if (allowedHostsEnv) {
+  if (allowedHostsEnv.includes(',')) {
+    parsedHosts.push(
+      ...allowedHostsEnv
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean),
+    );
+  } else {
+    try {
+      const u = new URL(allowedHostsEnv);
+      parsedHosts.push(u.hostname);
+    } catch {
+      parsedHosts.push(allowedHostsEnv.trim());
+    }
+  }
+}
+const defaultLocal = ['localhost', `localhost:${port}`, '127.0.0.1', `127.0.0.1:${port}`, '[::1]', `[::1]:${port}`];
+const allowList = Array.from(new Set([...defaultLocal, ...parsedHosts]));
+const engineOptions: AngularNodeAppEngineOptions = {
+  allowedHosts: allowList,
+  trustProxyHeaders: [
+    'x-forwarded-for',
+    'x-forwarded-host',
+    'x-forwarded-port',
+    'x-forwarded-proto',
+    'x-forwarded-prefix',
+    'x-forwarded-server',
+  ],
+};
+const angularApp = new AngularNodeAppEngine(engineOptions);
 
 app.use(
   express.static(browserDistFolder, {
