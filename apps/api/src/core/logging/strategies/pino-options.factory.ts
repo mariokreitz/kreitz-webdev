@@ -1,3 +1,4 @@
+import { resolveRequestId } from '@app/core/logging/middlewares/request-id.middleware';
 import type { Request } from 'express';
 import type { Params } from 'nestjs-pino';
 import type { IncomingMessage, ServerResponse } from 'node:http';
@@ -11,7 +12,6 @@ import {
   SERVICE_NAME,
 } from '../constants/pino-options.constants';
 import type { CreatePinoHttpOptionsParams, LoggedRequest, LoggedResponse } from '../interfaces/pino-options.interface';
-import { resolveRequestId } from '../request-id.middleware';
 
 function decodeParamName(name: string): string {
   try {
