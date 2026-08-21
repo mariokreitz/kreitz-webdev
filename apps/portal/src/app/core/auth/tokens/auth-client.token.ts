@@ -1,10 +1,11 @@
 import { isPlatformBrowser } from '@angular/common';
 import { inject, InjectionToken, PLATFORM_ID } from '@angular/core';
 import { dashClient } from '@better-auth/infra/client';
+import { environment } from '@shared/environments';
 import { createAuthClient } from 'better-auth/client';
 import type { AuthClient } from '../types/auth.types';
 
-const AUTH_BASE_URL = 'http://localhost:3000';
+const AUTH_BASE_URL = environment.api.authBaseUrl;
 
 export const AUTH_CLIENT = new InjectionToken<AuthClient>('AUTH_CLIENT', {
   factory: () => {

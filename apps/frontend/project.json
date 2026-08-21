@@ -4,7 +4,7 @@
   "projectType": "application",
   "prefix": "kwd-frontend",
   "sourceRoot": "apps/frontend/src",
-  "tags": [],
+  "tags": ["type:app", "scope:client"],
   "targets": {
     "tsc": {
       "executor": "nx:run-commands",
@@ -47,12 +47,24 @@
               "maximumError": "8kb"
             }
           ],
-          "outputHashing": "all"
+          "outputHashing": "all",
+          "fileReplacements": [
+            {
+              "replace": "libs/environments/src/lib/environment.ts",
+              "with": "libs/environments/src/lib/environment.production.ts"
+            }
+          ]
         },
         "development": {
           "optimization": false,
           "extractLicenses": false,
-          "sourceMap": true
+          "sourceMap": true,
+          "fileReplacements": [
+            {
+              "replace": "libs/environments/src/lib/environment.ts",
+              "with": "libs/environments/src/lib/environment.development.ts"
+            }
+          ]
         }
       }
     },

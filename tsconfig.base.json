@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "ignoreDeprecations": "6.0",
     "noUncheckedSideEffectImports": true,
     "erasableSyntaxOnly": true,
     "noErrorTruncation": false,
@@ -38,7 +39,11 @@
     "noUnusedParameters": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
-    "paths": {}
+    "baseUrl": "./",
+    "paths": {
+      "@shared/environments": ["libs/environments/src/index.ts"],
+      "@shared/environments/*": ["libs/environments/src/*"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
