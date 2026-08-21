@@ -25,6 +25,7 @@ services:
       RESEND_API_KEY: ${RESEND_API_KEY}
       RESEND_FROM: ${RESEND_FROM}
       ARCJET_KEY: ${ARCJET_KEY}
+      ARCJET_TRUSTED_PROXIES: ${ARCJET_TRUSTED_PROXIES}
     ports:
       - '${API_PORT:-3000}:3000'
     restart: always
