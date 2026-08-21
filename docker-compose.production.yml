@@ -1,8 +1,7 @@
 services:
   api:
-    build:
-      context: .
-      dockerfile: docker/kwd.api.Dockerfile
+    image: ghcr.io/mariokreitz/kreitz-webdev/api:latest
+    pull_policy: always
     environment:
       NODE_ENV: ${NODE_ENV}
       API_PORT: ${API_PORT}
@@ -29,6 +28,18 @@ services:
     ports:
       - '${API_PORT:-3000}:3000'
     restart: always
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://localhost:'+(process.env.API_PORT||3000)+'/api/health/live').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
     depends_on:
       postgres:
         condition: service_healthy
