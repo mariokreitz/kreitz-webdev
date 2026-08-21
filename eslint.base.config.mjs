@@ -9,7 +9,7 @@ const angularSelectorRules = ({ componentPrefix, directivePrefix }) => ({
 
 const angularTypescriptRules = {
   '@angular-eslint/consistent-component-styles': 'error',
-  '@angular-eslint/inject-at-top': 'error',
+  // '@angular-eslint/inject-at-top': 'error',
   '@angular-eslint/no-async-lifecycle-method': 'error',
   '@angular-eslint/no-duplicates-in-metadata-arrays': 'error',
   '@angular-eslint/no-implicit-take-until-destroyed': 'error',

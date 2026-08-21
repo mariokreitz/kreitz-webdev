@@ -12,14 +12,13 @@ type SuccessState = { kind: 'signed-in'; email: string } | { kind: 'check-email'
   templateUrl: './login.component.html',
 })
 export default class Login {
-  private readonly authService = inject(AuthService);
+  public readonly mode = signal<'login' | 'register'>('login');
+  public readonly loading = signal(false);
+  public readonly errorMessage = signal<string | null>(null);
+  public readonly successState = signal<SuccessState | null>(null);
+  private readonly authService: AuthService = inject(AuthService);
 
-  readonly mode = signal<'login' | 'register'>('login');
-  readonly loading = signal(false);
-  readonly errorMessage = signal<string | null>(null);
-  readonly successState = signal<SuccessState | null>(null);
-
-  async onLogin({ email, password }: LoginPayload): Promise<void> {
+  public async onLogin({ email, password }: LoginPayload): Promise<void> {
     this.loading.set(true);
     this.errorMessage.set(null);
     this.successState.set(null);
@@ -40,7 +39,7 @@ export default class Login {
     this.successState.set({ kind: 'signed-in', email: result.email });
   }
 
-  async onRegister({ email, password, name }: RegisterPayload): Promise<void> {
+  public async onRegister({ email, password, name }: RegisterPayload): Promise<void> {
     this.loading.set(true);
     this.errorMessage.set(null);
     this.successState.set(null);
@@ -57,7 +56,7 @@ export default class Login {
     this.successState.set({ kind: 'check-email', email: result.email });
   }
 
-  onToggleMode(): void {
+  public onToggleMode(): void {
     this.mode.update((mode) => (mode === 'login' ? 'register' : 'login'));
     this.errorMessage.set(null);
     this.successState.set(null);

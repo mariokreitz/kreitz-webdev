@@ -1,2 +1,2 @@
 export { AuthService } from './auth.service';
-export type { AuthResult } from './types/auth.types';
+export type { AuthResult, AuthClient } from './types/auth.types';

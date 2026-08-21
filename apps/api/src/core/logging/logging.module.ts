@@ -14,7 +14,7 @@ import { createPinoHttpOptions } from './strategies/pino-options.factory';
   ],
 })
 export class LoggingModule implements NestModule {
-  configure(consumer: MiddlewareConsumer): void {
+  public configure(consumer: MiddlewareConsumer): void {
     consumer.apply(RequestIdMiddleware).forRoutes('*path');
   }
 }

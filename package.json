@@ -61,6 +61,7 @@
     "@angular/router": "~22.0.4",
     "@angular/ssr": "~22.0.9",
     "@arcjet/nest": "^1.10.0",
+    "@better-auth/infra": "^0.4.1",
     "@better-auth/redis-storage": "^1.6.29",
     "@nestjs/common": "^11.0.0",
     "@nestjs/config": "^4.0.4",

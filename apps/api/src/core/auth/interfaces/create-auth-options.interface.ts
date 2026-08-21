@@ -7,6 +7,7 @@ export interface CreateAuthOptions {
   readonly redisClient?: Redis;
   readonly secret: string;
   readonly baseUrl: string;
+  readonly apiKey: string;
   readonly githubClientId: string;
   readonly githubClientSecret: string;
   readonly trustedOrigins: string[];

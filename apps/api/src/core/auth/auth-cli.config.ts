@@ -14,14 +14,15 @@ const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: data
 
 export const auth = createAuth({
   prisma,
+  apiKey: authCfg.apiKey,
   secret: authCfg.secret,
   baseUrl: authCfg.baseUrl,
   githubClientId: github.clientId,
   githubClientSecret: github.clientSecret,
   trustedOrigins: security.corsOrigins,
-  // eslint-disable-next-line @typescript-eslint/require-await -- no-op placeholder, only needs to satisfy the async Promise<void> signature for CLI schema generation.
+
   sendVerificationEmail: async () => undefined,
-  // eslint-disable-next-line @typescript-eslint/require-await -- no-op placeholder, only needs to satisfy the async Promise<void> signature for CLI schema generation.
+
   sendExistingAccountNotice: async () => undefined,
   verificationTokenTtlMs: verification.tokenTtlMs,
   enableDocs: security.enableSwagger,

@@ -113,7 +113,15 @@ export default tseslint.config(
           ignoreRestSiblings: true,
         },
       ],
-      '@typescript-eslint/explicit-member-accessibility': ['error', { accessibility: 'no-public' }],
+      '@typescript-eslint/explicit-member-accessibility': [
+        'error',
+        {
+          accessibility: 'explicit',
+          overrides: {
+            constructors: 'no-public',
+          },
+        },
+      ],
       '@typescript-eslint/prefer-readonly': 'error',
       '@typescript-eslint/require-array-sort-compare': ['error', { ignoreStringArrays: true }],
       '@typescript-eslint/switch-exhaustiveness-check': 'error',

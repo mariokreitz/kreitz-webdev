@@ -7,6 +7,7 @@ export const authConfig = registerAs('auth', () => {
   return {
     secret: env.BETTER_AUTH_SECRET,
     baseUrl: env.BETTER_AUTH_URL,
+    apiKey: env.BETTER_AUTH_API_KEY,
   };
 });
 

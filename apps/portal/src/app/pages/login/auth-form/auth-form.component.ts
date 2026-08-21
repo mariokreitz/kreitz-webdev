@@ -21,28 +21,28 @@ const registerSchema = z.object({
   templateUrl: './auth-form.component.html',
 })
 export class AuthForm {
-  readonly mode = input.required<'login' | 'register'>();
-  readonly loading = input(false);
-  readonly errorMessage = input<string | null>(null);
+  public readonly mode = input.required<'login' | 'register'>();
+  public readonly loading = input(false);
+  public readonly errorMessage = input<string | null>(null);
 
-  readonly login = output<LoginPayload>();
-  readonly register = output<RegisterPayload>();
-  readonly toggleMode = output();
+  public readonly login = output<LoginPayload>();
+  public readonly register = output<RegisterPayload>();
+  public readonly toggleMode = output();
 
-  readonly isRegister = computed(() => this.mode() === 'register');
+  public readonly isRegister = computed(() => this.mode() === 'register');
 
-  readonly loginModel = signal<z.infer<typeof loginSchema>>({ email: '', password: '' });
-  readonly registerModel = signal<z.infer<typeof registerSchema>>({ name: '', email: '', password: '' });
+  public readonly loginModel = signal<z.infer<typeof loginSchema>>({ email: '', password: '' });
+  public readonly registerModel = signal<z.infer<typeof registerSchema>>({ name: '', email: '', password: '' });
 
-  readonly loginForm = form(this.loginModel, (path) => {
+  public readonly loginForm = form(this.loginModel, (path) => {
     validateStandardSchema(path, loginSchema);
   });
 
-  readonly registerForm = form(this.registerModel, (path) => {
+  public readonly registerForm = form(this.registerModel, (path) => {
     validateStandardSchema(path, registerSchema);
   });
 
-  async onLoginSubmit(event: Event): Promise<void> {
+  public async onLoginSubmit(event: Event): Promise<void> {
     event.preventDefault();
 
     if (this.loading()) {
@@ -54,7 +54,7 @@ export class AuthForm {
     });
   }
 
-  async onRegisterSubmit(event: Event): Promise<void> {
+  public async onRegisterSubmit(event: Event): Promise<void> {
     event.preventDefault();
 
     if (this.loading()) {
@@ -66,7 +66,7 @@ export class AuthForm {
     });
   }
 
-  onToggleMode(): void {
+  public onToggleMode(): void {
     this.toggleMode.emit();
   }
 }

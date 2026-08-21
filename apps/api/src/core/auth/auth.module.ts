@@ -32,6 +32,7 @@ import { createAuth } from './strategies/auth.factory';
         verification: VerificationConfig,
       ) => ({
         auth: createAuth({
+          apiKey: auth.apiKey,
           prisma,
           redisClient: redis.client,
           secret: auth.secret,

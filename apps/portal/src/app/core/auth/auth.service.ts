@@ -1,16 +1,13 @@
-import { Injectable, inject } from '@angular/core';
-import { AUTH_CLIENT } from './auth-client.token';
-import type { AuthResult } from './types/auth.types';
-
-// authClient.$ERROR_CODES resolves to an unpopulated Proxy at runtime on a plugin-less client (verified empirically
-// against the installed better-auth version) even though it is typed as a real object — compare the wire code directly.
-const EMAIL_NOT_VERIFIED_CODE = 'EMAIL_NOT_VERIFIED';
+import { inject, Injectable } from '@angular/core';
+import { EMAIL_NOT_VERIFIED_CODE } from './constants';
+import { AUTH_CLIENT } from './tokens/auth-client.token';
+import type { AuthClient, AuthResult } from './types/auth.types';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly authClient = inject(AUTH_CLIENT);
+  private readonly authClient: AuthClient = inject(AUTH_CLIENT);
 
-  async login(email: string, password: string): Promise<AuthResult> {
+  public async login(email: string, password: string): Promise<AuthResult> {
     const { data, error } = await this.authClient.signIn.email({ email, password });
 
     if (error) {
@@ -20,7 +17,7 @@ export class AuthService {
     return { ok: true, email: data.user.email };
   }
 
-  async register(email: string, password: string, name: string): Promise<AuthResult> {
+  public async register(email: string, password: string, name: string): Promise<AuthResult> {
     const { data, error } = await this.authClient.signUp.email({ email, password, name });
 
     if (error) {
@@ -30,7 +27,7 @@ export class AuthService {
     return { ok: true, email: data.user.email };
   }
 
-  isEmailNotVerifiedError(code: string | undefined): boolean {
+  public isEmailNotVerifiedError(code: string | undefined): boolean {
     return code === EMAIL_NOT_VERIFIED_CODE;
   }
 

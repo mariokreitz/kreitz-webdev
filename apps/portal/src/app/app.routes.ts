@@ -16,6 +16,6 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'terms-of-service',
-    loadComponent: () => import('./pages/terms-of-service/terms-of-service.component'),
+    loadComponent: () => import('./pages/tos/tos.component'),
   },
 ];
