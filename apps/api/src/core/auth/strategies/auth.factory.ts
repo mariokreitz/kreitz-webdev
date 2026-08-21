@@ -7,6 +7,11 @@ import { AUTH_REFERENCE_CSP_NONCE } from '..';
 
 import type { CreateAuthOptions } from '../interfaces/create-auth-options.interface';
 
+const APP_NAME = 'Kreitz WebDev';
+
+// betterAuth()'s return type is generic over the exact literal options object; naming it explicitly
+// breaks structural assignability (DBAdapter<T> invariance), so the return type is left to inference.
+
 export function createAuth(options: CreateAuthOptions) {
   const {
     prisma,
@@ -17,6 +22,8 @@ export function createAuth(options: CreateAuthOptions) {
     githubClientId,
     githubClientSecret,
     trustedOrigins,
+    trustedProxies,
+    errorUrl,
     sendVerificationEmail,
     sendExistingAccountNotice,
     verificationTokenTtlMs,
@@ -26,6 +33,7 @@ export function createAuth(options: CreateAuthOptions) {
   const DEFAULT_PLUGINS = [dash({ apiKey })];
 
   return betterAuth({
+    appName: APP_NAME,
     secret,
     baseURL: baseUrl,
     trustedOrigins,
@@ -41,13 +49,24 @@ export function createAuth(options: CreateAuthOptions) {
     emailAndPassword: {
       enabled: true,
       requireEmailVerification: true,
-      onExistingUserSignUp: async ({ user }) => sendExistingAccountNotice({ to: user.email }),
+      onExistingUserSignUp: async ({ user }) => {
+        await sendExistingAccountNotice({ to: user.email });
+      },
     },
     emailVerification: {
-      sendVerificationEmail: async ({ user, url, token }) => sendVerificationEmail({ to: user.email, url, token }),
+      sendVerificationEmail: async ({ user, url, token }) => {
+        await sendVerificationEmail({ to: user.email, url, token });
+      },
       expiresIn: Math.floor(verificationTokenTtlMs / 1000), // ms -> seconds, better-auth wants seconds
       sendOnSignUp: true,
       autoSignInAfterVerification: true,
+    },
+    advanced: {
+      ipAddress: trustedProxies.length > 0 ? { trustedProxies } : undefined,
+      database: { joins: true },
+    },
+    onAPIError: {
+      errorURL: errorUrl,
     },
   });
 }
