@@ -1,0 +1,15 @@
+node_modules
+dist
+coverage
+tmp
+out-tsc
+.git
+.idea
+.vscode
+.angular
+.nx/cache
+.nx/workspace-data
+*.log
+.env
+.env.*
+!.env.example
