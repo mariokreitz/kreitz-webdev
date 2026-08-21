@@ -12,7 +12,10 @@ const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
 
 const app = express();
-const angularApp = new AngularNodeAppEngine();
+const port = Number(process.env['FRONTEND_PORT']) || 4000;
+const angularApp = new AngularNodeAppEngine({
+  allowedHosts: ['localhost', `localhost:${port}`, '127.0.0.1', `127.0.0.1:${port}`, '[::1]', `[::1]:${port}`],
+});
 
 app.use(
   express.static(browserDistFolder, {
@@ -36,7 +39,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 if (isMainModule(import.meta.url) || process.env['pm_id']) {
-  const port = process.env['FRONTEND_PORT'] ?? 4000;
   app.listen(port, () => {
     console.warn(`Node Express server listening on http://localhost:${port}`);
   });
