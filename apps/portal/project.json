@@ -27,7 +27,12 @@
             "input": "apps/portal/public"
           }
         ],
-        "styles": ["apps/portal/src/styles.css"]
+        "styles": ["apps/portal/src/styles.css"],
+        "server": "apps/portal/src/main.server.ts",
+        "ssr": {
+          "entry": "apps/portal/src/server.ts"
+        },
+        "outputMode": "server"
       },
       "configurations": {
         "production": {

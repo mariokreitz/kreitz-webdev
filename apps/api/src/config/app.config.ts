@@ -7,7 +7,7 @@ export const appConfig = registerAs('app', () => {
 
   return {
     env: env.NODE_ENV,
-    port: env.PORT,
+    port: env.API_PORT,
     logLevel: env.LOG_LEVEL ?? (isProduction ? 'warn' : 'debug'),
     logFormat: env.LOG_FORMAT ?? (isProduction ? 'json' : 'pretty'),
     isProduction,
