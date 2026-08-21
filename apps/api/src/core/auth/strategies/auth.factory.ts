@@ -1,6 +1,6 @@
 import { dash } from '@better-auth/infra';
 import { redisStorage } from '@better-auth/redis-storage';
-import { betterAuth } from 'better-auth';
+import { type Auth, betterAuth, type BetterAuthOptions } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { openAPI } from 'better-auth/plugins';
 import { AUTH_REFERENCE_CSP_NONCE } from '..';
@@ -9,10 +9,7 @@ import type { CreateAuthOptions } from '../interfaces/create-auth-options.interf
 
 const APP_NAME = 'Kreitz WebDev';
 
-// betterAuth()'s return type is generic over the exact literal options object; naming it explicitly
-// breaks structural assignability (DBAdapter<T> invariance), so the return type is left to inference.
-
-export function createAuth(options: CreateAuthOptions) {
+export function createAuth(options: CreateAuthOptions): Auth {
   const {
     prisma,
     redisClient,
@@ -32,7 +29,7 @@ export function createAuth(options: CreateAuthOptions) {
 
   const DEFAULT_PLUGINS = [dash({ apiKey })];
 
-  return betterAuth({
+  const betterAuthOptions: BetterAuthOptions = {
     appName: APP_NAME,
     secret,
     baseURL: baseUrl,
@@ -72,5 +69,7 @@ export function createAuth(options: CreateAuthOptions) {
     onAPIError: {
       errorURL: errorUrl,
     },
-  });
+  };
+
+  return betterAuth(betterAuthOptions);
 }

@@ -19,6 +19,22 @@ services:
       redis:
         condition: service_healthy
 
+  portal:
+    build:
+      context: .
+      dockerfile: docker/kwd.portal.Dockerfile
+    env_file:
+      - .env.local
+    environment:
+      PORTAL_PORT: '4201'
+      # Angular SSR's SSRF guard 400s any request whose Host header isn't in this allowlist.
+      NG_ALLOWED_HOSTS: localhost
+    ports:
+      - '${PORTAL_PORT:-4201}:4201'
+    restart: always
+    depends_on:
+      - api
+
   postgres:
     image: postgres:17-alpine
     environment:

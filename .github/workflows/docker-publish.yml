@@ -8,10 +8,16 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}/api
 
 jobs:
-  build-and-push-api:
+  build-and-push:
+    strategy:
+      matrix:
+        include:
+          - service: api
+            dockerfile: docker/kwd.api.Dockerfile
+          - service: portal
+            dockerfile: docker/kwd.portal.Dockerfile
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -35,7 +41,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ github.repository }}/${{ matrix.service }}
           tags: |
             type=ref,event=branch
             type=sha,prefix=,format=short
@@ -45,9 +51,9 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: docker/kwd.api.Dockerfile
+          file: ${{ matrix.dockerfile }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=${{ matrix.service }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.service }}
