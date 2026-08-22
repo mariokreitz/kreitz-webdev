@@ -1,20 +1,27 @@
-<div class="flex min-h-screen items-center justify-center bg-[var(--color-surface-muted)] px-4">
-  <div class="w-full max-w-sm rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-sm">
-    <h1 class="mb-6 text-center text-xl font-semibold text-[var(--color-text)]">
-      {{ mode() === 'register' ? 'Create an account' : 'Sign in' }}
-    </h1>
+<div
+  class="login-shell flex min-h-screen items-center justify-center bg-[var(--color-background)] px-4 py-8 text-[var(--color-on-background)]">
+  <div
+    class="w-full max-w-md rounded-[var(--radius-lg)] border border-[var(--color-outline)] bg-[var(--color-surface-container)] p-6 sm:p-8">
+    <div class="mb-6">
+      <h1 class="text-2xl font-semibold tracking-[-0.03em] text-[var(--color-on-surface)]">
+        {{ mode() === 'register' ? 'Create an account' : 'Sign in' }}
+      </h1>
+    </div>
 
     @if (infoMessage()) {
-      <p class="mb-4 text-center text-sm text-[var(--color-text)]">{{ infoMessage() }}</p>
+      <p
+        class="mb-4 rounded-[var(--radius-md)] border border-[var(--color-outline)] bg-[var(--color-surface-container-low)] px-3 py-2 text-sm text-[var(--color-on-surface)]">
+        {{ infoMessage() }}
+      </p>
     }
 
     <kwd-portal-auth-form
-      [mode]="mode()"
-      [loading]="loading()"
       [errorMessage]="errorMessage()"
+      [loading]="loading()"
+      [mode]="mode()"
+      (githubLogin)="onGithubLogin()"
       (login)="onLogin($event)"
       (register)="onRegister($event)"
-      (toggleMode)="onToggleMode()"
-      (githubLogin)="onGithubLogin()" />
+      (toggleMode)="onToggleMode()" />
   </div>
 </div>

@@ -1,116 +1,170 @@
 @if (isRegister()) {
-  <form class="flex flex-col gap-4" (submit)="onRegisterSubmit($event)">
-    <div class="flex flex-col gap-1">
-      <label class="text-sm font-medium text-[var(--color-text)]" for="register-name">Name</label>
+  <form class="auth-form flex min-h-[23rem] flex-col gap-4" (submit)="onRegisterSubmit($event)">
+    <div class="flex flex-col gap-2">
+      <label
+        class="font-mono text-[0.625rem] font-bold uppercase tracking-[0.12em] text-[var(--color-on-surface-variant)]"
+        for="register-name"
+        >Name</label
+      >
       <input
         autocomplete="name"
-        class="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-brand-500"
+        class="rounded-[var(--radius-md)] border border-[var(--color-outline)] bg-[var(--color-surface-container-lowest)] px-3 py-2.5 text-sm text-[var(--color-on-surface)] outline-none transition-colors placeholder:text-[var(--color-on-surface-variant)] focus:border-[var(--color-primary)]"
         id="register-name"
         type="text"
         [formField]="registerForm.name" />
       @if (registerForm.name().touched() && registerForm.name().errors().length) {
-        <p class="text-sm text-red-600">{{ registerForm.name().errors()[0]?.message }}</p>
+        <p class="min-h-[1.25rem] text-sm text-[var(--color-error)]">{{ registerForm.name().errors()[0]?.message }}</p>
+      } @else {
+        <p class="min-h-[1.25rem]"></p>
       }
     </div>
 
-    <div class="flex flex-col gap-1">
-      <label class="text-sm font-medium text-[var(--color-text)]" for="register-email">Email</label>
+    <div class="flex flex-col gap-2">
+      <label
+        class="font-mono text-[0.625rem] font-bold uppercase tracking-[0.12em] text-[var(--color-on-surface-variant)]"
+        for="register-email"
+        >Email</label
+      >
+
       <input
         autocomplete="email"
-        class="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-brand-500"
+        class="rounded-[var(--radius-md)] border border-[var(--color-outline)] bg-[var(--color-surface-container-lowest)] px-3 py-2.5 text-sm text-[var(--color-on-surface)] outline-none transition-colors placeholder:text-[var(--color-on-surface-variant)] focus:border-[var(--color-primary)]"
         id="register-email"
         type="email"
         [formField]="registerForm.email" />
       @if (registerForm.email().touched() && registerForm.email().errors().length) {
-        <p class="text-sm text-red-600">{{ registerForm.email().errors()[0]?.message }}</p>
+        <p class="min-h-[1.25rem] text-sm text-[var(--color-error)]">{{ registerForm.email().errors()[0]?.message }}</p>
+      } @else {
+        <p class="min-h-[1.25rem]"></p>
       }
     </div>
 
-    <div class="flex flex-col gap-1">
-      <label class="text-sm font-medium text-[var(--color-text)]" for="register-password">Password</label>
+    <div class="flex flex-col gap-2">
+      <label
+        class="font-mono text-[0.625rem] font-bold uppercase tracking-[0.12em] text-[var(--color-on-surface-variant)]"
+        for="register-password"
+        >Password</label
+      >
       <input
         autocomplete="new-password"
-        class="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-brand-500"
+        class="rounded-[var(--radius-md)] border border-[var(--color-outline)] bg-[var(--color-surface-container-lowest)] px-3 py-2.5 text-sm text-[var(--color-on-surface)] outline-none transition-colors placeholder:text-[var(--color-on-surface-variant)] focus:border-[var(--color-primary)]"
         id="register-password"
         type="password"
         [formField]="registerForm.password" />
       @if (registerForm.password().touched() && registerForm.password().errors().length) {
-        <p class="text-sm text-red-600">{{ registerForm.password().errors()[0]?.message }}</p>
+        <p class="min-h-[1.25rem] text-sm text-[var(--color-error)]">
+          {{ registerForm.password().errors()[0]?.message }}
+        </p>
+      } @else {
+        <p class="min-h-[1.25rem]"></p>
       }
     </div>
 
     @if (errorMessage()) {
-      <p class="text-sm text-red-600">{{ errorMessage() }}</p>
+      <p class="min-h-[1.25rem] text-sm text-[var(--color-error)]">{{ errorMessage() }}</p>
+    } @else {
+      <p class="min-h-[1.25rem]"></p>
     }
 
     <button
-      class="rounded-md bg-brand-600 px-4 py-2 font-medium text-white transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
+      class="auth-submit rounded-[var(--radius-md)] bg-[var(--color-primary)] px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.08em] text-[var(--color-on-primary)] disabled:cursor-not-allowed disabled:opacity-60"
       type="submit"
       [disabled]="registerForm().invalid() || loading()">
-      {{ loading() ? 'Creating account…' : 'Create account' }}
+      <span class="inline-flex items-center justify-center gap-2">
+        @if (loading()) {
+          <span aria-label="Processing" class="loading-spinner"></span>
+        } @else {
+          <fa-icon size="sm" [icon]="faArrowRight" />
+        }
+        <span>{{ loading() ? 'Creating account…' : 'Create account' }}</span>
+      </span>
     </button>
   </form>
 } @else {
-  <form class="flex flex-col gap-4" (submit)="onLoginSubmit($event)">
-    <div class="flex flex-col gap-1">
-      <label class="text-sm font-medium text-[var(--color-text)]" for="login-email">Email</label>
+  <form class="auth-form flex min-h-[20rem] flex-col gap-4" (submit)="onLoginSubmit($event)">
+    <div class="flex flex-col gap-2">
+      <label
+        class="font-mono text-[0.625rem] font-bold uppercase tracking-[0.12em] text-[var(--color-on-surface-variant)]"
+        for="login-email"
+        >Email</label
+      >
       <input
         autocomplete="email"
-        class="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-brand-500"
+        class="rounded-[var(--radius-md)] border border-[var(--color-outline)] bg-[var(--color-surface-container-lowest)] px-3 py-2.5 text-sm text-[var(--color-on-surface)] outline-none transition-colors placeholder:text-[var(--color-on-surface-variant)] focus:border-[var(--color-primary)]"
         id="login-email"
         type="email"
         [formField]="loginForm.email" />
       @if (loginForm.email().touched() && loginForm.email().errors().length) {
-        <p class="text-sm text-red-600">{{ loginForm.email().errors()[0]?.message }}</p>
+        <p class="min-h-[1.25rem] text-sm text-[var(--color-error)]">{{ loginForm.email().errors()[0]?.message }}</p>
+      } @else {
+        <p class="min-h-[1.25rem]"></p>
       }
     </div>
 
-    <div class="flex flex-col gap-1">
-      <label class="text-sm font-medium text-[var(--color-text)]" for="login-password">Password</label>
+    <div class="flex flex-col gap-2">
+      <label
+        class="font-mono text-[0.625rem] font-bold uppercase tracking-[0.12em] text-[var(--color-on-surface-variant)]"
+        for="login-password"
+        >Password</label
+      >
       <input
         autocomplete="current-password"
-        class="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-brand-500"
+        class="rounded-[var(--radius-md)] border border-[var(--color-outline)] bg-[var(--color-surface-container-lowest)] px-3 py-2.5 text-sm text-[var(--color-on-surface)] outline-none transition-colors placeholder:text-[var(--color-on-surface-variant)] focus:border-[var(--color-primary)]"
         id="login-password"
         type="password"
         [formField]="loginForm.password" />
       @if (loginForm.password().touched() && loginForm.password().errors().length) {
-        <p class="text-sm text-red-600">{{ loginForm.password().errors()[0]?.message }}</p>
+        <p class="min-h-[1.25rem] text-sm text-[var(--color-error)]">{{ loginForm.password().errors()[0]?.message }}</p>
+      } @else {
+        <p class="min-h-[1.25rem]"></p>
       }
     </div>
 
     @if (errorMessage()) {
-      <p class="text-sm text-red-600">{{ errorMessage() }}</p>
+      <p class="min-h-[1.25rem] text-sm text-[var(--color-error)]">{{ errorMessage() }}</p>
+    } @else {
+      <p class="min-h-[1.25rem]"></p>
     }
 
     <button
-      class="rounded-md bg-brand-600 px-4 py-2 font-medium text-white transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
+      class="auth-submit rounded-[var(--radius-md)] bg-[var(--color-primary)] px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.08em] text-[var(--color-on-primary)] disabled:cursor-not-allowed disabled:opacity-60"
       type="submit"
       [disabled]="loginForm().invalid() || loading()">
-      {{ loading() ? 'Signing in…' : 'Sign in' }}
+      <span class="inline-flex items-center justify-center gap-2">
+        @if (loading()) {
+          <span aria-label="Processing" class="loading-spinner"></span>
+        } @else {
+          <fa-icon size="sm" [icon]="faArrowRight" />
+        }
+        <span>{{ loading() ? 'Signing in…' : 'Sign in' }}</span>
+      </span>
     </button>
   </form>
 
   <div class="mt-4 flex items-center gap-3">
-    <div class="h-px flex-1 bg-[var(--color-border)]"></div>
-    <span class="text-xs uppercase text-[var(--color-text-muted)]">or</span>
-    <div class="h-px flex-1 bg-[var(--color-border)]"></div>
+    <div class="h-px flex-1 bg-[var(--color-outline)]"></div>
+    <span class="font-mono text-[0.625rem] font-bold uppercase tracking-[0.12em] text-[var(--color-on-surface-variant)]"
+      >or</span
+    >
+    <div class="h-px flex-1 bg-[var(--color-outline)]"></div>
   </div>
 
   <button
-    class="mt-4 flex w-full items-center justify-center gap-2 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2 font-medium text-[var(--color-text)] transition-colors hover:bg-[var(--color-surface-muted)] disabled:cursor-not-allowed disabled:opacity-50"
+    class="mt-4 flex w-full items-center justify-center gap-2 rounded-[var(--radius-md)] border border-[var(--color-outline)] bg-[var(--color-surface-container-low)] px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.08em] text-[var(--color-on-surface)] transition-colors hover:bg-[var(--color-surface-container-high)] disabled:cursor-not-allowed disabled:opacity-60"
     type="button"
     [disabled]="loading()"
     (click)="onGithubLogin()">
-    <svg aria-hidden="true" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-      <path
-        d="M12 .5C5.65.5.5 5.65.5 12c0 5.09 3.29 9.4 7.86 10.93.58.1.79-.25.79-.56v-2.17c-3.2.7-3.87-1.36-3.87-1.36-.53-1.33-1.29-1.69-1.29-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.68 0-1.25.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.64 1.58.24 2.75.12 3.04.74.8 1.19 1.83 1.19 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.07.78 2.15v3.19c0 .31.21.67.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z" />
-    </svg>
+    @if (loading()) {
+      <span aria-label="Connecting" class="loading-spinner"></span>
+    } @else {
+      <fa-icon [icon]="faGithub" />
+    }
     {{ loading() ? 'Connecting…' : 'Continue with GitHub' }}
   </button>
 }
 
 <button
-  class="mt-4 text-sm text-[var(--color-text-muted)] underline-offset-2 hover:underline"
+  class="mt-4 text-sm text-[var(--color-on-surface-variant)] transition-colors hover:text-[var(--color-on-surface)]"
   type="button"
   (click)="onToggleMode()">
   {{ isRegister() ? 'Already have an account? Sign in' : "Don't have an account? Create one" }}

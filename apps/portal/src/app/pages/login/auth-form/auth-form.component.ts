@@ -1,29 +1,35 @@
 import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { form, FormField, submit, validateStandardSchema } from '@angular/forms/signals';
 import * as z from 'zod';
 import type { LoginPayload, RegisterPayload } from './types/auth-form.types';
 
 const loginSchema = z.object({
-  email: z.email(),
-  password: z.string().min(1),
+  email: z.email('Please enter a valid email address.'),
+  password: z.string().min(1, 'Please enter your password.'),
 });
 
 const registerSchema = z.object({
-  name: z.string().min(1),
-  email: z.email(),
-  password: z.string().min(8),
+  name: z.string().min(1, 'Please enter your name.'),
+  email: z.email('Please enter a valid email address.'),
+  password: z.string().min(8, 'Use at least 8 characters.'),
 });
 
 @Component({
   selector: 'kwd-portal-auth-form',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormField],
+  imports: [FormField, FontAwesomeModule],
   templateUrl: './auth-form.component.html',
 })
 export class AuthForm {
   public readonly mode = input.required<'login' | 'register'>();
   public readonly loading = input(false);
   public readonly errorMessage = input<string | null>(null);
+
+  public readonly faGithub = faGithub;
+  public readonly faArrowRight = faArrowRight;
 
   public readonly login = output<LoginPayload>();
   public readonly register = output<RegisterPayload>();

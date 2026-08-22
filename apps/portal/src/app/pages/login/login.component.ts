@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, type OnDestroy, type OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AuthService, DASHBOARD_ROUTE, LOGIN_ROUTE } from '../../core/auth';
 import { AuthForm } from './auth-form/auth-form.component';
 import type { LoginPayload, RegisterPayload } from './auth-form/types/auth-form.types';
@@ -7,16 +8,25 @@ import type { LoginPayload, RegisterPayload } from './auth-form/types/auth-form.
 @Component({
   selector: 'kwd-portal-login',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [AuthForm],
+  imports: [FontAwesomeModule, AuthForm],
   templateUrl: './login.component.html',
 })
-export default class Login {
+export default class Login implements OnInit, OnDestroy {
   public readonly mode = signal<'login' | 'register'>('login');
   public readonly loading = signal(false);
   public readonly errorMessage = signal<string | null>(null);
   public readonly infoMessage = signal<string | null>(null);
   private readonly authService: AuthService = inject(AuthService);
   private readonly router: Router = inject(Router);
+  private readonly previousBodyOverflow = document.body.style.overflow;
+
+  public ngOnInit(): void {
+    document.body.style.overflow = 'hidden';
+  }
+
+  public ngOnDestroy(): void {
+    document.body.style.overflow = this.previousBodyOverflow;
+  }
 
   public async onLogin({ email, password }: LoginPayload): Promise<void> {
     this.loading.set(true);
