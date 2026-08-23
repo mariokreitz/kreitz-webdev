@@ -125,7 +125,6 @@ function buildGuard(): {
     findById: jest.fn(),
     findByIdAndUserId: jest.fn(),
     findBySlug: jest.fn(),
-    findBySlugAndUserId: jest.fn(),
     findByDomain: jest.fn(),
     findManyByUserId: jest.fn(),
     create: jest.fn(),

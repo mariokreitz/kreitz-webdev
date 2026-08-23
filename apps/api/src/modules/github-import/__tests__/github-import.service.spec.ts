@@ -60,6 +60,7 @@ function buildLogger(): MockedLogger {
   return {
     setContext: jest.fn(),
     info: jest.fn(),
+    warn: jest.fn(),
   };
 }
 
@@ -75,6 +76,7 @@ interface MockedProjectService {
 interface MockedLogger {
   setContext: jest.Mock;
   info: jest.Mock;
+  warn: jest.Mock;
 }
 
 function buildService(): {
@@ -197,8 +199,9 @@ describe('GithubImportService', () => {
       expect(githubApiService.getRepo).not.toHaveBeenCalled();
     });
 
-    it('throws BadRequestException when the fetched repo id does not match the claimed githubId', async () => {
-      const { service, githubAccountRepository, githubApiService, projectService, getAccessToken } = buildService();
+    it('throws BadRequestException and logs a rejection when the fetched repo id does not match the claimed githubId', async () => {
+      const { service, githubAccountRepository, githubApiService, projectService, getAccessToken, logger } =
+        buildService();
 
       githubAccountRepository.findByUserId.mockResolvedValue(buildAccount());
       getAccessToken.mockResolvedValue({ accessToken: 'token-a' });
@@ -208,10 +211,18 @@ describe('GithubImportService', () => {
         BadRequestException,
       );
       expect(projectService.create).not.toHaveBeenCalled();
+      expect(logger.warn).toHaveBeenCalledWith({
+        event: 'github_import.rejected',
+        reason: 'github_id_mismatch',
+        userId: 'user-a',
+        githubId: '123',
+        fetchedGithubId: '999',
+      });
     });
 
-    it('throws BadRequestException when the fetched repo does not belong to the linked GitHub account', async () => {
-      const { service, githubAccountRepository, githubApiService, projectService, getAccessToken } = buildService();
+    it('throws BadRequestException and logs a rejection when the fetched repo does not belong to the linked GitHub account', async () => {
+      const { service, githubAccountRepository, githubApiService, projectService, getAccessToken, logger } =
+        buildService();
 
       githubAccountRepository.findByUserId.mockResolvedValue(buildAccount({ accountId: '111111' }));
       getAccessToken.mockResolvedValue({ accessToken: 'token-a' });
@@ -221,6 +232,13 @@ describe('GithubImportService', () => {
         BadRequestException,
       );
       expect(projectService.create).not.toHaveBeenCalled();
+      expect(logger.warn).toHaveBeenCalledWith({
+        event: 'github_import.rejected',
+        reason: 'owner_mismatch',
+        userId: 'user-a',
+        linkedAccountId: '111111',
+        fetchedOwnerId: '999999',
+      });
     });
 
     it('propagates ConflictException from ProjectService.create on a duplicate githubId', async () => {

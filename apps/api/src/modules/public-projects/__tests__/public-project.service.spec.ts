@@ -1,11 +1,24 @@
 import type { IPublicProjectRepository } from '@app/database/interfaces/public-project.repository.interface';
 import type { PublicProjectRecord } from '@app/database/types/public-project.types';
+import type { PinoLogger } from 'nestjs-pino';
 
 import { PublicProjectService } from '../public-project.service';
 
 function buildRepository(records: PublicProjectRecord[]): IPublicProjectRepository {
   return {
     findPublishedByWebsiteId: jest.fn().mockResolvedValue(records),
+  };
+}
+
+interface MockedLogger {
+  setContext: jest.Mock;
+  info: jest.Mock;
+}
+
+function buildLogger(): MockedLogger {
+  return {
+    setContext: jest.fn(),
+    info: jest.fn(),
   };
 }
 
@@ -33,7 +46,8 @@ describe('PublicProjectService', () => {
   describe('getPublishedProjects', () => {
     it('returns the website projects in the documented public shape with exactly id, name, description, repoUrl, liveUrl, tags, and imageUrl', async () => {
       const repository = buildRepository([record]);
-      const service = new PublicProjectService(repository);
+      const logger = buildLogger();
+      const service = new PublicProjectService(repository, logger as unknown as PinoLogger);
 
       const result = await service.getPublishedProjects('website-1');
 
@@ -61,7 +75,8 @@ describe('PublicProjectService', () => {
 
     it('does not include githubOwner, githubRepo, sortOrder, or any other internal field in the returned projects', async () => {
       const repository = buildRepository([record]);
-      const service = new PublicProjectService(repository);
+      const logger = buildLogger();
+      const service = new PublicProjectService(repository, logger as unknown as PinoLogger);
 
       const result = await service.getPublishedProjects('website-1');
 
@@ -72,7 +87,8 @@ describe('PublicProjectService', () => {
 
     it('queries the repository with exactly the given websiteId, so no code path can return another website data', async () => {
       const repository = buildRepository([]);
-      const service = new PublicProjectService(repository);
+      const logger = buildLogger();
+      const service = new PublicProjectService(repository, logger as unknown as PinoLogger);
 
       await service.getPublishedProjects('website-a');
 
@@ -82,7 +98,8 @@ describe('PublicProjectService', () => {
 
     it('never calls the repository with a websiteId other than the one it received', async () => {
       const repository = buildRepository([]);
-      const service = new PublicProjectService(repository);
+      const logger = buildLogger();
+      const service = new PublicProjectService(repository, logger as unknown as PinoLogger);
 
       await service.getPublishedProjects('website-b');
 
@@ -91,7 +108,8 @@ describe('PublicProjectService', () => {
 
     it('returns an empty array as-is, relying on the repository to have already excluded unpublished projects', async () => {
       const repository = buildRepository([]);
-      const service = new PublicProjectService(repository);
+      const logger = buildLogger();
+      const service = new PublicProjectService(repository, logger as unknown as PinoLogger);
 
       const result = await service.getPublishedProjects('website-c');
 
@@ -107,7 +125,8 @@ describe('PublicProjectService', () => {
         internalNotes: 'never expose this',
       } as PublicProjectRecord;
       const repository = buildRepository([leakyRecord]);
-      const service = new PublicProjectService(repository);
+      const logger = buildLogger();
+      const service = new PublicProjectService(repository, logger as unknown as PinoLogger);
 
       const result = await service.getPublishedProjects('website-1');
 
@@ -118,6 +137,21 @@ describe('PublicProjectService', () => {
       expect(mapped).not.toHaveProperty('githubRepo');
       expect(mapped).not.toHaveProperty('sortOrder');
       expect(mapped).not.toHaveProperty('internalNotes');
+    });
+
+    it('logs an info event with the websiteId and the returned project count, never the project data itself', async () => {
+      const repository = buildRepository([record]);
+      const logger = buildLogger();
+      const service = new PublicProjectService(repository, logger as unknown as PinoLogger);
+
+      await service.getPublishedProjects('website-1');
+
+      expect(logger.info).toHaveBeenCalledTimes(1);
+      expect(logger.info).toHaveBeenCalledWith({
+        event: 'public_project.listed',
+        websiteId: 'website-1',
+        count: 1,
+      });
     });
   });
 });

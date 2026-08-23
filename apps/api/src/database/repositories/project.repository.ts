@@ -52,10 +52,14 @@ export class ProjectRepository implements IProjectRepository {
     });
   }
 
-  public async findById(id: string): Promise<ProjectRecord | null> {
-    return await this.prisma.project.findUnique({
+  public async findRepoUrlsByUserId(userId: string): Promise<Pick<ProjectRecord, 'id' | 'repoUrl'>[]> {
+    return await this.prisma.project.findMany({
       where: {
-        id,
+        userId,
+      },
+      select: {
+        id: true,
+        repoUrl: true,
       },
     });
   }
@@ -129,21 +133,11 @@ export class ProjectRepository implements IProjectRepository {
   }
 
   public async update(id: string, userId: string, data: UpdateProjectData): Promise<ProjectRecord | null> {
-    const existingProject = await this.prisma.project.findFirst({
-      where: {
-        id,
-        userId,
-      },
-    });
-
-    if (!existingProject) {
-      return null;
-    }
-
     try {
-      return await this.prisma.project.update({
+      const result = await this.prisma.project.updateMany({
         where: {
           id,
+          userId,
         },
         data: {
           ...(data.githubId !== undefined && {
@@ -183,6 +177,12 @@ export class ProjectRepository implements IProjectRepository {
           }),
         },
       });
+
+      if (result.count === 0) {
+        return null;
+      }
+
+      return await this.findByIdAndUserId(id, userId);
     } catch (error) {
       if (isUserGithubUniqueViolation(error)) {
         throw new ConflictException('This GitHub project is already imported');
@@ -193,23 +193,13 @@ export class ProjectRepository implements IProjectRepository {
   }
 
   public async delete(id: string, userId: string): Promise<boolean> {
-    const existingProject = await this.prisma.project.findFirst({
+    const result = await this.prisma.project.deleteMany({
       where: {
         id,
         userId,
       },
     });
 
-    if (!existingProject) {
-      return false;
-    }
-
-    await this.prisma.project.delete({
-      where: {
-        id,
-      },
-    });
-
-    return true;
+    return result.count > 0;
   }
 }

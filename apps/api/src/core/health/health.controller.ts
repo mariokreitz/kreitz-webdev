@@ -1,3 +1,4 @@
+import { SkipResponseEnvelope } from '@app/common/decorators/skip-response-envelope.decorator';
 import { type HealthConfig, healthConfig } from '@app/config/health.config';
 import { RedisHealthIndicator } from '@app/core/health/indicators/redis-health.indicator';
 import { PrismaService } from '@app/database/prisma';
@@ -16,6 +17,7 @@ import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
 @Controller({ path: 'health', version: VERSION_NEUTRAL })
 @AllowAnonymous()
 @ApiTags('Health')
+@SkipResponseEnvelope()
 export class HealthController {
   constructor(
     private readonly health: HealthCheckService,

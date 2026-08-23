@@ -1,3 +1,5 @@
+import type { PublicProjectRecord } from '@app/database/types/public-project.types';
+
 import { ApiProperty } from '@nestjs/swagger';
 
 export class PublicProjectDto {
@@ -44,4 +46,16 @@ export class PublicProjectDto {
     example: 'https://example.com/project.png',
   })
   public imageUrl!: string | null;
+
+  public static fromRecord(record: PublicProjectRecord): PublicProjectDto {
+    return {
+      id: record.id,
+      name: record.name,
+      description: record.description,
+      repoUrl: record.repoUrl,
+      liveUrl: record.liveUrl,
+      tags: record.tags,
+      imageUrl: record.imageUrl,
+    };
+  }
 }

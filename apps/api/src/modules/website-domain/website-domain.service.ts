@@ -1,16 +1,14 @@
 import { IWebsiteDomainRepository } from '@app/database/interfaces/website-domain.repository.interface';
-import { IWebsiteRepository } from '@app/database/interfaces/website.repository.interface';
 import { WebsiteDomainRecord } from '@app/database/types/website-domain.types';
+import { WebsiteService } from '@app/modules/website';
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PinoLogger } from 'nestjs-pino';
-import { WEBSITE_REPOSITORY } from '../website/tokens/website.tokens';
 import { WEBSITE_DOMAIN_REPOSITORY } from './tokens/website-domain.tokens';
 
 @Injectable()
 export class WebsiteDomainService {
   constructor(
-    @Inject(WEBSITE_REPOSITORY)
-    private readonly websiteRepository: IWebsiteRepository,
+    private readonly websiteService: WebsiteService,
 
     @Inject(WEBSITE_DOMAIN_REPOSITORY)
     private readonly websiteDomainRepository: IWebsiteDomainRepository,
@@ -21,21 +19,19 @@ export class WebsiteDomainService {
   }
 
   public async getAllForUser(websiteId: string, userId: string): Promise<WebsiteDomainRecord[]> {
-    const website = await this.websiteRepository.findByIdAndUserId(websiteId, userId);
-
-    if (!website) {
-      throw new NotFoundException('Website not found');
-    }
+    await this.websiteService.ensureOwnership(websiteId, userId);
 
     return this.websiteDomainRepository.findManyByWebsiteId(websiteId);
   }
 
   public async getByIdForUser(websiteId: string, domainId: string, userId: string): Promise<WebsiteDomainRecord> {
-    await this.ensureWebsiteOwnership(websiteId, userId);
+    await this.websiteService.ensureOwnership(websiteId, userId);
 
     const domain = await this.websiteDomainRepository.findByIdAndWebsiteId(domainId, websiteId);
 
     if (!domain) {
+      this.logger.warn({ event: 'website_domain.rejected', reason: 'not_found', websiteId, domainId });
+
       throw new NotFoundException('Website domain not found');
     }
 
@@ -43,11 +39,13 @@ export class WebsiteDomainService {
   }
 
   public async create(websiteId: string, userId: string, domain: string): Promise<WebsiteDomainRecord> {
-    await this.ensureWebsiteOwnership(websiteId, userId);
+    await this.websiteService.ensureOwnership(websiteId, userId);
 
     const existingDomain = await this.websiteDomainRepository.findByDomain(domain);
 
     if (existingDomain) {
+      this.logger.warn({ event: 'website_domain.rejected', reason: 'domain_conflict', websiteId, domain });
+
       throw new ConflictException('This domain is already registered');
     }
 
@@ -62,27 +60,35 @@ export class WebsiteDomainService {
     websiteId: string,
     domainId: string,
     userId: string,
-    domain: string,
+    domain?: string,
   ): Promise<WebsiteDomainRecord> {
-    await this.ensureWebsiteOwnership(websiteId, userId);
+    await this.websiteService.ensureOwnership(websiteId, userId);
 
     const existingDomain = await this.websiteDomainRepository.findByIdAndWebsiteId(domainId, websiteId);
 
     if (!existingDomain) {
+      this.logger.warn({ event: 'website_domain.rejected', reason: 'not_found', websiteId, domainId });
+
       throw new NotFoundException('Website domain not found');
     }
 
-    if (existingDomain.domain !== domain) {
-      const domainAlreadyRegistered = await this.websiteDomainRepository.findByDomain(domain);
+    if (domain === undefined || domain === existingDomain.domain) {
+      return existingDomain;
+    }
 
-      if (domainAlreadyRegistered) {
-        throw new ConflictException('This domain is already registered');
-      }
+    const domainAlreadyRegistered = await this.websiteDomainRepository.findByDomain(domain);
+
+    if (domainAlreadyRegistered) {
+      this.logger.warn({ event: 'website_domain.rejected', reason: 'domain_conflict', websiteId, domainId, domain });
+
+      throw new ConflictException('This domain is already registered');
     }
 
     const updatedDomain = await this.websiteDomainRepository.update(domainId, websiteId, domain);
 
     if (!updatedDomain) {
+      this.logger.warn({ event: 'website_domain.rejected', reason: 'not_found', websiteId, domainId });
+
       throw new NotFoundException('Website domain not found');
     }
 
@@ -92,22 +98,16 @@ export class WebsiteDomainService {
   }
 
   public async delete(websiteId: string, domainId: string, userId: string): Promise<void> {
-    await this.ensureWebsiteOwnership(websiteId, userId);
+    await this.websiteService.ensureOwnership(websiteId, userId);
 
     const deleted = await this.websiteDomainRepository.delete(domainId, websiteId);
 
     if (!deleted) {
+      this.logger.warn({ event: 'website_domain.rejected', reason: 'not_found', websiteId, domainId });
+
       throw new NotFoundException('Website domain not found');
     }
 
     this.logger.info({ event: 'website_domain.deleted', websiteId, domainId });
-  }
-
-  private async ensureWebsiteOwnership(websiteId: string, userId: string): Promise<void> {
-    const website = await this.websiteRepository.findByIdAndUserId(websiteId, userId);
-
-    if (!website) {
-      throw new NotFoundException('Website not found');
-    }
   }
 }

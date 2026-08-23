@@ -1,5 +1,5 @@
 import { GithubAccountRepository } from '@app/database/repositories/github-account.repository';
-import { ProjectModule } from '@app/modules/project/project.module';
+import { ProjectModule } from '@app/modules/project';
 import { Module } from '@nestjs/common';
 import { AuthService } from '@thallesp/nestjs-better-auth';
 

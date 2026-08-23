@@ -1,9 +1,13 @@
+import { IWebsiteDomainRepository } from '@app/database/interfaces/website-domain.repository.interface';
 import { PrismaService } from '@app/database/prisma';
 import { WebsiteDomainRecord } from '@app/database/types/website-domain.types';
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
+import { isUniqueViolationOn } from '../utils/unique-violation';
+
+const WEBSITE_DOMAIN_UNIQUE_FIELDS = ['domain'] as const;
 
 @Injectable()
-export class WebsiteDomainRepository {
+export class WebsiteDomainRepository implements IWebsiteDomainRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   public async findManyByWebsiteId(websiteId: string): Promise<WebsiteDomainRecord[]> {
@@ -44,12 +48,20 @@ export class WebsiteDomainRepository {
   }
 
   public async create(websiteId: string, domain: string): Promise<WebsiteDomainRecord> {
-    return this.prisma.websiteDomain.create({
-      data: {
-        websiteId,
-        domain,
-      },
-    });
+    try {
+      return await this.prisma.websiteDomain.create({
+        data: {
+          websiteId,
+          domain,
+        },
+      });
+    } catch (error) {
+      if (isUniqueViolationOn(error, WEBSITE_DOMAIN_UNIQUE_FIELDS)) {
+        throw new ConflictException('This domain is already registered');
+      }
+
+      throw error;
+    }
   }
 
   public async update(id: string, websiteId: string, domain: string): Promise<WebsiteDomainRecord | null> {
@@ -59,14 +71,22 @@ export class WebsiteDomainRepository {
       return null;
     }
 
-    return this.prisma.websiteDomain.update({
-      where: {
-        id,
-      },
-      data: {
-        domain,
-      },
-    });
+    try {
+      return await this.prisma.websiteDomain.update({
+        where: {
+          id,
+        },
+        data: {
+          domain,
+        },
+      });
+    } catch (error) {
+      if (isUniqueViolationOn(error, WEBSITE_DOMAIN_UNIQUE_FIELDS)) {
+        throw new ConflictException('This domain is already registered');
+      }
+
+      throw error;
+    }
   }
 
   public async delete(id: string, websiteId: string): Promise<WebsiteDomainRecord | null> {

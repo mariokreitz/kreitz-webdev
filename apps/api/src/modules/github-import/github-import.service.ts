@@ -5,7 +5,7 @@ import { GithubRepoSummaryResponse } from '@app/modules/github-import/dto/github
 import { GithubApiService } from '@app/modules/github-import/github-api.service';
 import { GITHUB_ACCOUNT_REPOSITORY, GITHUB_AUTH_SERVICE } from '@app/modules/github-import/tokens/github-import.tokens';
 import { toCreateProjectData, toGithubRepoSummary } from '@app/modules/github-import/utils/github-import.utils';
-import { ProjectService } from '@app/modules/project/project.service';
+import { ProjectService } from '@app/modules/project';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import type { AuthService } from '@thallesp/nestjs-better-auth';
 import { PinoLogger } from 'nestjs-pino';
@@ -41,10 +41,26 @@ export class GithubImportService {
     const fetchedRepo = await this.githubApiService.getRepo(accessToken, owner, repo);
 
     if (String(fetchedRepo.id) !== githubId) {
+      this.logger.warn({
+        event: 'github_import.rejected',
+        reason: 'github_id_mismatch',
+        userId,
+        githubId,
+        fetchedGithubId: String(fetchedRepo.id),
+      });
+
       throw new BadRequestException('The repository owner/repo does not match the provided githubId');
     }
 
     if (String(fetchedRepo.owner.id) !== account.accountId) {
+      this.logger.warn({
+        event: 'github_import.rejected',
+        reason: 'owner_mismatch',
+        userId,
+        linkedAccountId: account.accountId,
+        fetchedOwnerId: String(fetchedRepo.owner.id),
+      });
+
       throw new BadRequestException('The repository does not belong to your linked GitHub account');
     }
 
@@ -62,8 +78,7 @@ export class GithubImportService {
       throw new BadRequestException('Link your GitHub account first');
     }
 
-    // No `headers`/`request` is passed, so better-call's resolveUserId falls through to the
-    // explicit `userId` instead of requiring a session — this is a trusted server-side call.
+    // Omitting `headers`/`request` makes better-call trust the explicit `userId` instead of requiring a session.
     const { accessToken } = await this.authService.api.getAccessToken({
       body: { accountId: account.id, userId },
     });

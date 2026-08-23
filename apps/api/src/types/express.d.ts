@@ -6,6 +6,7 @@ declare global {
       id: string;
       websiteId?: string;
       websiteTokenId?: string;
+      skipResponseEnvelope?: boolean;
     }
   }
 }

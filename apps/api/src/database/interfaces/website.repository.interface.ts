@@ -7,8 +7,6 @@ export interface IWebsiteRepository {
 
   findBySlug: (slug: string) => Promise<WebsiteRecord | null>;
 
-  findBySlugAndUserId: (slug: string, userId: string) => Promise<WebsiteRecord | null>;
-
   findByDomain: (domain: string) => Promise<WebsiteRecord | null>;
 
   findManyByUserId: (userId: string) => Promise<WebsiteRecord[]>;

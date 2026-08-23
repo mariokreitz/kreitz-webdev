@@ -12,6 +12,10 @@ module.exports = {
     ],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
+  moduleNameMapper: {
+    // @thallesp/nestjs-better-auth is ESM-only (`import.meta.url`) and unparsable by CJS Jest, so it's stubbed here.
+    '^@thallesp/nestjs-better-auth$': '<rootDir>/src/testing/mocks/thallesp-nestjs-better-auth.mock.ts',
+  },
   coverageDirectory: '../../coverage/apps/api',
 
   collectCoverage: true,

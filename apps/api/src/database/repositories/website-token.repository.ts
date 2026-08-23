@@ -1,7 +1,10 @@
 import { IWebsiteTokenRepository } from '@app/database/interfaces/website-token.repository.interface';
 import { PrismaService } from '@app/database/prisma';
 import { CreateWebsiteTokenData, WebsiteTokenRecord } from '@app/database/types/website-token.types';
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
+import { isUniqueViolationOn } from '../utils/unique-violation';
+
+const WEBSITE_TOKEN_HASH_UNIQUE_FIELDS = ['tokenHash'] as const;
 
 @Injectable()
 export class WebsiteTokenRepository implements IWebsiteTokenRepository {
@@ -36,9 +39,17 @@ export class WebsiteTokenRepository implements IWebsiteTokenRepository {
   }
 
   public async create(data: CreateWebsiteTokenData): Promise<WebsiteTokenRecord> {
-    return this.prisma.websiteToken.create({
-      data: this.toCreateData(data),
-    });
+    try {
+      return await this.prisma.websiteToken.create({
+        data: this.toCreateData(data),
+      });
+    } catch (error) {
+      if (isUniqueViolationOn(error, WEBSITE_TOKEN_HASH_UNIQUE_FIELDS)) {
+        throw new ConflictException('This website token could not be created, please try again');
+      }
+
+      throw error;
+    }
   }
 
   public async delete(id: string, websiteId: string): Promise<WebsiteTokenRecord | null> {

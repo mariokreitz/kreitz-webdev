@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  NotFoundException,
+  ServiceUnavailableException,
+  UnauthorizedException,
+} from '@nestjs/common';
 
 import { GithubApiService } from '../github-api.service';
 
@@ -39,6 +45,27 @@ describe('GithubApiService', () => {
           },
         },
       );
+    });
+
+    it('throws ServiceUnavailableException when the underlying fetch rejects', async () => {
+      const service = new GithubApiService();
+
+      jest.spyOn(global, 'fetch').mockRejectedValue(new TypeError('fetch failed'));
+
+      await expect(service.listUserRepos('token-a')).rejects.toBeInstanceOf(ServiceUnavailableException);
+    });
+
+    it('throws a 502 HttpException when the response body cannot be parsed as JSON', async () => {
+      const service = new GithubApiService();
+
+      jest
+        .spyOn(global, 'fetch')
+        .mockResolvedValue(buildResponse({ json: jest.fn().mockRejectedValue(new SyntaxError('Unexpected token')) }));
+
+      const promise = service.listUserRepos('token-a');
+
+      await expect(promise).rejects.toBeInstanceOf(HttpException);
+      await expect(promise).rejects.toMatchObject({ status: HttpStatus.BAD_GATEWAY });
     });
   });
 
@@ -105,6 +132,27 @@ describe('GithubApiService', () => {
       const service = new GithubApiService();
 
       jest.spyOn(global, 'fetch').mockResolvedValue(buildResponse({ ok: false, status: 403, headers: new Headers() }));
+
+      const promise = service.getRepo('token-a', 'owner-a', 'repo-a');
+
+      await expect(promise).rejects.toBeInstanceOf(HttpException);
+      await expect(promise).rejects.toMatchObject({ status: HttpStatus.BAD_GATEWAY });
+    });
+
+    it('throws ServiceUnavailableException when the underlying fetch rejects', async () => {
+      const service = new GithubApiService();
+
+      jest.spyOn(global, 'fetch').mockRejectedValue(new TypeError('fetch failed'));
+
+      await expect(service.getRepo('token-a', 'owner-a', 'repo-a')).rejects.toBeInstanceOf(ServiceUnavailableException);
+    });
+
+    it('throws a 502 HttpException when the response body cannot be parsed as JSON', async () => {
+      const service = new GithubApiService();
+
+      jest
+        .spyOn(global, 'fetch')
+        .mockResolvedValue(buildResponse({ json: jest.fn().mockRejectedValue(new SyntaxError('Unexpected token')) }));
 
       const promise = service.getRepo('token-a', 'owner-a', 'repo-a');
 

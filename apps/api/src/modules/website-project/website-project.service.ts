@@ -6,9 +6,9 @@ import {
   WebsiteProjectRecord,
   WebsiteProjectWithProjectRecord,
 } from '@app/database/types/website-project.types';
+import { PROJECT_REPOSITORY } from '@app/modules/project';
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PinoLogger } from 'nestjs-pino';
-import { PROJECT_REPOSITORY } from '../project/tokens/project.tokens';
 import { WEBSITE_REPOSITORY } from '../website/tokens/website.tokens';
 import { WEBSITE_PROJECT_REPOSITORY } from './tokens/website-project.tokens';
 
@@ -48,6 +48,7 @@ export class WebsiteProjectService {
     const existingLink = await this.websiteProjectRepository.findByWebsiteAndProject(websiteId, projectId);
 
     if (existingLink) {
+      this.logger.warn({ event: 'website_project.rejected', reason: 'already_linked', websiteId, projectId, userId });
       throw new ConflictException('This project is already linked to this website');
     }
 
@@ -75,12 +76,14 @@ export class WebsiteProjectService {
     const existingLink = await this.websiteProjectRepository.findByWebsiteAndProject(websiteId, projectId);
 
     if (!existingLink) {
+      this.logger.warn({ event: 'website_project.rejected', reason: 'link_not_found', websiteId, projectId, userId });
       throw new NotFoundException('Website project not found');
     }
 
     const updated = await this.websiteProjectRepository.update(existingLink.id, websiteId, data);
 
     if (!updated) {
+      this.logger.warn({ event: 'website_project.rejected', reason: 'link_not_found', websiteId, projectId, userId });
       throw new NotFoundException('Website project not found');
     }
 
@@ -95,12 +98,14 @@ export class WebsiteProjectService {
     const existingLink = await this.websiteProjectRepository.findByWebsiteAndProject(websiteId, projectId);
 
     if (!existingLink) {
+      this.logger.warn({ event: 'website_project.rejected', reason: 'link_not_found', websiteId, projectId, userId });
       throw new NotFoundException('Website project not found');
     }
 
     const deleted = await this.websiteProjectRepository.delete(existingLink.id, websiteId);
 
     if (!deleted) {
+      this.logger.warn({ event: 'website_project.rejected', reason: 'link_not_found', websiteId, projectId, userId });
       throw new NotFoundException('Website project not found');
     }
 
@@ -111,6 +116,7 @@ export class WebsiteProjectService {
     const website = await this.websiteRepository.findByIdAndUserId(websiteId, userId);
 
     if (!website) {
+      this.logger.warn({ event: 'website_project.rejected', reason: 'website_not_found', websiteId, userId });
       throw new NotFoundException('Website not found');
     }
   }
@@ -119,6 +125,7 @@ export class WebsiteProjectService {
     const project = await this.projectRepository.findByIdAndUserId(projectId, userId);
 
     if (!project) {
+      this.logger.warn({ event: 'website_project.rejected', reason: 'project_not_found', projectId, userId });
       throw new NotFoundException('Project not found');
     }
   }

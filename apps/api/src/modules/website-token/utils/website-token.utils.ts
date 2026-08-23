@@ -1,5 +1,3 @@
-import type { WebsiteTokenRecord } from '@app/database/types/website-token.types';
-import type { WebsiteTokenSummaryResponse } from '@app/modules/website-token/dto/website-token-summary.response';
 import { createHash, randomBytes } from 'node:crypto';
 
 const TOKEN_PREFIX = 'wst_live_';
@@ -27,17 +25,4 @@ export function generateWebsiteToken(): GeneratedWebsiteToken {
 
 export function hashWebsiteToken(token: string): string {
   return createHash('sha256').update(token).digest('hex');
-}
-
-export function toWebsiteTokenSummary(token: WebsiteTokenRecord): WebsiteTokenSummaryResponse {
-  return {
-    id: token.id,
-    websiteId: token.websiteId,
-    name: token.name,
-    prefix: token.prefix,
-    expiresAt: token.expiresAt,
-    lastUsedAt: token.lastUsedAt,
-    createdAt: token.createdAt,
-    updatedAt: token.updatedAt,
-  };
 }

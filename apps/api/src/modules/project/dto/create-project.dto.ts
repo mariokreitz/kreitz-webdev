@@ -1,3 +1,4 @@
+import type { CreateProjectData } from '@app/database/types/project.types';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { ArrayMaxSize, IsArray, IsOptional, IsString, IsUrl, MaxLength } from 'class-validator';
 
@@ -69,4 +70,20 @@ export class CreateProjectDto {
   @IsOptional()
   @IsString()
   public githubRepo?: string;
+
+  public toCreateProjectData(userId: string): CreateProjectData {
+    return {
+      userId,
+      name: this.name,
+
+      ...(this.description !== undefined && { description: this.description }),
+      ...(this.repoUrl !== undefined && { repoUrl: this.repoUrl }),
+      ...(this.liveUrl !== undefined && { liveUrl: this.liveUrl }),
+      ...(this.tags !== undefined && { tags: this.tags }),
+      ...(this.imageUrl !== undefined && { imageUrl: this.imageUrl }),
+      ...(this.githubId !== undefined && { githubId: this.githubId }),
+      ...(this.githubOwner !== undefined && { githubOwner: this.githubOwner }),
+      ...(this.githubRepo !== undefined && { githubRepo: this.githubRepo }),
+    };
+  }
 }

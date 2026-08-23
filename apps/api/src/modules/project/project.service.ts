@@ -24,6 +24,7 @@ export class ProjectService {
     const project = await this.projectRepository.findByIdAndUserId(id, userId);
 
     if (!project) {
+      this.logger.warn({ event: 'project.rejected', reason: 'not_found', userId, projectId: id });
       throw new NotFoundException('Project not found');
     }
 
@@ -35,6 +36,12 @@ export class ProjectService {
       const existingProject = await this.projectRepository.findByGithubId(input.githubId, input.userId);
 
       if (existingProject) {
+        this.logger.warn({
+          event: 'project.rejected',
+          reason: 'duplicate_github_id',
+          userId: input.userId,
+          githubId: input.githubId,
+        });
         throw new ConflictException('This GitHub project is already imported');
       }
     }
@@ -54,6 +61,7 @@ export class ProjectService {
     const project = await this.projectRepository.findByIdAndUserId(id, userId);
 
     if (!project) {
+      this.logger.warn({ event: 'project.rejected', reason: 'not_found', userId, projectId: id });
       throw new NotFoundException('Project not found');
     }
 
@@ -61,6 +69,7 @@ export class ProjectService {
       const existingProject = await this.projectRepository.findByGithubId(data.githubId, userId);
 
       if (existingProject) {
+        this.logger.warn({ event: 'project.rejected', reason: 'duplicate_github_id', userId, projectId: id });
         throw new ConflictException('This GitHub project is already imported');
       }
     }
@@ -72,6 +81,7 @@ export class ProjectService {
     const updatedProject = await this.projectRepository.update(id, userId, data);
 
     if (!updatedProject) {
+      this.logger.warn({ event: 'project.rejected', reason: 'not_found', userId, projectId: id });
       throw new NotFoundException('Project not found');
     }
 
@@ -84,6 +94,7 @@ export class ProjectService {
     const deleted = await this.projectRepository.delete(id, userId);
 
     if (!deleted) {
+      this.logger.warn({ event: 'project.rejected', reason: 'not_found', userId, projectId: id });
       throw new NotFoundException('Project not found');
     }
 
@@ -92,7 +103,7 @@ export class ProjectService {
 
   private async assertNoRepoUrlConflict(userId: string, repoUrl: string, excludeProjectId?: string): Promise<void> {
     const normalizedRepoUrl = normalizeRepoUrl(repoUrl);
-    const existingProjects = await this.projectRepository.findManyByUserId(userId);
+    const existingProjects = await this.projectRepository.findRepoUrlsByUserId(userId);
 
     const hasConflict = existingProjects.some(
       (existingProject) =>
@@ -102,6 +113,12 @@ export class ProjectService {
     );
 
     if (hasConflict) {
+      this.logger.warn({
+        event: 'project.rejected',
+        reason: 'duplicate_repo_url',
+        userId,
+        projectId: excludeProjectId,
+      });
       throw new ConflictException('A project with this repository URL already exists');
     }
   }

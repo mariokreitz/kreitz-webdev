@@ -1,6 +1,6 @@
 import { CoreModule } from '@app/core/core.module';
 import { GithubImportModule } from '@app/modules/github-import';
-import { ProjectModule } from '@app/modules/project/project.module';
+import { ProjectModule } from '@app/modules/project';
 import { PublicProjectModule } from '@app/modules/public-projects';
 import { WebsiteDomainModule } from '@app/modules/website-domain/website-domain.module';
 import { WebsiteProjectModule } from '@app/modules/website-project';

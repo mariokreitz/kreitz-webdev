@@ -1,3 +1,4 @@
+import type { WebsiteTokenRecord } from '@app/database/types/website-token.types';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class WebsiteTokenSummaryResponse {
@@ -24,4 +25,19 @@ export class WebsiteTokenSummaryResponse {
 
   @ApiProperty({ example: '2026-08-20T09:15:00.000Z' })
   public updatedAt!: Date;
+
+  public static fromRecord(token: WebsiteTokenRecord): WebsiteTokenSummaryResponse {
+    const response = new WebsiteTokenSummaryResponse();
+
+    response.id = token.id;
+    response.websiteId = token.websiteId;
+    response.name = token.name;
+    response.prefix = token.prefix;
+    response.expiresAt = token.expiresAt;
+    response.lastUsedAt = token.lastUsedAt;
+    response.createdAt = token.createdAt;
+    response.updatedAt = token.updatedAt;
+
+    return response;
+  }
 }

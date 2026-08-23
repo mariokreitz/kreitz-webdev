@@ -30,6 +30,7 @@ function buildLogger(): jest.Mocked<PinoLogger> {
   return {
     setContext: jest.fn(),
     info: jest.fn(),
+    warn: jest.fn(),
   } as unknown as jest.Mocked<PinoLogger>;
 }
 
@@ -40,7 +41,7 @@ function buildService(): {
 } {
   const projectRepository: jest.Mocked<IProjectRepository> = {
     findManyByUserId: jest.fn(),
-    findById: jest.fn(),
+    findRepoUrlsByUserId: jest.fn(),
     findByIdAndUserId: jest.fn(),
     findByGithubId: jest.fn(),
     create: jest.fn(),
@@ -65,7 +66,7 @@ describe('ProjectService', () => {
     it('creates a project when no existing project has the same repoUrl or githubId', async () => {
       const { service, projectRepository } = buildService();
 
-      projectRepository.findManyByUserId.mockResolvedValue([]);
+      projectRepository.findRepoUrlsByUserId.mockResolvedValue([]);
       projectRepository.create.mockResolvedValue(buildProject());
 
       const result = await service.create({ ...baseCreateInput, repoUrl: 'https://github.com/owner/repo' });
@@ -77,7 +78,7 @@ describe('ProjectService', () => {
     it('throws ConflictException when another project for the user already has the same repoUrl, even ignoring scheme/case/trailing-slash differences', async () => {
       const { service, projectRepository } = buildService();
 
-      projectRepository.findManyByUserId.mockResolvedValue([
+      projectRepository.findRepoUrlsByUserId.mockResolvedValue([
         buildProject({ id: 'project-existing', repoUrl: 'https://github.com/Owner/Repo/' }),
       ]);
 
@@ -93,7 +94,7 @@ describe('ProjectService', () => {
     it('throws ConflictException on repoUrl collision even when githubId differs or is absent on either side', async () => {
       const { service, projectRepository } = buildService();
 
-      projectRepository.findManyByUserId.mockResolvedValue([
+      projectRepository.findRepoUrlsByUserId.mockResolvedValue([
         buildProject({ id: 'project-existing', githubId: null, repoUrl: 'https://github.com/owner/repo' }),
       ]);
 
@@ -122,7 +123,7 @@ describe('ProjectService', () => {
 
       await service.create(baseCreateInput);
 
-      expect(projectRepository.findManyByUserId).not.toHaveBeenCalled();
+      expect(projectRepository.findRepoUrlsByUserId).not.toHaveBeenCalled();
       expect(projectRepository.create).toHaveBeenCalled();
     });
   });
@@ -138,7 +139,7 @@ describe('ProjectService', () => {
 
       await service.update('project-a', 'user-a', { repoUrl: 'https://github.com/owner/repo' });
 
-      expect(projectRepository.findManyByUserId).not.toHaveBeenCalled();
+      expect(projectRepository.findRepoUrlsByUserId).not.toHaveBeenCalled();
       expect(projectRepository.update).toHaveBeenCalled();
     });
 
@@ -149,7 +150,7 @@ describe('ProjectService', () => {
       const other = buildProject({ id: 'project-b', repoUrl: 'https://github.com/owner/repo-b' });
 
       projectRepository.findByIdAndUserId.mockResolvedValue(existing);
-      projectRepository.findManyByUserId.mockResolvedValue([existing, other]);
+      projectRepository.findRepoUrlsByUserId.mockResolvedValue([existing, other]);
 
       await expect(
         service.update('project-a', 'user-a', { repoUrl: 'https://github.com/owner/repo-b' }),
@@ -163,7 +164,7 @@ describe('ProjectService', () => {
       const existing = buildProject({ id: 'project-a', repoUrl: 'https://github.com/owner/repo/' });
 
       projectRepository.findByIdAndUserId.mockResolvedValue(existing);
-      projectRepository.findManyByUserId.mockResolvedValue([existing]);
+      projectRepository.findRepoUrlsByUserId.mockResolvedValue([existing]);
       projectRepository.update.mockResolvedValue(existing);
 
       await service.update('project-a', 'user-a', { repoUrl: 'https://github.com/owner/repo' });
@@ -179,7 +180,7 @@ describe('ProjectService', () => {
       await expect(service.update('project-a', 'user-a', { repoUrl: 'https://github.com/owner/repo' })).rejects.toThrow(
         NotFoundException,
       );
-      expect(projectRepository.findManyByUserId).not.toHaveBeenCalled();
+      expect(projectRepository.findRepoUrlsByUserId).not.toHaveBeenCalled();
     });
   });
 });

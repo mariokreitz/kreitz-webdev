@@ -1,22 +1,19 @@
 import { IWebsiteTokenRepository } from '@app/database/interfaces/website-token.repository.interface';
 
-import { IWebsiteRepository } from '@app/database/interfaces/website.repository.interface';
-import type { WebsiteTokenRecord } from '@app/database/types/website-token.types';
+import { WebsiteService } from '@app/modules/website';
 import { CreatedWebsiteTokenResponse } from '@app/modules/website-token/dto/created-website-token.response';
 import { WebsiteTokenSummaryResponse } from '@app/modules/website-token/dto/website-token-summary.response';
 
-import { generateWebsiteToken, toWebsiteTokenSummary } from '@app/modules/website-token/utils/website-token.utils';
+import { generateWebsiteToken } from '@app/modules/website-token/utils/website-token.utils';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PinoLogger } from 'nestjs-pino';
 
-import { WEBSITE_REPOSITORY } from '../website/tokens/website.tokens';
 import { WEBSITE_TOKEN_REPOSITORY } from './tokens/website-token.tokens';
 
 @Injectable()
 export class WebsiteTokenService {
   constructor(
-    @Inject(WEBSITE_REPOSITORY)
-    private readonly websiteRepository: IWebsiteRepository,
+    private readonly websiteService: WebsiteService,
 
     @Inject(WEBSITE_TOKEN_REPOSITORY)
     private readonly websiteTokenRepository: IWebsiteTokenRepository,
@@ -27,11 +24,11 @@ export class WebsiteTokenService {
   }
 
   public async getAllForUser(websiteId: string, userId: string): Promise<WebsiteTokenSummaryResponse[]> {
-    await this.ensureWebsiteOwnership(websiteId, userId);
+    await this.websiteService.ensureOwnership(websiteId, userId);
 
     const tokens = await this.websiteTokenRepository.findManyByWebsiteId(websiteId);
 
-    return tokens.map(toWebsiteTokenSummary);
+    return tokens.map((token) => WebsiteTokenSummaryResponse.fromRecord(token));
   }
 
   public async getByIdForUser(
@@ -39,15 +36,17 @@ export class WebsiteTokenService {
     tokenId: string,
     userId: string,
   ): Promise<WebsiteTokenSummaryResponse> {
-    await this.ensureWebsiteOwnership(websiteId, userId);
+    await this.websiteService.ensureOwnership(websiteId, userId);
 
     const token = await this.websiteTokenRepository.findByIdAndWebsiteId(tokenId, websiteId);
 
     if (!token) {
+      this.logger.warn({ event: 'website_token.rejected', reason: 'not_found', websiteId, tokenId });
+
       throw new NotFoundException('Website token not found');
     }
 
-    return toWebsiteTokenSummary(token);
+    return WebsiteTokenSummaryResponse.fromRecord(token);
   }
 
   public async create(
@@ -56,7 +55,7 @@ export class WebsiteTokenService {
     name: string,
     expiresAt?: string,
   ): Promise<CreatedWebsiteTokenResponse> {
-    await this.ensureWebsiteOwnership(websiteId, userId);
+    await this.websiteService.ensureOwnership(websiteId, userId);
 
     const created = await this.createToken(websiteId, name, expiresAt ? new Date(expiresAt) : null);
 
@@ -66,11 +65,13 @@ export class WebsiteTokenService {
   }
 
   public async delete(websiteId: string, tokenId: string, userId: string): Promise<void> {
-    await this.ensureWebsiteOwnership(websiteId, userId);
+    await this.websiteService.ensureOwnership(websiteId, userId);
 
     const deleted = await this.websiteTokenRepository.delete(tokenId, websiteId);
 
     if (!deleted) {
+      this.logger.warn({ event: 'website_token.rejected', reason: 'not_found', websiteId, tokenId });
+
       throw new NotFoundException('Website token not found');
     }
 
@@ -92,25 +93,6 @@ export class WebsiteTokenService {
       expiresAt,
     });
 
-    return this.toCreatedResponse(token, generated.token);
-  }
-
-  private toCreatedResponse(token: WebsiteTokenRecord, plaintextToken: string): CreatedWebsiteTokenResponse {
-    return {
-      id: token.id,
-      name: token.name,
-      prefix: token.prefix,
-      token: plaintextToken,
-      expiresAt: token.expiresAt,
-      createdAt: token.createdAt,
-    };
-  }
-
-  private async ensureWebsiteOwnership(websiteId: string, userId: string): Promise<void> {
-    const website = await this.websiteRepository.findByIdAndUserId(websiteId, userId);
-
-    if (!website) {
-      throw new NotFoundException('Website not found');
-    }
+    return CreatedWebsiteTokenResponse.fromRecordAndSecret(token, generated.token);
   }
 }

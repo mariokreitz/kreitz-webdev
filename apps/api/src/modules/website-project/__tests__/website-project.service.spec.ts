@@ -60,6 +60,7 @@ function buildLogger(): jest.Mocked<PinoLogger> {
   return {
     setContext: jest.fn(),
     info: jest.fn(),
+    warn: jest.fn(),
   } as unknown as jest.Mocked<PinoLogger>;
 }
 
@@ -74,7 +75,6 @@ function buildService(): {
     findById: jest.fn(),
     findByIdAndUserId: jest.fn(),
     findBySlug: jest.fn(),
-    findBySlugAndUserId: jest.fn(),
     findByDomain: jest.fn(),
     findManyByUserId: jest.fn(),
     create: jest.fn(),
@@ -84,7 +84,7 @@ function buildService(): {
 
   const projectRepository: jest.Mocked<IProjectRepository> = {
     findManyByUserId: jest.fn(),
-    findById: jest.fn(),
+    findRepoUrlsByUserId: jest.fn(),
     findByIdAndUserId: jest.fn(),
     findByGithubId: jest.fn(),
     create: jest.fn(),

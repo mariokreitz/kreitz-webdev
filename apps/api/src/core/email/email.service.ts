@@ -1,19 +1,23 @@
 import { EmailConfig, emailConfig } from '@app/config/email.config';
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { PinoLogger } from 'nestjs-pino';
 import { Resend } from 'resend';
 import { SendExistingAccountNoticeInput, SendMailInput, SendVerificationEmailInput } from './types/email.types';
 
 @Injectable()
 export class EmailService {
-  private readonly logger: Logger = new Logger(EmailService.name);
   private readonly resend?: Resend;
   private readonly fromAddress: string;
 
-  constructor(@Inject(emailConfig.KEY) config: EmailConfig) {
+  constructor(
+    @Inject(emailConfig.KEY) config: EmailConfig,
+    private readonly logger: PinoLogger,
+  ) {
+    this.logger.setContext(EmailService.name);
     this.fromAddress = config.fromAddress;
 
     if (config.resendApiKey === '') {
-      this.logger.warn('RESEND_API_KEY is not set; emails will be logged instead of sent.');
+      this.logger.info('RESEND_API_KEY is not set; emails will be logged instead of sent.');
       return;
     }
 
@@ -22,7 +26,7 @@ export class EmailService {
 
   public async sendMail({ to, subject, html }: SendMailInput): Promise<void> {
     if (!this.resend) {
-      this.logger.debug(`No-op email send (no RESEND_API_KEY) — to=${to} subject="${subject}" html=${html}`);
+      this.logger.debug({ event: 'email.noop_send', to, subject, hasApiKey: false });
       return;
     }
 
@@ -38,7 +42,7 @@ export class EmailService {
         this.logger.error(`Failed to send email to ${to}: ${error.message}`);
       }
     } catch (err) {
-      this.logger.error(`Unexpected error sending email to ${to}`, err instanceof Error ? err.stack : undefined);
+      this.logger.error(err instanceof Error ? err : undefined, `Unexpected error sending email to ${to}`);
     }
   }
 

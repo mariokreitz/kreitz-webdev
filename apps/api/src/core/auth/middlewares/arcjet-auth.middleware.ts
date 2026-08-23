@@ -8,8 +8,9 @@ import {
   tokenBucket,
   validateEmail,
 } from '@arcjet/nest';
-import { Inject, Injectable, Logger, type NestMiddleware } from '@nestjs/common';
+import { Inject, Injectable, type NestMiddleware } from '@nestjs/common';
 import express, { type NextFunction, type Request, type Response } from 'express';
+import { PinoLogger } from 'nestjs-pino';
 
 type ArcjetRuleMode = 'LIVE' | 'DRY_RUN';
 
@@ -31,8 +32,6 @@ function toArcjetRequest(req: Request): ArcjetNestRequest {
 
 @Injectable()
 export class ArcjetAuthMiddleware implements NestMiddleware {
-  private readonly logger = new Logger(ArcjetAuthMiddleware.name);
-
   private readonly signUpBase: ArcjetNest;
   private readonly signUpWithEmail: ArcjetNest;
   private readonly signIn: ArcjetNest;
@@ -40,7 +39,10 @@ export class ArcjetAuthMiddleware implements NestMiddleware {
   constructor(
     @Inject(ARCJET) private readonly arcjet: ArcjetNest,
     @Inject(appConfig.KEY) app: AppConfig,
+    private readonly logger: PinoLogger,
   ) {
+    this.logger.setContext(ArcjetAuthMiddleware.name);
+
     const mode: ArcjetRuleMode = app.env === 'development' ? 'DRY_RUN' : 'LIVE';
 
     this.signUpBase = this.arcjet
@@ -76,7 +78,7 @@ export class ArcjetAuthMiddleware implements NestMiddleware {
       const decision = await this.arcjet.protect(toArcjetRequest(req));
       this.handleDecision(decision, res, next);
     } catch (error) {
-      this.logger.error('Arcjet auth middleware failed; failing open', error as Error);
+      this.logger.error(error as Error, 'Arcjet auth middleware failed; failing open');
       next();
     }
   }
@@ -105,7 +107,7 @@ export class ArcjetAuthMiddleware implements NestMiddleware {
     }
 
     if (decision.isErrored()) {
-      this.logger.warn(`Arcjet decision errored: ${decision.reason.message}`);
+      this.logger.info(`Arcjet decision errored: ${decision.reason.message}`);
     }
 
     next();

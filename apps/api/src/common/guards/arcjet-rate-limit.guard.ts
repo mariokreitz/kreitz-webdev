@@ -62,7 +62,7 @@ export class ArcjetRateLimitGuard implements CanActivate {
     if (decision.isDenied()) {
       if (decision.reason.isRateLimit()) {
         this.logger.warn({
-          event: 'website_token.rate_limit.denied',
+          event: 'arcjet.rate_limit.denied',
           bucket: websiteId ? 'website' : 'ip_fallback',
           websiteId,
         });
@@ -74,7 +74,7 @@ export class ArcjetRateLimitGuard implements CanActivate {
     }
 
     if (decision.isErrored()) {
-      this.logger.warn(`Arcjet decision errored: ${decision.reason.message}`);
+      this.logger.info(`Arcjet decision errored: ${decision.reason.message}`);
     }
 
     return true;

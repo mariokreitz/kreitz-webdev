@@ -1,21 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsString, Matches } from 'class-validator';
+import { normalizeDomain } from '../utils/normalize-domain';
 
 const DOMAIN_PATTERN = /^(localhost|(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+(?:[a-z]{2,63}|xn--[a-z0-9-]{2,59}))$/;
-
-export function normalizeDomain(value: unknown): unknown {
-  if (typeof value !== 'string') {
-    return value;
-  }
-
-  return value
-    .trim()
-    .toLowerCase()
-    .replace(/^https?:\/\//, '')
-    .replace(/[/?#].*$/, '')
-    .replace(/:\d+$/, '');
-}
 
 export class CreateWebsiteDomainDto {
   @ApiProperty({

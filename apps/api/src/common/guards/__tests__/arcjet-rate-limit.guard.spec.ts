@@ -94,7 +94,7 @@ describe('ArcjetRateLimitGuard', () => {
     expect((thrown as HttpException).getStatus()).toBe(HttpStatus.TOO_MANY_REQUESTS);
     expect(logger.warn).toHaveBeenCalledWith(
       expect.objectContaining({
-        event: 'website_token.rate_limit.denied',
+        event: 'arcjet.rate_limit.denied',
         bucket: 'website',
         websiteId: 'website-a',
       }),
@@ -109,7 +109,7 @@ describe('ArcjetRateLimitGuard', () => {
     await expect(guard.canActivate(context)).rejects.toBeInstanceOf(HttpException);
     expect(logger.warn).toHaveBeenCalledWith(
       expect.objectContaining({
-        event: 'website_token.rate_limit.denied',
+        event: 'arcjet.rate_limit.denied',
         bucket: 'ip_fallback',
         websiteId: undefined,
       }),

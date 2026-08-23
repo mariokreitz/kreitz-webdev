@@ -7,9 +7,11 @@ import {
   setupSwagger,
   SWAGGER_PATH,
 } from '@app/bootstrap';
+import { GlobalExceptionFilter } from '@app/common/filters/global-exception.filter';
+import { ResponseInterceptor } from '@app/common/interceptors/response.interceptor';
 import { type AppConfig, appConfig, type SecurityConfig, securityConfig } from '@app/config';
 import { Logger as NestLogger } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory, Reflector } from '@nestjs/core';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
 
@@ -20,7 +22,8 @@ async function bootstrap(): Promise<void> {
   });
 
   app.useLogger(app.get(Logger));
-  app.useGlobalInterceptors(new LoggerErrorInterceptor());
+  app.useGlobalInterceptors(new LoggerErrorInterceptor(), new ResponseInterceptor(app.get(Reflector)));
+  app.useGlobalFilters(new GlobalExceptionFilter(app.get(HttpAdapterHost).httpAdapter));
 
   const context: BootstrapContext = {
     config: app.get<AppConfig>(appConfig.KEY),

@@ -3,7 +3,7 @@ import type { CreateProjectData, ProjectRecord, UpdateProjectData } from '@app/d
 export interface IProjectRepository {
   findManyByUserId: (userId: string) => Promise<ProjectRecord[]>;
 
-  findById: (id: string) => Promise<ProjectRecord | null>;
+  findRepoUrlsByUserId: (userId: string) => Promise<Pick<ProjectRecord, 'id' | 'repoUrl'>[]>;
 
   findByIdAndUserId: (id: string, userId: string) => Promise<ProjectRecord | null>;
 

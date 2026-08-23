@@ -2,7 +2,9 @@ import { IWebsiteDomainRepository } from '@app/database/interfaces/website-domai
 import { IWebsiteTokenRepository } from '@app/database/interfaces/website-token.repository.interface';
 import { IWebsiteRepository } from '@app/database/interfaces/website.repository.interface';
 import { WEBSITE_DOMAIN_REPOSITORY } from '@app/modules/website-domain/tokens/website-domain.tokens';
+import { normalizeDomain } from '@app/modules/website-domain/utils/normalize-domain';
 import { WEBSITE_TOKEN_REPOSITORY } from '@app/modules/website-token/tokens/website-token.tokens';
+import { hashWebsiteToken } from '@app/modules/website-token/utils/website-token.utils';
 import { WEBSITE_REPOSITORY } from '@app/modules/website/tokens/website.tokens';
 import {
   CanActivate,
@@ -13,7 +15,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { createHash } from 'node:crypto';
 import { PinoLogger } from 'nestjs-pino';
 
 @Injectable()
@@ -44,7 +45,7 @@ export class WebsiteTokenGuard implements CanActivate {
       throw new UnauthorizedException('Missing website token');
     }
 
-    const tokenHash = this.hashToken(rawToken);
+    const tokenHash = hashWebsiteToken(rawToken);
 
     const token = await this.websiteTokenRepository.findByTokenHash(tokenHash);
 
@@ -122,10 +123,6 @@ export class WebsiteTokenGuard implements CanActivate {
     return token;
   }
 
-  private hashToken(token: string): string {
-    return createHash('sha256').update(token, 'utf8').digest('hex');
-  }
-
   private async validateOrigin(request: Request, websiteId: string, tokenId: string): Promise<void> {
     const origin = request.headers.origin;
 
@@ -142,7 +139,10 @@ export class WebsiteTokenGuard implements CanActivate {
         throw new Error('Invalid protocol');
       }
 
-      hostname = parsedOrigin.hostname.toLowerCase().replace(/\.$/, '');
+      const normalized = normalizeDomain(parsedOrigin.hostname);
+
+      // normalizeDomain returns unknown to double as a class-transformer callback; a string in always yields a string out.
+      hostname = typeof normalized === 'string' ? normalized : parsedOrigin.hostname.toLowerCase();
     } catch {
       this.logger.warn({ event: 'website_token.guard.rejected', reason: 'origin_invalid', websiteId, tokenId });
 

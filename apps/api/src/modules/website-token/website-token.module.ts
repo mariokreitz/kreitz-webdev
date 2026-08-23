@@ -1,5 +1,5 @@
 import { WebsiteTokenRepository } from '@app/database/repositories/website-token.repository';
-import { WebsiteModule } from '@app/modules/website/website.module';
+import { WebsiteModule } from '@app/modules/website';
 import { Module } from '@nestjs/common';
 import { WEBSITE_TOKEN_REPOSITORY } from './tokens/website-token.tokens';
 

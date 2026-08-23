@@ -10,22 +10,22 @@ interface CreateArgs {
   data: Record<string, unknown>;
 }
 
-interface UpdateArgs {
+interface UpdateManyArgs {
   data: Record<string, unknown>;
 }
 
 function buildPrisma(existingProject: unknown = { id: 'project-1', userId: 'user-1' }): {
   prisma: PrismaService;
   create: jest.Mock<Promise<unknown>, [CreateArgs]>;
-  update: jest.Mock<Promise<unknown>, [UpdateArgs]>;
+  updateMany: jest.Mock<Promise<{ count: number }>, [UpdateManyArgs]>;
   findFirst: jest.Mock<Promise<unknown>, [unknown]>;
 } {
   const create = jest.fn<Promise<unknown>, [CreateArgs]>().mockResolvedValue({ id: 'project-1' });
-  const update = jest.fn<Promise<unknown>, [UpdateArgs]>().mockResolvedValue({ id: 'project-1' });
+  const updateMany = jest.fn<Promise<{ count: number }>, [UpdateManyArgs]>().mockResolvedValue({ count: 1 });
   const findFirst = jest.fn<Promise<unknown>, [unknown]>().mockResolvedValue(existingProject);
-  const prisma = { project: { create, update, findFirst } } as unknown as PrismaService;
+  const prisma = { project: { create, updateMany, findFirst } } as unknown as PrismaService;
 
-  return { prisma, create, update, findFirst };
+  return { prisma, create, updateMany, findFirst };
 }
 
 function buildUserGithubUniqueViolation(): Prisma.PrismaClientKnownRequestError {
@@ -160,7 +160,7 @@ describe('ProjectRepository', () => {
     const baseUpdateData: UpdateProjectData = {};
 
     it('writes repoUrl, liveUrl, and tags verbatim when they are provided', async () => {
-      const { prisma, update } = buildPrisma();
+      const { prisma, updateMany } = buildPrisma();
       const repository = new ProjectRepository(prisma);
 
       await repository.update('project-1', 'user-1', {
@@ -170,7 +170,7 @@ describe('ProjectRepository', () => {
         tags: ['Angular', 'NestJS'],
       });
 
-      const { data } = firstCall(update.mock.calls);
+      const { data } = firstCall(updateMany.mock.calls);
 
       expect(data['repoUrl']).toBe('https://github.com/mariokreitz/my-project');
       expect(data['liveUrl']).toBe('https://myproject.dev');
@@ -178,33 +178,46 @@ describe('ProjectRepository', () => {
     });
 
     it('writes an empty tags array as-is, clearing the column, since [] !== undefined', async () => {
-      const { prisma, update } = buildPrisma();
+      const { prisma, updateMany } = buildPrisma();
       const repository = new ProjectRepository(prisma);
 
       await repository.update('project-1', 'user-1', { tags: [] });
 
-      const { data } = firstCall(update.mock.calls);
+      const { data } = firstCall(updateMany.mock.calls);
 
       expect(data['tags']).toEqual([]);
     });
 
     it('omits repoUrl, liveUrl, and tags from the write when they are not provided', async () => {
-      const { prisma, update } = buildPrisma();
+      const { prisma, updateMany } = buildPrisma();
       const repository = new ProjectRepository(prisma);
 
       await repository.update('project-1', 'user-1', baseUpdateData);
 
-      const { data } = firstCall(update.mock.calls);
+      const { data } = firstCall(updateMany.mock.calls);
 
       expect('repoUrl' in data).toBe(false);
       expect('liveUrl' in data).toBe(false);
       expect('tags' in data).toBe(false);
     });
 
-    it('translates a P2002 violation on the (userId, githubId) constraint into a ConflictException', async () => {
-      const { prisma, update } = buildPrisma();
+    it('returns null without reading the project when no row matches the scoped (id, userId) where clause', async () => {
+      const { prisma, updateMany, findFirst } = buildPrisma();
 
-      update.mockRejectedValue(buildUserGithubUniqueViolation());
+      updateMany.mockResolvedValue({ count: 0 });
+
+      const repository = new ProjectRepository(prisma);
+
+      const result = await repository.update('project-1', 'user-1', baseUpdateData);
+
+      expect(result).toBeNull();
+      expect(findFirst).not.toHaveBeenCalled();
+    });
+
+    it('translates a P2002 violation on the (userId, githubId) constraint into a ConflictException', async () => {
+      const { prisma, updateMany } = buildPrisma();
+
+      updateMany.mockRejectedValue(buildUserGithubUniqueViolation());
 
       const repository = new ProjectRepository(prisma);
 
@@ -212,10 +225,10 @@ describe('ProjectRepository', () => {
     });
 
     it('re-throws a P2002 violation on an unrelated constraint unchanged', async () => {
-      const { prisma, update } = buildPrisma();
+      const { prisma, updateMany } = buildPrisma();
       const unrelatedViolation = buildUnrelatedUniqueViolation();
 
-      update.mockRejectedValue(unrelatedViolation);
+      updateMany.mockRejectedValue(unrelatedViolation);
 
       const repository = new ProjectRepository(prisma);
 

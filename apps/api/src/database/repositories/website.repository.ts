@@ -1,7 +1,10 @@
 import { IWebsiteRepository } from '@app/database/interfaces/website.repository.interface';
 import { PrismaService } from '@app/database/prisma';
 import { CreateWebsiteData, UpdateWebsiteData, WebsiteRecord } from '@app/database/types/website.repository.types';
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
+import { isUniqueViolationOn } from '../utils/unique-violation';
+
+const WEBSITE_SLUG_UNIQUE_FIELDS = ['slug'] as const;
 
 @Injectable()
 export class WebsiteRepository implements IWebsiteRepository {
@@ -32,15 +35,6 @@ export class WebsiteRepository implements IWebsiteRepository {
     });
   }
 
-  public async findBySlugAndUserId(slug: string, userId: string): Promise<WebsiteRecord | null> {
-    return this.prisma.website.findFirst({
-      where: {
-        slug,
-        userId,
-      },
-    });
-  }
-
   public async findByDomain(domain: string): Promise<WebsiteRecord | null> {
     return this.prisma.website.findFirst({
       where: {
@@ -65,20 +59,28 @@ export class WebsiteRepository implements IWebsiteRepository {
   }
 
   public async create(data: CreateWebsiteData): Promise<WebsiteRecord> {
-    return this.prisma.website.create({
-      data: {
-        userId: data.userId,
-        name: data.name,
-        slug: data.slug,
-        enabled: true,
+    try {
+      return await this.prisma.website.create({
+        data: {
+          userId: data.userId,
+          name: data.name,
+          slug: data.slug,
+          enabled: true,
 
-        domains: {
-          create: {
-            domain: data.domain,
+          domains: {
+            create: {
+              domain: data.domain,
+            },
           },
         },
-      },
-    });
+      });
+    } catch (error) {
+      if (isUniqueViolationOn(error, WEBSITE_SLUG_UNIQUE_FIELDS)) {
+        throw new ConflictException('A website with this slug already exists');
+      }
+
+      throw error;
+    }
   }
 
   public async update(id: string, userId: string, data: UpdateWebsiteData): Promise<WebsiteRecord | null> {
@@ -93,12 +95,20 @@ export class WebsiteRepository implements IWebsiteRepository {
       return null;
     }
 
-    return this.prisma.website.update({
-      where: {
-        id,
-      },
-      data,
-    });
+    try {
+      return await this.prisma.website.update({
+        where: {
+          id,
+        },
+        data,
+      });
+    } catch (error) {
+      if (isUniqueViolationOn(error, WEBSITE_SLUG_UNIQUE_FIELDS)) {
+        throw new ConflictException('A website with this slug already exists');
+      }
+
+      throw error;
+    }
   }
 
   public async delete(id: string, userId: string): Promise<boolean> {

@@ -1,4 +1,3 @@
-import { WebsiteProjectRecord, WebsiteProjectWithProjectRecord } from '@app/database/types/website-project.types';
 import { WebsiteProjectService } from '@app/modules/website-project/website-project.service';
 
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from '@nestjs/common';
@@ -8,6 +7,7 @@ import { Session, UserSession } from '@thallesp/nestjs-better-auth';
 
 import { CreateWebsiteProjectDto } from './dto/create-website-project.dto';
 import { UpdateWebsiteProjectDto } from './dto/update-website-project.dto';
+import { WebsiteProjectDto, WebsiteProjectWithProjectDto } from './dto/website-project.dto';
 
 @ApiTags('Website Projects')
 @ApiCookieAuth('session-cookie')
@@ -18,18 +18,25 @@ export class WebsiteProjectController {
 
   @Get()
   @ApiOperation({ summary: 'Get all project links for a website, published and unpublished' })
-  @ApiResponse({ status: 200, description: 'Project links for the website' })
+  @ApiResponse({
+    status: 200,
+    description: 'Project links for the website',
+    type: WebsiteProjectWithProjectDto,
+    isArray: true,
+  })
   @ApiResponse({ status: 404, description: 'Website not found' })
   public async getAll(
     @Param('websiteId') websiteId: string,
     @Session() session: UserSession,
-  ): Promise<WebsiteProjectWithProjectRecord[]> {
-    return this.websiteProjectService.getAllForUser(websiteId, session.user.id);
+  ): Promise<WebsiteProjectWithProjectDto[]> {
+    const links = await this.websiteProjectService.getAllForUser(websiteId, session.user.id);
+
+    return links.map((link) => WebsiteProjectWithProjectDto.fromRecordWithProject(link));
   }
 
   @Post()
   @ApiOperation({ summary: 'Link an existing project to a website' })
-  @ApiResponse({ status: 201, description: 'The created website project link' })
+  @ApiResponse({ status: 201, description: 'The created website project link', type: WebsiteProjectDto })
   @ApiResponse({ status: 400, description: 'Validation failed' })
   @ApiResponse({ status: 404, description: 'Website or project not found' })
   @ApiResponse({ status: 409, description: 'This project is already linked to this website' })
@@ -37,13 +44,21 @@ export class WebsiteProjectController {
     @Param('websiteId') websiteId: string,
     @Body() dto: CreateWebsiteProjectDto,
     @Session() session: UserSession,
-  ): Promise<WebsiteProjectRecord> {
-    return this.websiteProjectService.create(websiteId, session.user.id, dto.projectId, dto.published, dto.sortOrder);
+  ): Promise<WebsiteProjectDto> {
+    const created = await this.websiteProjectService.create(
+      websiteId,
+      session.user.id,
+      dto.projectId,
+      dto.published,
+      dto.sortOrder,
+    );
+
+    return WebsiteProjectDto.fromRecord(created);
   }
 
   @Patch(':projectId')
   @ApiOperation({ summary: 'Update the published state and/or sort order of a website project link' })
-  @ApiResponse({ status: 200, description: 'The updated website project link' })
+  @ApiResponse({ status: 200, description: 'The updated website project link', type: WebsiteProjectDto })
   @ApiResponse({ status: 400, description: 'Validation failed' })
   @ApiResponse({ status: 404, description: 'Website or website project link not found' })
   public async update(
@@ -51,8 +66,10 @@ export class WebsiteProjectController {
     @Param('projectId') projectId: string,
     @Body() dto: UpdateWebsiteProjectDto,
     @Session() session: UserSession,
-  ): Promise<WebsiteProjectRecord> {
-    return this.websiteProjectService.update(websiteId, projectId, session.user.id, dto);
+  ): Promise<WebsiteProjectDto> {
+    const updated = await this.websiteProjectService.update(websiteId, projectId, session.user.id, dto);
+
+    return WebsiteProjectDto.fromRecord(updated);
   }
 
   @Delete(':projectId')

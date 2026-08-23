@@ -1,3 +1,4 @@
+import type { WebsiteTokenRecord } from '@app/database/types/website-token.types';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreatedWebsiteTokenResponse {
@@ -21,4 +22,18 @@ export class CreatedWebsiteTokenResponse {
 
   @ApiProperty({ example: '2026-08-23T12:00:00.000Z' })
   public createdAt!: Date;
+
+  // plaintextToken is passed separately because it is never persisted on the record — it only exists at creation time.
+  public static fromRecordAndSecret(token: WebsiteTokenRecord, plaintextToken: string): CreatedWebsiteTokenResponse {
+    const response = new CreatedWebsiteTokenResponse();
+
+    response.id = token.id;
+    response.name = token.name;
+    response.prefix = token.prefix;
+    response.token = plaintextToken;
+    response.expiresAt = token.expiresAt;
+    response.createdAt = token.createdAt;
+
+    return response;
+  }
 }

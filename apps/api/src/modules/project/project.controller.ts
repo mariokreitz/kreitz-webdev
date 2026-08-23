@@ -1,5 +1,5 @@
-import { ProjectRecord } from '@app/database/types/project.types';
 import { CreateProjectDto } from '@app/modules/project/dto/create-project.dto';
+import { ProjectDto } from '@app/modules/project/dto/project.dto';
 import { UpdateProjectDto } from '@app/modules/project/dto/update-project.dto';
 import { ProjectService } from '@app/modules/project/project.service';
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
@@ -17,72 +17,43 @@ export class ProjectController {
   @ApiOperation({
     summary: 'Get all projects belonging to the current user',
   })
-  @ApiResponse({ status: 200, description: 'Projects for the current user' })
-  public async getAll(@Session() session: UserSession): Promise<ProjectRecord[]> {
-    return this.projectService.getAllForUser(session.user.id);
+  @ApiResponse({ status: 200, description: 'Projects for the current user', type: ProjectDto, isArray: true })
+  public async getAll(@Session() session: UserSession): Promise<ProjectDto[]> {
+    const projects = await this.projectService.getAllForUser(session.user.id);
+
+    return projects.map((project) => ProjectDto.fromRecord(project));
   }
 
   @Get(':id')
   @ApiOperation({
     summary: 'Get a project belonging to the current user',
   })
-  @ApiResponse({ status: 200, description: 'The requested project' })
+  @ApiResponse({ status: 200, description: 'The requested project', type: ProjectDto })
   @ApiResponse({ status: 404, description: 'Project not found' })
-  public async getById(@Param('id') id: string, @Session() session: UserSession): Promise<ProjectRecord> {
-    return this.projectService.getByIdForUser(id, session.user.id);
+  public async getById(@Param('id') id: string, @Session() session: UserSession): Promise<ProjectDto> {
+    const project = await this.projectService.getByIdForUser(id, session.user.id);
+
+    return ProjectDto.fromRecord(project);
   }
 
   @Post()
   @ApiOperation({
     summary: 'Create a project',
   })
-  @ApiResponse({ status: 201, description: 'The created project' })
+  @ApiResponse({ status: 201, description: 'The created project', type: ProjectDto })
   @ApiResponse({ status: 400, description: 'Validation failed' })
   @ApiResponse({ status: 409, description: 'GitHub project already imported' })
-  public async create(@Body() dto: CreateProjectDto, @Session() session: UserSession): Promise<ProjectRecord> {
-    return this.projectService.create({
-      userId: session.user.id,
-      name: dto.name,
+  public async create(@Body() dto: CreateProjectDto, @Session() session: UserSession): Promise<ProjectDto> {
+    const created = await this.projectService.create(dto.toCreateProjectData(session.user.id));
 
-      ...(dto.description !== undefined && {
-        description: dto.description,
-      }),
-
-      ...(dto.repoUrl !== undefined && {
-        repoUrl: dto.repoUrl,
-      }),
-
-      ...(dto.liveUrl !== undefined && {
-        liveUrl: dto.liveUrl,
-      }),
-
-      ...(dto.tags !== undefined && {
-        tags: dto.tags,
-      }),
-
-      ...(dto.imageUrl !== undefined && {
-        imageUrl: dto.imageUrl,
-      }),
-
-      ...(dto.githubId !== undefined && {
-        githubId: dto.githubId,
-      }),
-
-      ...(dto.githubOwner !== undefined && {
-        githubOwner: dto.githubOwner,
-      }),
-
-      ...(dto.githubRepo !== undefined && {
-        githubRepo: dto.githubRepo,
-      }),
-    });
+    return ProjectDto.fromRecord(created);
   }
 
   @Patch(':id')
   @ApiOperation({
     summary: 'Update a project',
   })
-  @ApiResponse({ status: 200, description: 'The updated project' })
+  @ApiResponse({ status: 200, description: 'The updated project', type: ProjectDto })
   @ApiResponse({ status: 400, description: 'Validation failed' })
   @ApiResponse({ status: 404, description: 'Project not found' })
   @ApiResponse({ status: 409, description: 'GitHub project already imported' })
@@ -90,8 +61,10 @@ export class ProjectController {
     @Param('id') id: string,
     @Body() dto: UpdateProjectDto,
     @Session() session: UserSession,
-  ): Promise<ProjectRecord> {
-    return this.projectService.update(id, session.user.id, dto);
+  ): Promise<ProjectDto> {
+    const updated = await this.projectService.update(id, session.user.id, dto.toUpdateProjectData());
+
+    return ProjectDto.fromRecord(updated);
   }
 
   @Delete(':id')

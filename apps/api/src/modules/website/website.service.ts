@@ -1,5 +1,6 @@
 import { IWebsiteRepository } from '@app/database/interfaces/website.repository.interface';
 import { UpdateWebsiteData, WebsiteRecord } from '@app/database/types/website.repository.types';
+import { normalizeDomain } from '@app/modules/website-domain/utils/normalize-domain';
 import { CreateWebsiteInput } from '@app/modules/website/types/website.types';
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PinoLogger } from 'nestjs-pino';
@@ -24,10 +25,16 @@ export class WebsiteService {
     const website = await this.websiteRepository.findByIdAndUserId(id, userId);
 
     if (!website) {
+      this.logger.warn({ event: 'website.rejected', reason: 'not_found', websiteId: id, userId });
+
       throw new NotFoundException('Website not found');
     }
 
     return website;
+  }
+
+  public async ensureOwnership(websiteId: string, userId: string): Promise<WebsiteRecord> {
+    return this.getByIdForUser(websiteId, userId);
   }
 
   public async create(input: CreateWebsiteInput): Promise<WebsiteRecord> {
@@ -37,12 +44,16 @@ export class WebsiteService {
     const existingDomain = await this.websiteRepository.findByDomain(domain);
 
     if (existingDomain) {
+      this.logger.warn({ event: 'website.rejected', reason: 'domain_conflict', domain, userId: input.userId });
+
       throw new ConflictException('This domain is already registered');
     }
 
     const existingSlug = await this.websiteRepository.findBySlug(slug);
 
     if (existingSlug) {
+      this.logger.warn({ event: 'website.rejected', reason: 'slug_conflict', slug, userId: input.userId });
+
       throw new ConflictException('A website with this slug already exists');
     }
 
@@ -62,6 +73,8 @@ export class WebsiteService {
     const website = await this.websiteRepository.findByIdAndUserId(id, userId);
 
     if (!website) {
+      this.logger.warn({ event: 'website.rejected', reason: 'not_found', websiteId: id, userId });
+
       throw new NotFoundException('Website not found');
     }
 
@@ -69,6 +82,14 @@ export class WebsiteService {
       const existingSlug = await this.websiteRepository.findBySlug(data.slug);
 
       if (existingSlug) {
+        this.logger.warn({
+          event: 'website.rejected',
+          reason: 'slug_conflict',
+          slug: data.slug,
+          websiteId: id,
+          userId,
+        });
+
         throw new ConflictException('A website with this slug already exists');
       }
     }
@@ -76,6 +97,8 @@ export class WebsiteService {
     const updatedWebsite = await this.websiteRepository.update(id, userId, data);
 
     if (!updatedWebsite) {
+      this.logger.warn({ event: 'website.rejected', reason: 'not_found', websiteId: id, userId });
+
       throw new NotFoundException('Website not found');
     }
 
@@ -88,6 +111,8 @@ export class WebsiteService {
     const deleted = await this.websiteRepository.delete(id, userId);
 
     if (!deleted) {
+      this.logger.warn({ event: 'website.rejected', reason: 'not_found', websiteId: id, userId });
+
       throw new NotFoundException('Website not found');
     }
 
@@ -96,8 +121,10 @@ export class WebsiteService {
 
   private extractDomain(url: string): string {
     const parsedUrl = new URL(url);
+    const normalized = normalizeDomain(parsedUrl.hostname);
 
-    return parsedUrl.hostname.toLowerCase().replace(/\.$/, '');
+    // normalizeDomain returns unknown to double as a class-transformer callback; a string in always yields a string out.
+    return typeof normalized === 'string' ? normalized : parsedUrl.hostname.toLowerCase();
   }
 
   private generateSlug(name: string): string {
