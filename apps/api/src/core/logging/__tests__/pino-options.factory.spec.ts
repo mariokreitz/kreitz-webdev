@@ -97,12 +97,16 @@ describe('maskSensitiveQuery', () => {
     );
   });
 
-  it('leaves non-sensitive query params untouched', () => {
-    expect(maskSensitiveQuery('/api/health/ready?probe=1')).toBe('/api/health/ready?probe=1');
+  it('redacts a query param not on the safe allow-list', () => {
+    expect(maskSensitiveQuery('/api/health/ready?probe=1')).toBe('/api/health/ready?probe=[REDACTED]');
   });
 
-  it('falls back to the raw name when percent-decoding fails', () => {
-    expect(maskSensitiveQuery('/x?%E0%A4%A=1')).toBe('/x?%E0%A4%A=1');
+  it('leaves an empty query string untouched', () => {
+    expect(maskSensitiveQuery('/x?')).toBe('/x?');
+  });
+
+  it('falls back to the raw name when percent-decoding fails, and still redacts it', () => {
+    expect(maskSensitiveQuery('/x?%E0%A4%A=1')).toBe('/x?%E0%A4%A=[REDACTED]');
   });
 });
 
@@ -142,6 +146,22 @@ describe('maskSensitiveRequestFields', () => {
     } as unknown as StdSerializedResults['req'];
 
     expect(maskSensitiveRequestFields(serialized).remoteAddress).toBe('203.0.113.5');
+  });
+
+  it('falls back to the socket remoteAddress when raw has no ip (plain node IncomingMessage)', () => {
+    const serialized = {
+      id: 'req-3',
+      method: 'GET',
+      url: '/',
+      headers: {},
+      remoteAddress: '10.0.0.1',
+      remotePort: 443,
+      params: {},
+      query: {},
+      raw: {},
+    } as unknown as StdSerializedResults['req'];
+
+    expect(maskSensitiveRequestFields(serialized).remoteAddress).toBe('10.0.0.1');
   });
 });
 

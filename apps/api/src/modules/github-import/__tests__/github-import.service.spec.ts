@@ -1,7 +1,7 @@
 import type { IGithubAccountRepository } from '@app/database/interfaces/github-account.repository.interface';
 import type { GithubLinkedAccount } from '@app/database/types/github-account.types';
 import type { ProjectRecord } from '@app/database/types/project.types';
-import type { ProjectService } from '@app/modules/project/project.service';
+import type { ProjectService } from '@app/modules/project';
 import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
 import type { AuthService } from '@thallesp/nestjs-better-auth';
 import type { PinoLogger } from 'nestjs-pino';

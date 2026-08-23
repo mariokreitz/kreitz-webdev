@@ -5,6 +5,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { isUniqueViolationOn } from '../utils/unique-violation';
 
 const WEBSITE_SLUG_UNIQUE_FIELDS = ['slug'] as const;
+const WEBSITE_DOMAIN_UNIQUE_FIELDS = ['domain'] as const;
 
 @Injectable()
 export class WebsiteRepository implements IWebsiteRepository {
@@ -79,29 +80,29 @@ export class WebsiteRepository implements IWebsiteRepository {
         throw new ConflictException('A website with this slug already exists');
       }
 
+      if (isUniqueViolationOn(error, WEBSITE_DOMAIN_UNIQUE_FIELDS)) {
+        throw new ConflictException('This domain is already registered');
+      }
+
       throw error;
     }
   }
 
   public async update(id: string, userId: string, data: UpdateWebsiteData): Promise<WebsiteRecord | null> {
-    const website = await this.prisma.website.findFirst({
-      where: {
-        id,
-        userId,
-      },
-    });
-
-    if (!website) {
-      return null;
-    }
-
     try {
-      return await this.prisma.website.update({
+      const result = await this.prisma.website.updateMany({
         where: {
           id,
+          userId,
         },
         data,
       });
+
+      if (result.count === 0) {
+        return null;
+      }
+
+      return await this.findByIdAndUserId(id, userId);
     } catch (error) {
       if (isUniqueViolationOn(error, WEBSITE_SLUG_UNIQUE_FIELDS)) {
         throw new ConflictException('A website with this slug already exists');
@@ -112,26 +113,13 @@ export class WebsiteRepository implements IWebsiteRepository {
   }
 
   public async delete(id: string, userId: string): Promise<boolean> {
-    const website = await this.prisma.website.findFirst({
+    const result = await this.prisma.website.deleteMany({
       where: {
         id,
         userId,
       },
-      select: {
-        id: true,
-      },
     });
 
-    if (!website) {
-      return false;
-    }
-
-    await this.prisma.website.delete({
-      where: {
-        id: website.id,
-      },
-    });
-
-    return true;
+    return result.count > 0;
   }
 }

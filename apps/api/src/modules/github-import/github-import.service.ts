@@ -4,7 +4,7 @@ import { ProjectRecord } from '@app/database/types/project.types';
 import { GithubRepoSummaryResponse } from '@app/modules/github-import/dto/github-repo-summary.response';
 import { GithubApiService } from '@app/modules/github-import/github-api.service';
 import { GITHUB_ACCOUNT_REPOSITORY, GITHUB_AUTH_SERVICE } from '@app/modules/github-import/tokens/github-import.tokens';
-import { toCreateProjectData, toGithubRepoSummary } from '@app/modules/github-import/utils/github-import.utils';
+import { toCreateProjectData } from '@app/modules/github-import/utils/github-import.utils';
 import { ProjectService } from '@app/modules/project';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import type { AuthService } from '@thallesp/nestjs-better-auth';
@@ -32,7 +32,7 @@ export class GithubImportService {
 
     const repos = await this.githubApiService.listUserRepos(accessToken);
 
-    return repos.map(toGithubRepoSummary);
+    return repos.map((repo) => GithubRepoSummaryResponse.fromApiResponse(repo));
   }
 
   public async importRepo(userId: string, githubId: string, owner: string, repo: string): Promise<ProjectRecord> {

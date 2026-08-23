@@ -2,6 +2,7 @@ import type { CacheService } from '@app/database/cache';
 import type { IProjectRepository } from '@app/database/interfaces/project.repository.interface';
 import type { IWebsiteProjectRepository } from '@app/database/interfaces/website-project.repository.interface';
 import type { CreateProjectData, ProjectRecord } from '@app/database/types/project.types';
+import { buildWebsiteProjectsCacheKey } from '@app/modules/website-project/utils/website-project.utils';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import type { PinoLogger } from 'nestjs-pino';
 
@@ -232,8 +233,8 @@ describe('ProjectService', () => {
 
       expect(websiteProjectRepository.findWebsiteIdsByProjectId).toHaveBeenCalledWith('project-a');
       expect(cacheService.del).toHaveBeenCalledTimes(2);
-      expect(cacheService.del).toHaveBeenCalledWith('website:website-a:projects');
-      expect(cacheService.del).toHaveBeenCalledWith('website:website-b:projects');
+      expect(cacheService.del).toHaveBeenCalledWith(buildWebsiteProjectsCacheKey('website-a'));
+      expect(cacheService.del).toHaveBeenCalledWith(buildWebsiteProjectsCacheKey('website-b'));
     });
 
     it('does not evict any cache when the project is not linked to any website', async () => {
@@ -282,8 +283,8 @@ describe('ProjectService', () => {
       await service.delete('project-a', 'user-a');
 
       expect(cacheService.del).toHaveBeenCalledTimes(2);
-      expect(cacheService.del).toHaveBeenCalledWith('website:website-a:projects');
-      expect(cacheService.del).toHaveBeenCalledWith('website:website-b:projects');
+      expect(cacheService.del).toHaveBeenCalledWith(buildWebsiteProjectsCacheKey('website-a'));
+      expect(cacheService.del).toHaveBeenCalledWith(buildWebsiteProjectsCacheKey('website-b'));
     });
 
     it('looks up linked websiteIds before deleting, since the join rows cascade-delete with the project', async () => {

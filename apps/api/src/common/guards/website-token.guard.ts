@@ -6,11 +6,9 @@ import { IWebsiteTokenRepository } from '@app/database/interfaces/website-token.
 import { IWebsiteRepository } from '@app/database/interfaces/website.repository.interface';
 import type { WebsiteTokenRecord } from '@app/database/types/website-token.types';
 import type { WebsiteRecord } from '@app/database/types/website.repository.types';
-import { WEBSITE_DOMAIN_REPOSITORY } from '@app/modules/website-domain/tokens/website-domain.tokens';
-import { normalizeDomain } from '@app/modules/website-domain/utils/normalize-domain';
-import { WEBSITE_TOKEN_REPOSITORY } from '@app/modules/website-token/tokens/website-token.tokens';
-import { buildWebsiteTokenCacheKey, hashWebsiteToken } from '@app/modules/website-token/utils/website-token.utils';
-import { WEBSITE_REPOSITORY } from '@app/modules/website/tokens/website.tokens';
+import { WEBSITE_DOMAIN_REPOSITORY, normalizeDomain } from '@app/modules/website-domain';
+import { WEBSITE_TOKEN_REPOSITORY, buildWebsiteTokenCacheKey, hashWebsiteToken } from '@app/modules/website-token';
+import { WEBSITE_REPOSITORY } from '@app/modules/website';
 import {
   CanActivate,
   ExecutionContext,

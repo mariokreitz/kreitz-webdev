@@ -1,3 +1,4 @@
+import { SkipResponseEnvelope } from '@app/common/decorators/skip-response-envelope.decorator';
 import { CreatedWebsiteTokenResponse } from '@app/modules/website-token/dto/created-website-token.response';
 import { WebsiteTokenSummaryResponse } from '@app/modules/website-token/dto/website-token-summary.response';
 import { Body, Controller, Delete, Get, HttpCode, Param, Post } from '@nestjs/common';
@@ -55,6 +56,7 @@ export class WebsiteTokenController {
 
   @Delete(':tokenId')
   @HttpCode(204)
+  @SkipResponseEnvelope()
   @ApiOperation({
     summary: 'Delete a website token',
     description: 'Permanently deletes the token. This cannot be undone.',

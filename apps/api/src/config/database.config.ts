@@ -4,8 +4,7 @@ import { type ConfigType, registerAs } from '@nestjs/config';
 export const databaseConfig = registerAs('database', () => {
   const env: DatabaseEnv = databaseSchema.parse(process.env);
 
-  // Prisma nimmt die Pool-Groesse als Query-Param der Connection-URL,
-  // nicht als Client-Option. Ein Ort, an dem die URL entsteht.
+  // Prisma takes pool size as a connection-URL query param, not a client option — the one place the URL is built.
   const url = new URL(env.DATABASE_URL);
   url.searchParams.set('connection_limit', String(env.DATABASE_POOL_SIZE));
 

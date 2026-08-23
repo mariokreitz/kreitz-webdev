@@ -1,8 +1,8 @@
 import type { LogFormat } from '../types/log-format.types';
 
 export interface CreatePinoHttpOptionsParams {
-  logLevel: string;
-  logFormat: LogFormat;
+  readonly logLevel: string;
+  readonly logFormat: LogFormat;
 }
 
 export interface LoggedRequest {

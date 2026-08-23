@@ -20,6 +20,23 @@ function buildResponse(overrides: Partial<Response> & { jsonBody?: unknown } = {
   } as unknown as Response;
 }
 
+function buildRepo(overrides: Partial<Record<string, unknown>> = {}): Record<string, unknown> {
+  return {
+    id: 1,
+    name: 'repo-a',
+    full_name: 'owner-a/repo-a',
+    html_url: 'https://github.com/owner-a/repo-a',
+    description: null,
+    homepage: null,
+    language: null,
+    topics: [],
+    private: false,
+    updated_at: '2026-08-20T09:15:00.000Z',
+    owner: { id: 1, login: 'owner-a' },
+    ...overrides,
+  };
+}
+
 describe('GithubApiService', () => {
   afterEach(() => {
     jest.restoreAllMocks();
@@ -28,7 +45,7 @@ describe('GithubApiService', () => {
   describe('listUserRepos', () => {
     it('returns the parsed repo list on success', async () => {
       const service = new GithubApiService();
-      const repos = [{ id: 1, name: 'repo-a' }];
+      const repos = [buildRepo()];
 
       jest.spyOn(global, 'fetch').mockResolvedValue(buildResponse({ jsonBody: repos }));
 
@@ -72,7 +89,7 @@ describe('GithubApiService', () => {
   describe('getRepo', () => {
     it('returns the parsed repo on success', async () => {
       const service = new GithubApiService();
-      const repo = { id: 1, name: 'repo-a' };
+      const repo = buildRepo();
 
       jest.spyOn(global, 'fetch').mockResolvedValue(buildResponse({ jsonBody: repo }));
 

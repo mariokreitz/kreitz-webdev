@@ -4,8 +4,14 @@ import type { Request, Response } from 'express';
 import { DEFAULT_ERROR_MESSAGE } from '../constants/response.constants';
 import type { ResponseEnvelope } from '../interfaces/response-envelope.interface';
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null;
+function hasMessage(body: unknown): body is { message: string | string[] } {
+  if (typeof body !== 'object' || body === null || !('message' in body)) {
+    return false;
+  }
+
+  const { message } = body;
+
+  return typeof message === 'string' || (Array.isArray(message) && message.every((item) => typeof item === 'string'));
 }
 
 function extractMessage(exception: HttpException): string | string[] {
@@ -15,8 +21,8 @@ function extractMessage(exception: HttpException): string | string[] {
     return body;
   }
 
-  if (isRecord(body) && (typeof body['message'] === 'string' || Array.isArray(body['message']))) {
-    return body['message'] as string | string[];
+  if (hasMessage(body)) {
+    return body.message;
   }
 
   return exception.message;

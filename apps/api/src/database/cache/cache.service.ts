@@ -27,7 +27,7 @@ export class CacheService implements OnModuleDestroy {
       });
     });
 
-    this.logger.info('Cache service initialized');
+    this.logger.info({ event: 'cache.initialized' });
   }
 
   public async onModuleDestroy(): Promise<void> {

@@ -12,6 +12,7 @@ import { ConflictException, Inject, Injectable, NotFoundException } from '@nestj
 import { PinoLogger } from 'nestjs-pino';
 import { WEBSITE_REPOSITORY } from '../website/tokens/website.tokens';
 import { WEBSITE_PROJECT_REPOSITORY } from './tokens/website-project.tokens';
+import { buildWebsiteProjectsCacheKey } from './utils/website-project.utils';
 
 @Injectable()
 export class WebsiteProjectService {
@@ -63,7 +64,7 @@ export class WebsiteProjectService {
       ...(sortOrder !== undefined && { sortOrder }),
     });
 
-    await this.cacheService.del(`website:${websiteId}:projects`);
+    await this.cacheService.del(buildWebsiteProjectsCacheKey(websiteId));
 
     this.logger.info({ event: 'website_project.created', websiteId, projectId: created.projectId });
 
@@ -92,7 +93,7 @@ export class WebsiteProjectService {
       throw new NotFoundException('Website project not found');
     }
 
-    await this.cacheService.del(`website:${websiteId}:projects`);
+    await this.cacheService.del(buildWebsiteProjectsCacheKey(websiteId));
 
     this.logger.info({ event: 'website_project.updated', websiteId, projectId });
 
@@ -116,7 +117,7 @@ export class WebsiteProjectService {
       throw new NotFoundException('Website project not found');
     }
 
-    await this.cacheService.del(`website:${websiteId}:projects`);
+    await this.cacheService.del(buildWebsiteProjectsCacheKey(websiteId));
 
     this.logger.info({ event: 'website_project.deleted', websiteId, projectId });
   }

@@ -4,6 +4,7 @@ import { IWebsiteProjectRepository } from '@app/database/interfaces/website-proj
 import { CreateProjectData, ProjectRecord, UpdateProjectData } from '@app/database/types/project.types';
 // WHY: importing the website-project barrel here would create a circular module load (WebsiteProjectModule already imports ProjectModule for project-ownership checks); this leaf import breaks the cycle while still letting ProjectService find every website a project is linked to for cache invalidation.
 import { WEBSITE_PROJECT_REPOSITORY } from '@app/modules/website-project/tokens/website-project.tokens';
+import { buildWebsiteProjectsCacheKey } from '@app/modules/website-project/utils/website-project.utils';
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PinoLogger } from 'nestjs-pino';
 import { PROJECT_REPOSITORY } from './tokens/project.tokens';
@@ -127,7 +128,7 @@ export class ProjectService {
   private async invalidateCacheForWebsites(websiteIds: string[]): Promise<void> {
     await Promise.all(
       websiteIds.map(async (websiteId) => {
-        await this.cacheService.del(`website:${websiteId}:projects`);
+        await this.cacheService.del(buildWebsiteProjectsCacheKey(websiteId));
       }),
     );
   }

@@ -15,13 +15,17 @@ import { HttpAdapterHost, NestFactory, Reflector } from '@nestjs/core';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
 
+let bootstrapLogger: Logger | undefined;
+
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(ApiModule, {
     bufferLogs: true,
     bodyParser: false,
   });
 
-  app.useLogger(app.get(Logger));
+  const logger = app.get(Logger);
+  bootstrapLogger = logger;
+  app.useLogger(logger);
   app.useGlobalInterceptors(new LoggerErrorInterceptor(), new ResponseInterceptor(app.get(Reflector)));
   app.useGlobalFilters(new GlobalExceptionFilter(app.get(HttpAdapterHost).httpAdapter));
 
@@ -35,24 +39,34 @@ async function bootstrap(): Promise<void> {
   const swaggerEnabled: boolean = setupSwagger(app, context);
 
   await app.listen(context.config.port);
-  NestLogger.log(`Application is running on: http://localhost:${context.config.port}/${API_GLOBAL_PREFIX}`);
-  NestLogger.log(
-    swaggerEnabled
-      ? `API documentation: http://localhost:${context.config.port}/${SWAGGER_PATH}`
-      : 'API documentation is disabled (SWAGGER_ENABLED)',
-  );
+
+  logger.log({
+    event: 'bootstrap.listening',
+    url: `http://localhost:${context.config.port}/${API_GLOBAL_PREFIX}`,
+  });
+
   if (swaggerEnabled) {
-    NestLogger.log(`Auth API reference: http://localhost:${context.config.port}${AUTH_REFERENCE_PATH}`);
+    logger.log({
+      event: 'bootstrap.swagger_enabled',
+      url: `http://localhost:${context.config.port}/${SWAGGER_PATH}`,
+    });
+    logger.log({
+      event: 'bootstrap.auth_reference_enabled',
+      url: `http://localhost:${context.config.port}${AUTH_REFERENCE_PATH}`,
+    });
+  } else {
+    logger.log({ event: 'bootstrap.swagger_disabled' });
   }
 }
 
 bootstrap().catch((err: unknown) => {
-  const logger = new NestLogger('Bootstrap');
+  const error = err instanceof Error ? err.message : String(err);
 
-  if (err instanceof Error) {
-    logger.error(`Application failed to start: ${err.message}`, err.stack);
+  if (bootstrapLogger) {
+    bootstrapLogger.error({ event: 'bootstrap.failed', error });
   } else {
-    logger.error('Application failed to start', String(err));
+    // Pino isn't resolvable yet if NestFactory.create itself threw, so fall back to Nest's static logger for this one unreachable-otherwise path.
+    new NestLogger('Bootstrap').error({ event: 'bootstrap.failed', error });
   }
 
   process.exit(1);

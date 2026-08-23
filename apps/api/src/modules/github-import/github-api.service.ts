@@ -1,4 +1,4 @@
-import { GithubRepoApiResponse } from '@app/modules/github-import/types/github-api.types';
+import { GithubRepoApiResponse, githubRepoApiResponseSchema } from '@app/modules/github-import/types/github-api.types';
 import {
   HttpException,
   HttpStatus,
@@ -7,6 +7,7 @@ import {
   ServiceUnavailableException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { z } from 'zod';
 
 const GITHUB_API_BASE_URL = 'https://api.github.com';
 const GITHUB_API_VERSION = '2022-11-28';
@@ -26,7 +27,7 @@ export class GithubApiService {
 
     this.assertOk(response);
 
-    return this.parseJson<GithubRepoApiResponse[]>(response);
+    return this.parseJson(response, z.array(githubRepoApiResponseSchema));
   }
 
   public async getRepo(accessToken: string, owner: string, repo: string): Promise<GithubRepoApiResponse> {
@@ -37,7 +38,7 @@ export class GithubApiService {
 
     this.assertOk(response);
 
-    return this.parseJson<GithubRepoApiResponse>(response);
+    return this.parseJson(response, githubRepoApiResponseSchema);
   }
 
   private async fetchGithub(url: string, accessToken: string): Promise<Response> {
@@ -48,9 +49,11 @@ export class GithubApiService {
     }
   }
 
-  private async parseJson<T>(response: Response): Promise<T> {
+  private async parseJson<S extends z.ZodType>(response: Response, schema: S): Promise<z.infer<S>> {
     try {
-      return (await response.json()) as T;
+      const json: unknown = await response.json();
+
+      return schema.parse(json);
     } catch {
       throw new HttpException('GitHub API returned an unparseable response', HttpStatus.BAD_GATEWAY);
     }

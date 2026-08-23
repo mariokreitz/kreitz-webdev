@@ -2,40 +2,9 @@ import { IProjectRepository } from '@app/database/interfaces/project.repository.
 import { PrismaService } from '@app/database/prisma';
 import { CreateProjectData, ProjectRecord, UpdateProjectData } from '@app/database/types/project.types';
 import { ConflictException, Injectable } from '@nestjs/common';
-import { Prisma } from '../../../generated/prisma/client';
+import { isUniqueViolationOn } from '../utils/unique-violation';
 
 const USER_GITHUB_UNIQUE_FIELDS = ['userId', 'githubId'] as const;
-
-function isUserGithubUniqueViolation(error: unknown): boolean {
-  if (!(error instanceof Prisma.PrismaClientKnownRequestError) || error.code !== 'P2002') {
-    return false;
-  }
-
-  const meta = error.meta;
-  const target = meta?.['target'];
-
-  if (Array.isArray(target)) {
-    return USER_GITHUB_UNIQUE_FIELDS.every((field) => target.includes(field));
-  }
-
-  const driverAdapterError = meta?.['driverAdapterError'];
-  const cause =
-    driverAdapterError && typeof driverAdapterError === 'object' && 'cause' in driverAdapterError
-      ? driverAdapterError.cause
-      : undefined;
-  const constraintFields =
-    cause && typeof cause === 'object' && 'constraint' in cause
-      ? (cause.constraint as { fields?: unknown } | undefined)?.fields
-      : undefined;
-
-  if (Array.isArray(constraintFields)) {
-    const normalizedFields = constraintFields.map((field) => String(field).replace(/"/g, ''));
-
-    return USER_GITHUB_UNIQUE_FIELDS.every((field) => normalizedFields.includes(field));
-  }
-
-  return false;
-}
 
 @Injectable()
 export class ProjectRepository implements IProjectRepository {
@@ -124,7 +93,7 @@ export class ProjectRepository implements IProjectRepository {
         },
       });
     } catch (error) {
-      if (isUserGithubUniqueViolation(error)) {
+      if (isUniqueViolationOn(error, USER_GITHUB_UNIQUE_FIELDS)) {
         throw new ConflictException('This GitHub project is already imported');
       }
 
@@ -184,7 +153,7 @@ export class ProjectRepository implements IProjectRepository {
 
       return await this.findByIdAndUserId(id, userId);
     } catch (error) {
-      if (isUserGithubUniqueViolation(error)) {
+      if (isUniqueViolationOn(error, USER_GITHUB_UNIQUE_FIELDS)) {
         throw new ConflictException('This GitHub project is already imported');
       }
 

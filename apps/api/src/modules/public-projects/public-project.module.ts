@@ -1,7 +1,7 @@
 import { redisConfig } from '@app/config';
 import { PublicProjectRepository } from '@app/database/repositories/public-project.repository';
-import { WebsiteDomainModule } from '@app/modules/website-domain/website-domain.module';
-import { WebsiteTokenModule } from '@app/modules/website-token/website-token.module';
+import { WebsiteDomainModule } from '@app/modules/website-domain';
+import { WebsiteTokenModule } from '@app/modules/website-token';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 

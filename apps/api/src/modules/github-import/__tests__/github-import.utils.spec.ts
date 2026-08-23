@@ -1,5 +1,5 @@
 import type { GithubRepoApiResponse } from '../types/github-api.types';
-import { toCreateProjectData, toGithubRepoSummary } from '../utils/github-import.utils';
+import { toCreateProjectData } from '../utils/github-import.utils';
 
 function buildRepo(overrides: Partial<GithubRepoApiResponse> = {}): GithubRepoApiResponse {
   return {
@@ -19,25 +19,6 @@ function buildRepo(overrides: Partial<GithubRepoApiResponse> = {}): GithubRepoAp
 }
 
 describe('github-import.utils', () => {
-  describe('toGithubRepoSummary', () => {
-    it('maps the raw GitHub API repo into the summary shape', () => {
-      const result = toGithubRepoSummary(buildRepo());
-
-      expect(result).toEqual({
-        githubId: '123',
-        name: 'my-project',
-        fullName: 'mariokreitz/my-project',
-        htmlUrl: 'https://github.com/mariokreitz/my-project',
-        description: 'A project description',
-        homepage: 'https://myproject.dev',
-        language: 'TypeScript',
-        topics: ['cli'],
-        private: false,
-        updatedAt: '2026-01-01T00:00:00.000Z',
-      });
-    });
-  });
-
   describe('toCreateProjectData', () => {
     it('omits liveUrl when homepage is null', () => {
       const result = toCreateProjectData('user-a', buildRepo({ homepage: null }));

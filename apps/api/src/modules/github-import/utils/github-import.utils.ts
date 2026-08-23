@@ -1,24 +1,8 @@
 import type { CreateProjectData } from '@app/database/types/project.types';
-import type { GithubRepoSummaryResponse } from '@app/modules/github-import/dto/github-repo-summary.response';
 import type { GithubRepoApiResponse } from '@app/modules/github-import/types/github-api.types';
 
 const MAX_TAGS = 20;
 const MAX_TAG_LENGTH = 50;
-
-export function toGithubRepoSummary(repo: GithubRepoApiResponse): GithubRepoSummaryResponse {
-  return {
-    githubId: String(repo.id),
-    name: repo.name,
-    fullName: repo.full_name,
-    htmlUrl: repo.html_url,
-    description: repo.description,
-    homepage: repo.homepage,
-    language: repo.language,
-    topics: repo.topics,
-    private: repo.private,
-    updatedAt: repo.updated_at,
-  };
-}
 
 export function toCreateProjectData(userId: string, repo: GithubRepoApiResponse): CreateProjectData {
   const liveUrl = toValidHttpUrl(repo.homepage);

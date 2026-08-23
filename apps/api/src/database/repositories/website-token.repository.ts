@@ -59,15 +59,22 @@ export class WebsiteTokenRepository implements IWebsiteTokenRepository {
       return null;
     }
 
-    return this.prisma.websiteToken.delete({
+    const result = await this.prisma.websiteToken.deleteMany({
       where: {
         id,
+        websiteId,
       },
     });
+
+    if (result.count === 0) {
+      return null;
+    }
+
+    return existing;
   }
 
   public async updateLastUsedAt(id: string, lastUsedAt: Date): Promise<void> {
-    await this.prisma.websiteToken.update({
+    await this.prisma.websiteToken.updateMany({
       where: {
         id,
       },

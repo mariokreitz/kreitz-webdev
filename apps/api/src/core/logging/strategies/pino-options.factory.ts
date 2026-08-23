@@ -1,5 +1,4 @@
 import { resolveRequestId } from '@app/core/logging/request-id.middleware';
-import type { Request } from 'express';
 import type { Params } from 'nestjs-pino';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { hostname } from 'node:os';
@@ -8,7 +7,7 @@ import { REDACTED } from '../constants/logging.constants';
 import {
   HEALTH_PATH_PREFIX,
   PRETTY_TRANSPORT_TARGET,
-  SENSITIVE_QUERY_PARAMS,
+  SAFE_QUERY_PARAMS,
   SERVICE_NAME,
 } from '../constants/pino-options.constants';
 import type { CreatePinoHttpOptionsParams, LoggedRequest, LoggedResponse } from '../interfaces/pino-options.interface';
@@ -28,28 +27,37 @@ export function maskSensitiveQuery(url: string): string {
     return url;
   }
 
-  const query = url
-    .slice(separator + 1)
+  const rawQuery = url.slice(separator + 1);
+
+  if (rawQuery.length === 0) {
+    return url;
+  }
+
+  const query = rawQuery
     .split('&')
     .map((pair) => {
       const equals = pair.indexOf('=');
       const name = equals === -1 ? pair : pair.slice(0, equals);
 
-      return SENSITIVE_QUERY_PARAMS.has(decodeParamName(name).toLowerCase()) ? `${name}=${REDACTED}` : pair;
+      return SAFE_QUERY_PARAMS.has(decodeParamName(name).toLowerCase()) ? pair : `${name}=${REDACTED}`;
     })
     .join('&');
 
   return `${url.slice(0, separator)}?${query}`;
 }
 
+function resolveRemoteAddress(raw: IncomingMessage | undefined, fallback: string | undefined): string | undefined {
+  return raw && 'ip' in raw && typeof raw.ip === 'string' ? raw.ip : fallback;
+}
+
 export function maskSensitiveRequestFields(req: StdSerializedResults['req']): LoggedRequest {
-  const raw = req.raw as Request | undefined;
+  const remoteAddress = resolveRemoteAddress(req.raw, req.remoteAddress);
 
   return {
     id: req.id,
     method: req.method,
     url: typeof req.url === 'string' ? maskSensitiveQuery(req.url) : req.url,
-    remoteAddress: raw?.ip ?? req.remoteAddress,
+    remoteAddress,
   };
 }
 
@@ -58,7 +66,8 @@ export function keepResponseStatusOnly(res: StdSerializedResults['res']): Logged
 }
 
 export function isHealthCheckRequest(req: IncomingMessage): boolean {
-  const path = (req as Partial<Request>).originalUrl ?? req.url ?? '';
+  const originalUrl = 'originalUrl' in req && typeof req.originalUrl === 'string' ? req.originalUrl : undefined;
+  const path = originalUrl ?? req.url ?? '';
 
   return path.split('?')[0]?.startsWith(HEALTH_PATH_PREFIX) ?? false;
 }

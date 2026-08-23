@@ -1,3 +1,4 @@
+import { SkipResponseEnvelope } from '@app/common/decorators/skip-response-envelope.decorator';
 import { WebsiteProjectService } from '@app/modules/website-project/website-project.service';
 
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from '@nestjs/common';
@@ -74,6 +75,7 @@ export class WebsiteProjectController {
 
   @Delete(':projectId')
   @HttpCode(204)
+  @SkipResponseEnvelope()
   @ApiOperation({
     summary: 'Unlink a project from a website',
     description: 'Removes the website/project association only. The underlying project itself is not deleted.',

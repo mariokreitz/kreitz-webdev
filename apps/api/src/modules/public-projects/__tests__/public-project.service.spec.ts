@@ -2,6 +2,7 @@ import type { RedisConfig } from '@app/config/redis.config';
 import type { CacheService } from '@app/database/cache';
 import type { IPublicProjectRepository } from '@app/database/interfaces/public-project.repository.interface';
 import type { PublicProjectRecord } from '@app/database/types/public-project.types';
+import { buildWebsiteProjectsCacheKey } from '@app/modules/website-project';
 import type { PinoLogger } from 'nestjs-pino';
 
 import { PublicProjectService } from '../public-project.service';
@@ -215,7 +216,11 @@ describe('PublicProjectService', () => {
 
         await service.getPublishedProjects('website-1');
 
-        expect(cacheService.getOrSet).toHaveBeenCalledWith('website:website-1:projects', 60_000, expect.any(Function));
+        expect(cacheService.getOrSet).toHaveBeenCalledWith(
+          buildWebsiteProjectsCacheKey('website-1'),
+          60_000,
+          expect.any(Function),
+        );
       });
 
       it('skips the repository call on a cache hit for a second read of the same website', async () => {
@@ -231,7 +236,7 @@ describe('PublicProjectService', () => {
         const { service, repository, cacheService } = buildService([record]);
 
         await service.getPublishedProjects('website-1');
-        await cacheService.del('website:website-1:projects');
+        await cacheService.del(buildWebsiteProjectsCacheKey('website-1'));
         await service.getPublishedProjects('website-1');
 
         expect(repository.findPublishedByWebsiteId).toHaveBeenCalledTimes(2);

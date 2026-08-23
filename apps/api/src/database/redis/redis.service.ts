@@ -22,7 +22,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
 
   public async onModuleInit(): Promise<void> {
     await this.client.ping();
-    this.logger.info('Connected to Redis');
+    this.logger.info({ event: 'redis.connected' });
   }
 
   public async onModuleDestroy(): Promise<void> {

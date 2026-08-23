@@ -1,4 +1,4 @@
-import { Injectable, type CallHandler, type ExecutionContext, type NestInterceptor } from '@nestjs/common';
+import { type CallHandler, type ExecutionContext, Injectable, type NestInterceptor } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import type { Request, Response } from 'express';
 import type { Observable } from 'rxjs';
@@ -20,9 +20,7 @@ export class ResponseInterceptor implements NestInterceptor<unknown, unknown> {
       context.getClass(),
     ]);
 
-    // GlobalExceptionFilter can't read route metadata (Nest builds an exception filter's
-    // ArgumentsHost without handler/class context) — stash the resolved flag on the request
-    // here, where a real ExecutionContext is available, so the filter can read it back.
+    // Exception filters get no handler/class context, so GlobalExceptionFilter reads this flag off the request.
     const request = context.switchToHttp().getRequest<Request>();
     request.skipResponseEnvelope = skip;
 

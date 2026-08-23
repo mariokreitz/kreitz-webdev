@@ -9,6 +9,7 @@ import { ConflictException, NotFoundException } from '@nestjs/common';
 import type { PinoLogger } from 'nestjs-pino';
 
 import { WebsiteProjectService } from '../website-project.service';
+import { buildWebsiteProjectsCacheKey } from '../utils/website-project.utils';
 
 const NOW = new Date('2026-01-01T00:00:00.000Z');
 
@@ -165,7 +166,7 @@ describe('WebsiteProjectService', () => {
 
       await service.create('website-a', 'user-a', 'project-a', true, 2);
 
-      expect(cacheService.del).toHaveBeenCalledWith('website:website-a:projects');
+      expect(cacheService.del).toHaveBeenCalledWith(buildWebsiteProjectsCacheKey('website-a'));
     });
 
     it('omits published and sortOrder from the create payload when they were not provided', async () => {
@@ -275,7 +276,7 @@ describe('WebsiteProjectService', () => {
 
       await service.update('website-a', 'project-a', 'user-a', { published: true, sortOrder: 5 });
 
-      expect(cacheService.del).toHaveBeenCalledWith('website:website-a:projects');
+      expect(cacheService.del).toHaveBeenCalledWith(buildWebsiteProjectsCacheKey('website-a'));
     });
 
     it('throws NotFoundException when no link exists for the website/project pair, and does not evict the cache', async () => {
@@ -325,7 +326,7 @@ describe('WebsiteProjectService', () => {
 
       await service.delete('website-a', 'project-a', 'user-a');
 
-      expect(cacheService.del).toHaveBeenCalledWith('website:website-a:projects');
+      expect(cacheService.del).toHaveBeenCalledWith(buildWebsiteProjectsCacheKey('website-a'));
     });
 
     it('throws NotFoundException when no link exists for the website/project pair, and does not evict the cache', async () => {

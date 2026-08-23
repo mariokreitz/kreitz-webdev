@@ -1,5 +1,11 @@
+import {
+  logErroredArcjetDecision,
+  toArcjetRequest,
+  toErrorReason,
+  type ArcjetRuleMode,
+} from '@app/common/utils/arcjet.utils';
 import { type AppConfig, appConfig } from '@app/config';
-import { ARCJET, type ArcjetDecision, type ArcjetNest, type ArcjetNestRequest, tokenBucket } from '@arcjet/nest';
+import { ARCJET, type ArcjetDecision, type ArcjetNest, tokenBucket } from '@arcjet/nest';
 import {
   type CanActivate,
   type ExecutionContext,
@@ -11,12 +17,6 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { PinoLogger } from 'nestjs-pino';
-
-type ArcjetRuleMode = 'LIVE' | 'DRY_RUN';
-
-function toArcjetRequest(req: Request): ArcjetNestRequest {
-  return req as unknown as ArcjetNestRequest;
-}
 
 @Injectable()
 export class ArcjetRateLimitGuard implements CanActivate {
@@ -51,7 +51,7 @@ export class ArcjetRateLimitGuard implements CanActivate {
         ? await this.websiteBucket.protect(arcjetRequest, { requested: 1, websiteId })
         : await this.ipFallbackBucket.protect(arcjetRequest, { requested: 1 });
     } catch (error) {
-      this.logger.error('Arcjet rate limit guard failed; failing open', error as Error);
+      this.logger.error({ event: 'arcjet.rate_limit.failed_open', reason: toErrorReason(error) });
       return true;
     }
 
@@ -73,9 +73,7 @@ export class ArcjetRateLimitGuard implements CanActivate {
       throw new ForbiddenException('Request blocked');
     }
 
-    if (decision.isErrored()) {
-      this.logger.info(`Arcjet decision errored: ${decision.reason.message}`);
-    }
+    logErroredArcjetDecision(this.logger, decision);
 
     return true;
   }

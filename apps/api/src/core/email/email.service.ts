@@ -17,7 +17,7 @@ export class EmailService {
     this.fromAddress = config.fromAddress;
 
     if (config.resendApiKey === '') {
-      this.logger.info('RESEND_API_KEY is not set; emails will be logged instead of sent.');
+      this.logger.info({ event: 'email.resend_disabled' });
       return;
     }
 
@@ -39,10 +39,10 @@ export class EmailService {
       });
 
       if (error) {
-        this.logger.error(`Failed to send email to ${to}: ${error.message}`);
+        this.logger.error({ event: 'email.send_failed', to, error: error.message });
       }
     } catch (err) {
-      this.logger.error(err instanceof Error ? err : undefined, `Unexpected error sending email to ${to}`);
+      this.logger.error({ event: 'email.send_failed', to, error: err instanceof Error ? err.message : String(err) });
     }
   }
 

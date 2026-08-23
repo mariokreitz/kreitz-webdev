@@ -65,21 +65,22 @@ export class WebsiteDomainRepository implements IWebsiteDomainRepository {
   }
 
   public async update(id: string, websiteId: string, domain: string): Promise<WebsiteDomainRecord | null> {
-    const existing = await this.findByIdAndWebsiteId(id, websiteId);
-
-    if (!existing) {
-      return null;
-    }
-
     try {
-      return await this.prisma.websiteDomain.update({
+      const result = await this.prisma.websiteDomain.updateMany({
         where: {
           id,
+          websiteId,
         },
         data: {
           domain,
         },
       });
+
+      if (result.count === 0) {
+        return null;
+      }
+
+      return await this.findByIdAndWebsiteId(id, websiteId);
     } catch (error) {
       if (isUniqueViolationOn(error, WEBSITE_DOMAIN_UNIQUE_FIELDS)) {
         throw new ConflictException('This domain is already registered');
@@ -96,10 +97,17 @@ export class WebsiteDomainRepository implements IWebsiteDomainRepository {
       return null;
     }
 
-    return this.prisma.websiteDomain.delete({
+    const result = await this.prisma.websiteDomain.deleteMany({
       where: {
         id,
+        websiteId,
       },
     });
+
+    if (result.count === 0) {
+      return null;
+    }
+
+    return existing;
   }
 }

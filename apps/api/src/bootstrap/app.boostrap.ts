@@ -1,6 +1,7 @@
 import type { AppConfig, SecurityConfig } from '@app/config';
 import { ArcjetAuthMiddleware, AUTH_REFERENCE_CSP_NONCE, AUTH_REFERENCE_PATH } from '@app/core/auth';
 import { type INestApplication, ValidationPipe, VersioningType } from '@nestjs/common';
+import type { NestExpressApplication } from '@nestjs/platform-express';
 import cookieParser from 'cookie-parser';
 import type { Express, NextFunction, Request, Response } from 'express';
 import express from 'express';
@@ -16,13 +17,13 @@ export const ROBOTS_DISALLOW_ALL_BODY = 'User-agent: *\nDisallow: /\n';
 const SCALAR_CDN_ORIGIN = 'https://cdn.jsdelivr.net';
 
 export interface BootstrapContext {
-  config: AppConfig;
-  security: SecurityConfig;
+  readonly config: AppConfig;
+  readonly security: SecurityConfig;
 }
 
-export function configureApplication(app: INestApplication, context: BootstrapContext): void {
+export function configureApplication(app: NestExpressApplication, context: BootstrapContext): void {
   const { config, security } = context;
-  const expressApp = app.getHttpAdapter().getInstance() as Express;
+  const expressApp = app.getHttpAdapter().getInstance();
 
   hardenExpressInstance(expressApp, security);
   registerRobotsRoute(expressApp);

@@ -1,18 +1,14 @@
-import { type AppConfig, appConfig } from '@app/config';
 import {
-  ARCJET,
-  type ArcjetDecision,
-  type ArcjetNest,
-  type ArcjetNestRequest,
-  detectBot,
-  tokenBucket,
-  validateEmail,
-} from '@arcjet/nest';
+  logErroredArcjetDecision,
+  toArcjetRequest,
+  toErrorReason,
+  type ArcjetRuleMode,
+} from '@app/common/utils/arcjet.utils';
+import { type AppConfig, appConfig } from '@app/config';
+import { ARCJET, type ArcjetDecision, type ArcjetNest, detectBot, tokenBucket, validateEmail } from '@arcjet/nest';
 import { Inject, Injectable, type NestMiddleware } from '@nestjs/common';
 import express, { type NextFunction, type Request, type Response } from 'express';
 import { PinoLogger } from 'nestjs-pino';
-
-type ArcjetRuleMode = 'LIVE' | 'DRY_RUN';
 
 const AUTH_BASE_PATH = '/api/auth';
 const SIGN_UP_EMAIL_PATH = '/api/auth/sign-up/email';
@@ -24,10 +20,6 @@ const jsonBodyParser = express.json({ limit: JSON_BODY_LIMIT });
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
-}
-
-function toArcjetRequest(req: Request): ArcjetNestRequest {
-  return req as unknown as ArcjetNestRequest;
 }
 
 @Injectable()
@@ -78,7 +70,7 @@ export class ArcjetAuthMiddleware implements NestMiddleware {
       const decision = await this.arcjet.protect(toArcjetRequest(req));
       this.handleDecision(decision, res, next);
     } catch (error) {
-      this.logger.error(error as Error, 'Arcjet auth middleware failed; failing open');
+      this.logger.error({ event: 'arcjet.auth_middleware.failed_open', reason: toErrorReason(error) });
       next();
     }
   }
@@ -106,9 +98,7 @@ export class ArcjetAuthMiddleware implements NestMiddleware {
       return;
     }
 
-    if (decision.isErrored()) {
-      this.logger.info(`Arcjet decision errored: ${decision.reason.message}`);
-    }
+    logErroredArcjetDecision(this.logger, decision);
 
     next();
   }
@@ -122,16 +112,17 @@ export class ArcjetAuthMiddleware implements NestMiddleware {
 
     await new Promise<void>((resolve) => {
       jsonBodyParser(req, res, (error?: unknown) => {
-        if (error instanceof Error) {
-          this.logger.debug(`Skipping Arcjet email validation: failed to pre-parse body (${error.message})`);
-        } else if (error) {
-          this.logger.debug('Skipping Arcjet email validation: failed to pre-parse body');
+        if (error) {
+          this.logger.debug({
+            event: 'arcjet.auth_middleware.body_preparse_failed',
+            reason: toErrorReason(error),
+          });
         }
         resolve();
       });
     });
 
-    const body: unknown = (req as Request & { body?: unknown }).body;
+    const body: unknown = req.body;
 
     return isRecord(body) && typeof body['email'] === 'string' ? body['email'] : undefined;
   }

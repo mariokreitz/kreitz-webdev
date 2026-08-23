@@ -3,7 +3,7 @@ import { redisStorage } from '@better-auth/redis-storage';
 import { type Auth, betterAuth, type BetterAuthOptions } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { openAPI } from 'better-auth/plugins';
-import { AUTH_REFERENCE_CSP_NONCE } from '..';
+import { AUTH_REFERENCE_CSP_NONCE } from '../constants/auth-reference.constants';
 
 import type { CreateAuthOptions } from '../interfaces/create-auth-options.interface';
 
