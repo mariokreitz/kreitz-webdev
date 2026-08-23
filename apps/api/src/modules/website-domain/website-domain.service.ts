@@ -16,7 +16,11 @@ export class WebsiteDomainService {
   ) {}
 
   public async getAllForUser(websiteId: string, userId: string): Promise<WebsiteDomainRecord[]> {
-    await this.ensureWebsiteOwnership(websiteId, userId);
+    const website = await this.websiteRepository.findByIdAndUserId(websiteId, userId);
+
+    if (!website) {
+      throw new NotFoundException('Website not found');
+    }
 
     return this.websiteDomainRepository.findManyByWebsiteId(websiteId);
   }
@@ -33,10 +37,8 @@ export class WebsiteDomainService {
     return domain;
   }
 
-  public async create(websiteId: string, userId: string, url: string): Promise<WebsiteDomainRecord> {
+  public async create(websiteId: string, userId: string, domain: string): Promise<WebsiteDomainRecord> {
     await this.ensureWebsiteOwnership(websiteId, userId);
-
-    const domain = this.extractDomain(url);
 
     const existingDomain = await this.websiteDomainRepository.findByDomain(domain);
 
@@ -44,13 +46,15 @@ export class WebsiteDomainService {
       throw new ConflictException('This domain is already registered');
     }
 
-    return this.websiteDomainRepository.create({
-      websiteId,
-      domain,
-    });
+    return this.websiteDomainRepository.create(websiteId, domain);
   }
 
-  public async update(websiteId: string, domainId: string, userId: string, url: string): Promise<WebsiteDomainRecord> {
+  public async update(
+    websiteId: string,
+    domainId: string,
+    userId: string,
+    domain: string,
+  ): Promise<WebsiteDomainRecord> {
     await this.ensureWebsiteOwnership(websiteId, userId);
 
     const existingDomain = await this.websiteDomainRepository.findByIdAndWebsiteId(domainId, websiteId);
@@ -59,21 +63,15 @@ export class WebsiteDomainService {
       throw new NotFoundException('Website domain not found');
     }
 
-    const domain = this.extractDomain(url);
+    if (existingDomain.domain !== domain) {
+      const domainAlreadyRegistered = await this.websiteDomainRepository.findByDomain(domain);
 
-    if (domain === existingDomain.domain) {
-      return existingDomain;
+      if (domainAlreadyRegistered) {
+        throw new ConflictException('This domain is already registered');
+      }
     }
 
-    const domainAlreadyRegistered = await this.websiteDomainRepository.findByDomain(domain);
-
-    if (domainAlreadyRegistered) {
-      throw new ConflictException('This domain is already registered');
-    }
-
-    const updatedDomain = await this.websiteDomainRepository.update(domainId, websiteId, {
-      domain,
-    });
+    const updatedDomain = await this.websiteDomainRepository.update(domainId, websiteId, domain);
 
     if (!updatedDomain) {
       throw new NotFoundException('Website domain not found');
@@ -98,11 +96,5 @@ export class WebsiteDomainService {
     if (!website) {
       throw new NotFoundException('Website not found');
     }
-  }
-
-  private extractDomain(url: string): string {
-    const parsedUrl = new URL(url);
-
-    return parsedUrl.hostname.toLowerCase().replace(/\.$/, '');
   }
 }

@@ -22,7 +22,18 @@ export function setupSwagger(app: INestApplication, context: BootstrapContext): 
         'account management for the kreitz-webdev Angular clients. Request and response shapes come from this ' +
         "API's own class-validator DTOs.",
     )
-    .setVersion('0.0.1');
+    .setVersion('0.0.1')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'Website Token',
+        name: 'Authorization',
+        in: 'header',
+        description: 'Website API token',
+      },
+      'website-token',
+    );
 
   if (config.isProduction) {
     documentBuilder.addServer(PRODUCTION_API_ORIGIN, 'Production');

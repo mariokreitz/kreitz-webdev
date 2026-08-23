@@ -1,8 +1,9 @@
 import { IWebsiteTokenRepository } from '@app/database/interfaces/website-token.repository.interface';
 
 import { IWebsiteRepository } from '@app/database/interfaces/website.repository.interface';
+import { WebsiteTokenRecord } from '@app/database/types/website-token.types';
+import { CreatedWebsiteTokenResponse } from '@app/modules/website-token/types/website-token.types';
 
-import { CreatedWebsiteTokenResponse, WebsiteTokenRecord } from '@app/database/types/website-token.types';
 import { generateWebsiteToken } from '@app/modules/website-token/utils/website-token.utils';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 

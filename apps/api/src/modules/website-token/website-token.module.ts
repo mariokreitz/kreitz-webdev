@@ -1,8 +1,6 @@
 import { WebsiteTokenRepository } from '@app/database/repositories/website-token.repository';
-
 import { WebsiteModule } from '@app/modules/website/website.module';
 import { Module } from '@nestjs/common';
-
 import { WEBSITE_TOKEN_REPOSITORY } from './tokens/website-token.tokens';
 
 import { WebsiteTokenController } from './website-token.controller';

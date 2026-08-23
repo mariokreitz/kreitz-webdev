@@ -1,21 +1,17 @@
-import type {
-  CreateWebsiteDomainData,
-  UpdateWebsiteDomainData,
-  WebsiteDomainRecord,
-} from '@app/database/types/website-domain.types';
+import type { WebsiteDomainRecord } from '@app/database/types/website-domain.types';
 
 export interface IWebsiteDomainRepository {
-  findById: (id: string) => Promise<WebsiteDomainRecord | null>;
+  findManyByWebsiteId: (websiteId: string) => Promise<WebsiteDomainRecord[]>;
 
   findByIdAndWebsiteId: (id: string, websiteId: string) => Promise<WebsiteDomainRecord | null>;
 
   findByDomain: (domain: string) => Promise<WebsiteDomainRecord | null>;
 
-  findManyByWebsiteId: (websiteId: string) => Promise<WebsiteDomainRecord[]>;
+  findVerifiedByDomain: (domain: string) => Promise<WebsiteDomainRecord | null>;
 
-  create: (data: CreateWebsiteDomainData) => Promise<WebsiteDomainRecord>;
+  create: (websiteId: string, domain: string) => Promise<WebsiteDomainRecord>;
 
-  update: (id: string, websiteId: string, data: UpdateWebsiteDomainData) => Promise<WebsiteDomainRecord | null>;
+  update: (id: string, websiteId: string, domain: string) => Promise<WebsiteDomainRecord | null>;
 
-  delete: (id: string, websiteId: string) => Promise<boolean>;
+  delete: (id: string, websiteId: string) => Promise<WebsiteDomainRecord | null>;
 }

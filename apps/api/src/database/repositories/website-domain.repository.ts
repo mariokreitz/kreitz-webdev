@@ -1,21 +1,18 @@
-import { IWebsiteDomainRepository } from '@app/database/interfaces/website-domain.repository.interface';
 import { PrismaService } from '@app/database/prisma';
-
-import {
-  CreateWebsiteDomainData,
-  UpdateWebsiteDomainData,
-  WebsiteDomainRecord,
-} from '@app/database/types/website-domain.types';
+import { WebsiteDomainRecord } from '@app/database/types/website-domain.types';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class WebsiteDomainRepository implements IWebsiteDomainRepository {
+export class WebsiteDomainRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  public async findById(id: string): Promise<WebsiteDomainRecord | null> {
-    return this.prisma.websiteDomain.findUnique({
+  public async findManyByWebsiteId(websiteId: string): Promise<WebsiteDomainRecord[]> {
+    return this.prisma.websiteDomain.findMany({
       where: {
-        id,
+        websiteId,
+      },
+      orderBy: {
+        createdAt: 'asc',
       },
     });
   }
@@ -37,39 +34,28 @@ export class WebsiteDomainRepository implements IWebsiteDomainRepository {
     });
   }
 
-  public async findManyByWebsiteId(websiteId: string): Promise<WebsiteDomainRecord[]> {
-    return this.prisma.websiteDomain.findMany({
+  public async findVerifiedByDomain(domain: string): Promise<WebsiteDomainRecord | null> {
+    return this.prisma.websiteDomain.findFirst({
       where: {
-        websiteId,
-      },
-      orderBy: {
-        createdAt: 'asc',
+        domain,
+        verified: true,
       },
     });
   }
 
-  public async create(data: CreateWebsiteDomainData): Promise<WebsiteDomainRecord> {
+  public async create(websiteId: string, domain: string): Promise<WebsiteDomainRecord> {
     return this.prisma.websiteDomain.create({
       data: {
-        websiteId: data.websiteId,
-        domain: data.domain,
+        websiteId,
+        domain,
       },
     });
   }
 
-  public async update(
-    id: string,
-    websiteId: string,
-    data: UpdateWebsiteDomainData,
-  ): Promise<WebsiteDomainRecord | null> {
-    const existingDomain = await this.prisma.websiteDomain.findFirst({
-      where: {
-        id,
-        websiteId,
-      },
-    });
+  public async update(id: string, websiteId: string, domain: string): Promise<WebsiteDomainRecord | null> {
+    const existing = await this.findByIdAndWebsiteId(id, websiteId);
 
-    if (!existingDomain) {
+    if (!existing) {
       return null;
     }
 
@@ -78,34 +64,22 @@ export class WebsiteDomainRepository implements IWebsiteDomainRepository {
         id,
       },
       data: {
-        domain: data.domain,
-        verified: false,
-        verifiedAt: null,
+        domain,
       },
     });
   }
 
-  public async delete(id: string, websiteId: string): Promise<boolean> {
-    const existingDomain = await this.prisma.websiteDomain.findFirst({
-      where: {
-        id,
-        websiteId,
-      },
-      select: {
-        id: true,
-      },
-    });
+  public async delete(id: string, websiteId: string): Promise<WebsiteDomainRecord | null> {
+    const existing = await this.findByIdAndWebsiteId(id, websiteId);
 
-    if (!existingDomain) {
-      return false;
+    if (!existing) {
+      return null;
     }
 
-    await this.prisma.websiteDomain.delete({
+    return this.prisma.websiteDomain.delete({
       where: {
-        id: existingDomain.id,
+        id,
       },
     });
-
-    return true;
   }
 }

@@ -1,4 +1,5 @@
-import { CreatedWebsiteTokenResponse, WebsiteTokenRecord } from '@app/database/types/website-token.types';
+import { WebsiteTokenRecord } from '@app/database/types/website-token.types';
+import { CreatedWebsiteTokenResponse } from '@app/modules/website-token/types/website-token.types';
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 
 import { Session, UserSession } from '@thallesp/nestjs-better-auth';
