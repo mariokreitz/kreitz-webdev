@@ -16,17 +16,11 @@ Nx monorepo, npm only (`package-lock.json`; no `packageManager` field, no other 
 
 ## Architecture & Code Quality (hard rules)
 
-- **No pattern without a concrete requirement.** Don't add Strategy/Factory/Adapter/etc. speculatively — apply one only when a real, present need drives it (e.g. Strategy for `LOG_FORMAT` selection). Before building a custom abstraction over a library already in use, verify the library doesn't already solve it (check its source/docs first) — don't duplicate what's already provided.
-- **DI over global mutable singletons.** No module-level `let instance` + getter/setter pairs. Use Nest's DI container.
-- **Every feature module exposes a public barrel (`index.ts`).** Code outside the module imports only from that barrel, never from the module's internal files directly.
-- **Only Nest's own module-wiring files live at a module's top level** (`*.module.ts`, `*.service.ts`, `*.controller.ts`, and other framework-recognized artifacts — middleware, guard, interceptor, pipe). Everything else gets its own subfolder — `types/`, `interfaces/`, `strategies/`, `constants/` (defaults/fallbacks, DI tokens) — re-exported through the module's `index.ts` barrel. Only add the subfolders a module actually needs; don't scaffold empty ones. Example shape for `core/email`: `email.module.ts`, `email.service.ts`, `email.controller.ts`, `index.ts`, plus `types/`, `interfaces/`, `strategies/`, `constants/` as needed. Watch for circular injection: a file inside one of those subfolders must import sibling files/subfolders directly, never back through the module's own `index.ts` — that's an import cycle into itself. Keep DI tokens in `constants/` so both the module and its subfolder files can import them without routing through the barrel.
-- **Cross-cutting modules used repo-wide are `@Global()` + listed in the owning module's `exports`**, matching `PrismaModule`/`RedisModule`. Don't mark a module `@Global()`/export it if it has nothing to export — that's dead config, delete it.
-- **Redaction/serialization of sensitive data uses an allow-list, not a deny-list.** Explicitly list the fields to keep; a field never included can't leak via a redact path someone forgets to update.
-- **One owner per cross-cutting concern.** Don't let two mechanisms register the same middleware/interceptor/logging path — pick one registration site.
-- **TypeScript**: isolate unavoidable `any` (forced by a framework interface) to a single boundary file — never let it leak further. `readonly` on config/options objects. Discriminated unions over loose `Record<string, unknown>` bags when variants actually differ. Interfaces, not abstract classes, when there's no shared implementation to inherit — just a contract.
-- **Delete no-op shells** (empty modules, dead re-export files) instead of keeping them "just in case."
-- **Zero comments by default.** The only acceptable comment is a one-line WHY (a non-obvious tradeoff/constraint) — never a WHAT.
-- **Tests follow the `__tests__`-per-feature convention** (see above); redaction/sanitization logic and other pure functions must ship with tests, not be deferred.
+Hard rules live under `.claude/rules/` (path-scoped, loaded on demand):
+
+- `.claude/rules/typescript-style.md` — repo-wide TS/engineering rules (explicit access modifiers, no speculative patterns, DI over singletons, zero comments, etc.)
+- `.claude/rules/nestjs-module-structure.md` — `apps/api` module structure, barrels, DI tokens, testing convention
+- `.claude/rules/angular-components.md` — `apps/frontend`/`apps/portal` smart/presentational component split
 
 Invoke the matching skill instead of guessing:
 
