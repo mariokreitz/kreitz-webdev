@@ -1,4 +1,4 @@
-import { RedisService } from '@app/core/redis';
+import { RedisService } from '@app/database/redis';
 import { Injectable } from '@nestjs/common';
 import { HealthIndicatorResult, HealthIndicatorService } from '@nestjs/terminus';
 

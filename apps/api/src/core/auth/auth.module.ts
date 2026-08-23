@@ -6,8 +6,8 @@ import { type SecurityConfig, securityConfig } from '@app/config/security.config
 import { type VerificationConfig, verificationConfig } from '@app/config/verification.config';
 import { ArcjetAuthMiddleware } from '@app/core/auth/middlewares/arcjet-auth.middleware';
 import { EmailService } from '@app/core/email';
-import { PrismaService } from '@app/core/prisma';
-import { RedisService } from '@app/core/redis';
+import { PrismaService } from '@app/database/prisma';
+import { RedisService } from '@app/database/redis';
 import { Module } from '@nestjs/common';
 import { AuthModule as BetterAuthNestModule } from '@thallesp/nestjs-better-auth';
 import { createAuth } from './strategies/auth.factory';

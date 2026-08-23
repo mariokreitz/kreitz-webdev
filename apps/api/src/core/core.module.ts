@@ -13,6 +13,8 @@ import {
   validateEnv,
   verificationConfig,
 } from '@app/config';
+import { PrismaModule } from '@app/database/prisma';
+import { RedisModule } from '@app/database/redis';
 import { ArcjetModule, shield } from '@arcjet/nest';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -20,8 +22,6 @@ import { AuthModule } from './auth';
 import { EmailModule } from './email';
 import { HealthModule } from './health';
 import { LoggingModule } from './logging';
-import { PrismaModule } from './prisma';
-import { RedisModule } from './redis';
 
 const NODE_ENV = process.env['NODE_ENV'] ?? 'development';
 

@@ -21,15 +21,18 @@ argument-hint: 'Optional: time range ("last 2 weeks", "this half"), category ("i
 
 # Brag Sheet — Work Impact Writer
 
-Turn engineering work into evidence-backed impact statements for performance reviews, self-reviews, promotion packets, and weekly updates. Uniquely mines Copilot CLI session logs, git history, and PRs to reconstruct forgotten work.
+Turn engineering work into evidence-backed impact statements for performance reviews, self-reviews, promotion packets,
+and weekly updates. Uniquely mines Copilot CLI session logs, git history, and PRs to reconstruct forgotten work.
 
-USE FOR: "brag", "log work", "what did I do", "backfill", "performance review", "self-review", "promo packet", "weekly update", "status report", "write impact statement", "what did I ship", "I forgot to log my work", "review prep", "accomplishments"
+USE FOR: "brag", "log work", "what did I do", "backfill", "performance review", "self-review", "promo packet", "weekly
+update", "status report", "write impact statement", "what did I ship", "I forgot to log my work", "review prep",
+"accomplishments"
 DO NOT USE FOR: project management, sprint planning, time tracking, ticket creation
 
 ## Quick Start
 
 | User wants...              | Mode            | Output                                               |
-| -------------------------- | --------------- | ---------------------------------------------------- |
+|----------------------------|-----------------|------------------------------------------------------|
 | Log one accomplishment     | **Capture**     | 1 impact-first entry                                 |
 | "What did I do last week?" | **Backfill**    | Entries grouped by week, mined from git/PRs/sessions |
 | Prep for review or promo   | **Review Pack** | Entries grouped by impact theme + STAR narratives    |
@@ -38,12 +41,14 @@ DO NOT USE FOR: project management, sprint planning, time tracking, ticket creat
 
 1. **DO** confirm the time range and scope before scanning sources. Don't assume "last week" — ask.
 2. **DO** check which tools are available (`save_to_brag_sheet`, `git`, `gh`) before choosing a workflow.
-3. **DO** always include all three parts: action → result → evidence. If evidence is missing, write `(evidence needed)` — never silently omit.
+3. **DO** always include all three parts: action → result → evidence. If evidence is missing, write
+   `(evidence needed)` — never silently omit.
 4. **DO** show drafted entries to the user before saving. Never auto-save without confirmation.
 5. **DO** group related commits into a single entry. Ten commits on the same feature = one entry.
 6. **DO** preserve the user's voice. Reframe for impact, but don't invent accomplishments or inflate scope.
 7. **DO NOT** fabricate metrics, team sizes, or impact numbers. If the user doesn't provide a number, don't invent one.
-8. **DO NOT** write entries for work the user only described verbally without verifying. Ask: "Did this ship? Is there a PR or doc I can reference?"
+8. **DO NOT** write entries for work the user only described verbally without verifying. Ask: "Did this ship? Is there a
+   PR or doc I can reference?"
 9. **DO NOT** skip the backfill scan steps or draft entries before scanning is complete.
 10. **DO NOT** pad weak periods with trivial entries. An honest gap is better than inflated fluff.
 
@@ -55,12 +60,13 @@ Every entry uses impact-first framing with three required parts:
 Did [action] → [result/impact] → [evidence]
 ```
 
-**Do not output an entry unless it includes all three parts.** If evidence is missing, ask for it or mark as "(evidence needed)".
+**Do not output an entry unless it includes all three parts.** If evidence is missing, ask for it or mark as "(evidence
+needed)".
 
 ### Anti-Patterns
 
 | ❌ Don't                                   | ✅ Do instead                                                                                 |
-| ------------------------------------------ | --------------------------------------------------------------------------------------------- |
+|--------------------------------------------|-----------------------------------------------------------------------------------------------|
 | "Fixed a bug in auth"                      | "Fixed token refresh race condition → eliminated 401s affecting 12% of API calls → PR #247"   |
 | "Worked on dashboards"                     | "Built latency dashboard in Grafana → on-call detects P95 spikes in <2min → deployed to prod" |
 | Invent a metric: "saved 40% of eng time"   | Ask: "Do you have a rough estimate, or should I keep this qualitative?"                       |
@@ -74,7 +80,7 @@ Did [action] → [result/impact] → [evidence]
 Not every entry needs a metric. Use the strongest evidence available:
 
 | Strength      | Evidence type           | Example                                                   |
-| ------------- | ----------------------- | --------------------------------------------------------- |
+|---------------|-------------------------|-----------------------------------------------------------|
 | 🥇 Best       | Quantified metric       | "Reduced P95 latency from 800ms to 120ms"                 |
 | 🥈 Strong     | PR, commit, or doc link | "PR #312, design doc in wiki"                             |
 | 🥉 Good       | Observable outcome      | "Unblocked Team X", "Resolved Sev2 incident Y"            |
@@ -86,7 +92,7 @@ Never invent a metric to fill the gap. Qualitative evidence with context beats f
 ## Categories
 
 | ID               | Emoji | Use for                                |
-| ---------------- | ----- | -------------------------------------- |
+|------------------|-------|----------------------------------------|
 | `pr`             | 🚀    | Merged PRs, shipped features           |
 | `bugfix`         | 🐛    | Bug fixes, incident patches            |
 | `infrastructure` | 🏗️    | Infra, deployments, migrations         |
@@ -101,13 +107,16 @@ Never invent a metric to fill the gap. Qualitative evidence with context beats f
 
 Follow this decision tree:
 
-1. **If `save_to_brag_sheet` tool is available** → use extension tools directly (`save_to_brag_sheet`, `review_brag_sheet`, `generate_work_log`). Do not reference or attempt to call these tools unless they are confirmed available.
+1. **If `save_to_brag_sheet` tool is available** → use extension tools directly (`save_to_brag_sheet`,
+   `review_brag_sheet`, `generate_work_log`). Do not reference or attempt to call these tools unless they are confirmed
+   available.
 
 2. **If git or gh CLI is available** → backfill from commits and PRs (see Backfill section below)
 
 3. **Otherwise** → guided interview: "What did you work on?", "Who benefited?", "What's the evidence?"
 
-For each entry, walk through: **What** (the deliverable) → **Why** (who benefits) → **Evidence** (PR, metric, link). Output formatted markdown the user can paste into a review doc.
+For each entry, walk through: **What** (the deliverable) → **Why** (who benefits) → **Evidence** (PR, metric, link).
+Output formatted markdown the user can paste into a review doc.
 
 ## Backfill Workflow
 
@@ -142,7 +151,7 @@ gh pr list --author @me --state merged --limit 20 \
 **Copilot session history** (unique to this skill):
 
 - Path: `~/.copilot/session-state/<session-id>/workspace.yaml`
-- Read fields: `summary`, `cwd`, `repository`, `branch`
+- Read fields: `summary`, `cwd`, `repositories`, `branch`
 - Skip sessions without a `summary` field
 - Note: this directory may not exist on all machines
 
@@ -189,20 +198,21 @@ When the user is preparing for a performance review (Connect, annual review, etc
 1. **Gather** — collect entries from the work log (or backfill using the workflow above)
 2. **Select** — pick the top 3–5 highest-impact items
 3. **Rewrite** each item with three parts:
-   - **What I did** — the specific action
-   - **Why it mattered** — who benefited, what changed
-   - **Proof** — PR number, metric delta, dashboard link, customer outcome
+    - **What I did** — the specific action
+    - **Why it mattered** — who benefited, what changed
+    - **Proof** — PR number, metric delta, dashboard link, customer outcome
 4. **Organize** by impact theme (not chronologically):
-   - Delivering results / operational excellence
-   - Customer / team impact
-   - Collaboration / mentoring / leadership
-   - Growth / learning
-5. **Ask for gaps** — if evidence is missing, prompt the user: "What metric changed?", "Who was unblocked?", "What's the PR or incident ID?"
+    - Delivering results / operational excellence
+    - Customer / team impact
+    - Collaboration / mentoring / leadership
+    - Growth / learning
+5. **Ask for gaps** — if evidence is missing, prompt the user: "What metric changed?", "Who was unblocked?", "What's the
+   PR or incident ID?"
 
 ### Strong vs weak entries
 
 | ✅ Strong                      | ❌ Weak                       |
-| ------------------------------ | ----------------------------- |
+|--------------------------------|-------------------------------|
 | Outcome-first, quantified      | Activity list ("worked on X") |
 | Tied to customer/team impact   | No beneficiary mentioned      |
 | Includes evidence (PR, metric) | No measurable result          |
@@ -212,7 +222,8 @@ When the user is preparing for a performance review (Connect, annual review, etc
 
 For longer narrative sections, use STAR: **S**ituation → **T**ask → **A**ction → **R**esult.
 
-For Microsoft employees using the Connect preset, frame entries around Core Priorities: delivering results, customer obsession, teamwork, and growth mindset.
+For Microsoft employees using the Connect preset, frame entries around Core Priorities: delivering results, customer
+obsession, teamwork, and growth mindset.
 
 ## Output Contract
 
@@ -232,7 +243,8 @@ The user may work across multiple repos. Before concluding there's nothing to ba
 
 1. Ask if they want to scan a different repo or branch
 2. Check `gh pr list --author @me --state merged` for cross-repo PRs
-3. Fall back to the guided interview — not all impactful work leaves git traces (design docs, incident response, mentoring)
+3. Fall back to the guided interview — not all impactful work leaves git traces (design docs, incident response,
+   mentoring)
 
 ### Review period doesn't match git history
 
@@ -246,15 +258,18 @@ PR history (`gh pr list --state merged`) is more reliable for long time ranges t
 
 ### User can't quantify impact
 
-Not every entry needs a number. See the Evidence Ladder above. Acceptable evidence includes PR links, "unblocked Team X", or qualitative outcomes with context. Never invent a metric to fill the gap.
+Not every entry needs a number. See the Evidence Ladder above. Acceptable evidence includes PR links, "unblocked Team
+X", or qualitative outcomes with context. Never invent a metric to fill the gap.
 
 ### Copilot session directory doesn't exist
 
-`~/.copilot/session-state/` only exists if the user has run Copilot CLI sessions. Don't error — silently skip and note: "No Copilot session history found; scanning git and PRs only."
+`~/.copilot/session-state/` only exists if the user has run Copilot CLI sessions. Don't error — silently skip and note:
+"No Copilot session history found; scanning git and PRs only."
 
 ### "brag" might mean something else
 
-The user might say "brag about this feature to my team" (a launch announcement, not a work entry). Confirm intent if ambiguous.
+The user might say "brag about this feature to my team" (a launch announcement, not a work entry). Confirm intent if
+ambiguous.
 
 ### Pair programming or co-authored commits
 
@@ -262,4 +277,6 @@ If multiple authors appear on the same commits, ask: "Should I credit this as yo
 
 ## Automatic Session Tracking (Optional)
 
-For automatic background tracking of every Copilot CLI session (files edited, PRs created, git actions), install the [copilot-brag-sheet](https://github.com/microsoft/copilot-brag-sheet) extension. It adds `save_to_brag_sheet`, `review_brag_sheet`, and `generate_work_log` tools to every session.
+For automatic background tracking of every Copilot CLI session (files edited, PRs created, git actions), install
+the [copilot-brag-sheet](https://github.com/microsoft/copilot-brag-sheet) extension. It adds `save_to_brag_sheet`,
+`review_brag_sheet`, and `generate_work_log` tools to every session.

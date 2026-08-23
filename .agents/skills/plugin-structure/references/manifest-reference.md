@@ -6,7 +6,8 @@ Complete reference for `plugin.json` configuration.
 
 **Required path**: `.claude-plugin/plugin.json`
 
-The manifest MUST be in the `.claude-plugin/` directory at the plugin root. Claude Code will not recognize plugins without this file in the correct location.
+The manifest MUST be in the `.claude-plugin/` directory at the plugin root. Claude Code will not recognize plugins
+without this file in the correct location.
 
 ## Complete Field Reference
 
@@ -14,9 +15,7 @@ The manifest MUST be in the `.claude-plugin/` directory at the plugin root. Clau
 
 #### name (required)
 
-**Type**: String
-**Format**: kebab-case
-**Example**: `"test-automation-suite"`
+**Type**: String **Format**: kebab-case **Example**: `"test-automation-suite"`
 
 The unique identifier for the plugin. Used for:
 
@@ -45,8 +44,7 @@ The unique identifier for the plugin. Used for:
 
 #### version
 
-**Type**: String
-**Format**: Semantic versioning (MAJOR.MINOR.PATCH)
+**Type**: String **Format**: Semantic versioning (MAJOR.MINOR.PATCH)
 **Example**: `"2.1.0"`
 **Default**: `"0.1.0"` if not specified
 
@@ -71,9 +69,8 @@ Semantic versioning guidelines:
 
 #### description
 
-**Type**: String
-**Length**: 50-200 characters recommended
-**Example**: `"Automates code review workflows with style checks and automated feedback"`
+**Type**: String **Length**: 50-200 characters recommended **Example**:
+`"Automates code review workflows with style checks and automated feedback"`
 
 Brief explanation of plugin purpose and functionality.
 
@@ -95,8 +92,7 @@ Brief explanation of plugin purpose and functionality.
 
 #### author
 
-**Type**: Object
-**Fields**: name (required), email (optional), url (optional)
+**Type**: Object **Fields**: name (required), email (optional), url (optional)
 
 ```json
 {
@@ -139,14 +135,13 @@ Link to plugin documentation or landing page.
 
 **Not for**:
 
-- Source code (use `repository` field)
+- Source code (use `repositories` field)
 - Issue tracker (include in documentation)
 - Personal websites (use `author.url`)
 
 #### repository
 
-**Type**: String (URL) or Object
-**Example**: `"https://github.com/user/plugin-name"`
+**Type**: String (URL) or Object **Example**: `"https://github.com/user/plugin-name"`
 
 Source code repository location.
 
@@ -179,9 +174,7 @@ Source code repository location.
 
 #### license
 
-**Type**: String
-**Format**: SPDX identifier
-**Example**: `"MIT"`
+**Type**: String **Format**: SPDX identifier **Example**: `"MIT"`
 
 Software license identifier.
 
@@ -206,8 +199,7 @@ Software license identifier.
 
 #### keywords
 
-**Type**: Array of strings
-**Example**: `["testing", "automation", "ci-cd", "quality-assurance"]`
+**Type**: Array of strings **Example**: `["testing", "automation", "ci-cd", "quality-assurance"]`
 
 Tags for plugin discovery and categorization.
 
@@ -230,8 +222,7 @@ Tags for plugin discovery and categorization.
 
 #### commands
 
-**Type**: String or Array of strings
-**Default**: `["./commands"]`
+**Type**: String or Array of strings **Default**: `["./commands"]`
 **Example**: `"./cli-commands"`
 
 Additional directories or files containing command definitions.
@@ -262,8 +253,7 @@ Additional directories or files containing command definitions.
 
 #### agents
 
-**Type**: String or Array of strings
-**Default**: `["./agents"]`
+**Type**: String or Array of strings **Default**: `["./agents"]`
 **Example**: `"./specialized-agents"`
 
 Additional directories or files containing agent definitions.
@@ -381,21 +371,21 @@ All paths in component fields must follow these rules:
 When Claude Code loads components:
 
 1. **Default directories**: Scans standard locations first
-   - `./commands/`
-   - `./agents/`
-   - `./skills/`
-   - `./hooks/hooks.json`
-   - `./.mcp.json`
+    - `./commands/`
+    - `./agents/`
+    - `./skills/`
+    - `./hooks/hooks.json`
+    - `./.mcp.json`
 
 2. **Custom paths**: Scans paths specified in manifest
-   - Paths from `commands` field
-   - Paths from `agents` field
-   - Files from `hooks` and `mcpServers` fields
+    - Paths from `commands` field
+    - Paths from `agents` field
+    - Files from `hooks` and `mcpServers` fields
 
 3. **Merge behavior**: Components from all locations load
-   - No overwriting
-   - All discovered components register
-   - Name conflicts cause errors
+    - No overwriting
+    - All discovered components register
+    - Name conflicts cause errors
 
 ## Validation
 

@@ -1,6 +1,6 @@
 import { type HealthConfig, healthConfig } from '@app/config/health.config';
 import { RedisHealthIndicator } from '@app/core/health/indicators/redis-health.indicator';
-import { PrismaService } from '@app/core/prisma';
+import { PrismaService } from '@app/database/prisma';
 import { Controller, Get, Inject, VERSION_NEUTRAL } from '@nestjs/common';
 import {
   HealthCheck,
