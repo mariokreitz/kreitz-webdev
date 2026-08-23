@@ -1,34 +1,50 @@
-import { WebsiteTokenRecord } from '@app/database/types/website-token.types';
-import { CreatedWebsiteTokenResponse } from '@app/modules/website-token/types/website-token.types';
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { CreatedWebsiteTokenResponse } from '@app/modules/website-token/dto/created-website-token.response';
+import { WebsiteTokenSummaryResponse } from '@app/modules/website-token/dto/website-token-summary.response';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post } from '@nestjs/common';
+import { ApiCookieAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { Session, UserSession } from '@thallesp/nestjs-better-auth';
 import { CreateWebsiteTokenDto } from './dto/create-website-token.dto';
 
 import { WebsiteTokenService } from './website-token.service';
 
+@ApiTags('Website Tokens')
+@ApiCookieAuth('session-cookie')
+@ApiResponse({ status: 401, description: 'No valid session' })
 @Controller('websites/:websiteId/tokens')
 export class WebsiteTokenController {
   constructor(private readonly websiteTokenService: WebsiteTokenService) {}
 
   @Get()
+  @ApiOperation({ summary: 'List all tokens for a website owned by the current user' })
+  @ApiResponse({ status: 200, type: [WebsiteTokenSummaryResponse] })
+  @ApiResponse({ status: 404, description: 'Website not found' })
   public async getAll(
     @Param('websiteId') websiteId: string,
     @Session() session: UserSession,
-  ): Promise<WebsiteTokenRecord[]> {
+  ): Promise<WebsiteTokenSummaryResponse[]> {
     return this.websiteTokenService.getAllForUser(websiteId, session.user.id);
   }
 
   @Get(':tokenId')
+  @ApiOperation({ summary: 'Get a single token for a website owned by the current user' })
+  @ApiResponse({ status: 200, type: WebsiteTokenSummaryResponse })
+  @ApiResponse({ status: 404, description: 'Website or token not found' })
   public async getById(
     @Param('websiteId') websiteId: string,
     @Param('tokenId') tokenId: string,
     @Session() session: UserSession,
-  ): Promise<WebsiteTokenRecord> {
+  ): Promise<WebsiteTokenSummaryResponse> {
     return this.websiteTokenService.getByIdForUser(websiteId, tokenId, session.user.id);
   }
 
   @Post()
+  @ApiOperation({
+    summary: 'Create a website token',
+    description: 'Returns the plaintext token exactly once. Only its prefix is ever exposed again.',
+  })
+  @ApiResponse({ status: 201, type: CreatedWebsiteTokenResponse })
+  @ApiResponse({ status: 404, description: 'Website not found' })
   public async create(
     @Param('websiteId') websiteId: string,
     @Body() dto: CreateWebsiteTokenDto,
@@ -38,6 +54,13 @@ export class WebsiteTokenController {
   }
 
   @Delete(':tokenId')
+  @HttpCode(204)
+  @ApiOperation({
+    summary: 'Delete a website token',
+    description: 'Permanently deletes the token. This cannot be undone.',
+  })
+  @ApiResponse({ status: 204, description: 'Token deleted' })
+  @ApiResponse({ status: 404, description: 'Website or token not found' })
   public async delete(
     @Param('websiteId') websiteId: string,
     @Param('tokenId') tokenId: string,

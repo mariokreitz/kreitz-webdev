@@ -45,6 +45,8 @@ export function createAuth(options: CreateAuthOptions): Auth {
       github: {
         clientId: githubClientId,
         clientSecret: githubClientSecret,
+        // `scope` is additive to GitHub's default ["read:user","user:email"], not a replacement — login is unaffected.
+        scope: ['repo'],
       },
     },
     emailAndPassword: {

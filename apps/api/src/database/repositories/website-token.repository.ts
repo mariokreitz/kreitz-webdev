@@ -37,20 +37,14 @@ export class WebsiteTokenRepository implements IWebsiteTokenRepository {
 
   public async create(data: CreateWebsiteTokenData): Promise<WebsiteTokenRecord> {
     return this.prisma.websiteToken.create({
-      data: {
-        websiteId: data.websiteId,
-        name: data.name,
-        prefix: data.prefix,
-        tokenHash: data.tokenHash,
-        expiresAt: data.expiresAt ?? null,
-      },
+      data: this.toCreateData(data),
     });
   }
 
   public async delete(id: string, websiteId: string): Promise<WebsiteTokenRecord | null> {
-    const token = await this.findByIdAndWebsiteId(id, websiteId);
+    const existing = await this.findByIdAndWebsiteId(id, websiteId);
 
-    if (!token) {
+    if (!existing) {
       return null;
     }
 
@@ -70,5 +64,15 @@ export class WebsiteTokenRepository implements IWebsiteTokenRepository {
         lastUsedAt,
       },
     });
+  }
+
+  private toCreateData(data: CreateWebsiteTokenData): CreateWebsiteTokenData {
+    return {
+      websiteId: data.websiteId,
+      name: data.name,
+      prefix: data.prefix,
+      tokenHash: data.tokenHash,
+      expiresAt: data.expiresAt ?? null,
+    };
   }
 }

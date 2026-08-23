@@ -6,10 +6,8 @@ export interface WebsiteTokenRecord {
   prefix: string;
   tokenHash: string;
 
-  active: boolean;
   expiresAt: Date | null;
   lastUsedAt: Date | null;
-  revokedAt: Date | null;
 
   createdAt: Date;
   updatedAt: Date;

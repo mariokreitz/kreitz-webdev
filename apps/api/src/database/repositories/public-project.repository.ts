@@ -13,8 +13,18 @@ export class PublicProjectRepository implements IPublicProjectRepository {
         websiteId,
         published: true,
       },
-      include: {
-        project: true,
+      select: {
+        project: {
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            repoUrl: true,
+            liveUrl: true,
+            tags: true,
+            imageUrl: true,
+          },
+        },
       },
       orderBy: {
         sortOrder: 'asc',
@@ -26,11 +36,10 @@ export class PublicProjectRepository implements IPublicProjectRepository {
         id: record.project.id,
         name: record.project.name,
         description: record.project.description,
-        url: record.project.url,
+        repoUrl: record.project.repoUrl,
+        liveUrl: record.project.liveUrl,
+        tags: record.project.tags,
         imageUrl: record.project.imageUrl,
-        githubOwner: record.project.githubOwner,
-        githubRepo: record.project.githubRepo,
-        sortOrder: record.sortOrder,
       }),
     );
   }

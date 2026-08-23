@@ -2,6 +2,7 @@ import { IWebsiteDomainRepository } from '@app/database/interfaces/website-domai
 import { IWebsiteRepository } from '@app/database/interfaces/website.repository.interface';
 import { WebsiteDomainRecord } from '@app/database/types/website-domain.types';
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { PinoLogger } from 'nestjs-pino';
 import { WEBSITE_REPOSITORY } from '../website/tokens/website.tokens';
 import { WEBSITE_DOMAIN_REPOSITORY } from './tokens/website-domain.tokens';
 
@@ -13,7 +14,11 @@ export class WebsiteDomainService {
 
     @Inject(WEBSITE_DOMAIN_REPOSITORY)
     private readonly websiteDomainRepository: IWebsiteDomainRepository,
-  ) {}
+
+    private readonly logger: PinoLogger,
+  ) {
+    this.logger.setContext(WebsiteDomainService.name);
+  }
 
   public async getAllForUser(websiteId: string, userId: string): Promise<WebsiteDomainRecord[]> {
     const website = await this.websiteRepository.findByIdAndUserId(websiteId, userId);
@@ -46,7 +51,11 @@ export class WebsiteDomainService {
       throw new ConflictException('This domain is already registered');
     }
 
-    return this.websiteDomainRepository.create(websiteId, domain);
+    const created = await this.websiteDomainRepository.create(websiteId, domain);
+
+    this.logger.info({ event: 'website_domain.created', websiteId, domainId: created.id, domain });
+
+    return created;
   }
 
   public async update(
@@ -77,6 +86,8 @@ export class WebsiteDomainService {
       throw new NotFoundException('Website domain not found');
     }
 
+    this.logger.info({ event: 'website_domain.updated', websiteId, domainId: updatedDomain.id, domain });
+
     return updatedDomain;
   }
 
@@ -88,6 +99,8 @@ export class WebsiteDomainService {
     if (!deleted) {
       throw new NotFoundException('Website domain not found');
     }
+
+    this.logger.info({ event: 'website_domain.deleted', websiteId, domainId });
   }
 
   private async ensureWebsiteOwnership(websiteId: string, userId: string): Promise<void> {

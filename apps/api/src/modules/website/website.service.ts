@@ -2,6 +2,7 @@ import { IWebsiteRepository } from '@app/database/interfaces/website.repository.
 import { UpdateWebsiteData, WebsiteRecord } from '@app/database/types/website.repository.types';
 import { CreateWebsiteInput } from '@app/modules/website/types/website.types';
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { PinoLogger } from 'nestjs-pino';
 import { WEBSITE_REPOSITORY } from './tokens/website.tokens';
 
 @Injectable()
@@ -9,7 +10,11 @@ export class WebsiteService {
   constructor(
     @Inject(WEBSITE_REPOSITORY)
     private readonly websiteRepository: IWebsiteRepository,
-  ) {}
+
+    private readonly logger: PinoLogger,
+  ) {
+    this.logger.setContext(WebsiteService.name);
+  }
 
   public async getAllForUser(userId: string): Promise<WebsiteRecord[]> {
     return this.websiteRepository.findManyByUserId(userId);
@@ -41,12 +46,16 @@ export class WebsiteService {
       throw new ConflictException('A website with this slug already exists');
     }
 
-    return this.websiteRepository.create({
+    const created = await this.websiteRepository.create({
       userId: input.userId,
       name: input.name,
       slug,
       domain,
     });
+
+    this.logger.info({ event: 'website.created', websiteId: created.id, userId: input.userId });
+
+    return created;
   }
 
   public async update(id: string, userId: string, data: UpdateWebsiteData): Promise<WebsiteRecord> {
@@ -70,6 +79,8 @@ export class WebsiteService {
       throw new NotFoundException('Website not found');
     }
 
+    this.logger.info({ event: 'website.updated', websiteId: updatedWebsite.id, userId });
+
     return updatedWebsite;
   }
 
@@ -79,6 +90,8 @@ export class WebsiteService {
     if (!deleted) {
       throw new NotFoundException('Website not found');
     }
+
+    this.logger.info({ event: 'website.deleted', websiteId: id, userId });
   }
 
   private extractDomain(url: string): string {

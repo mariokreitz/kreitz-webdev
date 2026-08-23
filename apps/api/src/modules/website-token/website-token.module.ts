@@ -16,6 +16,6 @@ import { WebsiteTokenService } from './website-token.service';
       useClass: WebsiteTokenRepository,
     },
   ],
-  exports: [WebsiteTokenService, WEBSITE_TOKEN_REPOSITORY],
+  exports: [WebsiteTokenService, WEBSITE_TOKEN_REPOSITORY, WebsiteModule],
 })
 export class WebsiteTokenModule {}

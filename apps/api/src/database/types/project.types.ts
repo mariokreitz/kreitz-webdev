@@ -8,7 +8,9 @@ export interface ProjectRecord {
 
   name: string;
   description: string | null;
-  url: string | null;
+  repoUrl: string | null;
+  liveUrl: string | null;
+  tags: string[];
   imageUrl: string | null;
 
   importedAt: Date;
@@ -24,7 +26,9 @@ export interface CreateProjectData {
 
   name: string;
   description?: string;
-  url?: string;
+  repoUrl?: string;
+  liveUrl?: string;
+  tags?: string[];
   imageUrl?: string;
 }
 
@@ -35,6 +39,8 @@ export interface UpdateProjectData {
 
   name?: string;
   description?: string;
-  url?: string;
+  repoUrl?: string;
+  liveUrl?: string;
+  tags?: string[];
   imageUrl?: string;
 }

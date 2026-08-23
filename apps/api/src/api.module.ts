@@ -1,7 +1,9 @@
 import { CoreModule } from '@app/core/core.module';
+import { GithubImportModule } from '@app/modules/github-import';
 import { ProjectModule } from '@app/modules/project/project.module';
-import { PublicProjectModule } from '@app/modules/public-projects/public-project.module';
+import { PublicProjectModule } from '@app/modules/public-projects';
 import { WebsiteDomainModule } from '@app/modules/website-domain/website-domain.module';
+import { WebsiteProjectModule } from '@app/modules/website-project';
 import { WebsiteTokenModule } from '@app/modules/website-token/website-token.module';
 import { WebsiteModule } from '@app/modules/website/website.module';
 import { Module } from '@nestjs/common';
@@ -13,8 +15,9 @@ import { Module } from '@nestjs/common';
     WebsiteModule,
     WebsiteDomainModule,
     WebsiteTokenModule,
-    ProjectModule,
+    WebsiteProjectModule,
     PublicProjectModule,
+    GithubImportModule,
   ],
 })
 export class ApiModule {}

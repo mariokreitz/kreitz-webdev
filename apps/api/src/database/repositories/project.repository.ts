@@ -1,7 +1,41 @@
 import { IProjectRepository } from '@app/database/interfaces/project.repository.interface';
 import { PrismaService } from '@app/database/prisma';
 import { CreateProjectData, ProjectRecord, UpdateProjectData } from '@app/database/types/project.types';
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
+import { Prisma } from '../../../generated/prisma/client';
+
+const USER_GITHUB_UNIQUE_FIELDS = ['userId', 'githubId'] as const;
+
+function isUserGithubUniqueViolation(error: unknown): boolean {
+  if (!(error instanceof Prisma.PrismaClientKnownRequestError) || error.code !== 'P2002') {
+    return false;
+  }
+
+  const meta = error.meta;
+  const target = meta?.['target'];
+
+  if (Array.isArray(target)) {
+    return USER_GITHUB_UNIQUE_FIELDS.every((field) => target.includes(field));
+  }
+
+  const driverAdapterError = meta?.['driverAdapterError'];
+  const cause =
+    driverAdapterError && typeof driverAdapterError === 'object' && 'cause' in driverAdapterError
+      ? driverAdapterError.cause
+      : undefined;
+  const constraintFields =
+    cause && typeof cause === 'object' && 'constraint' in cause
+      ? (cause.constraint as { fields?: unknown } | undefined)?.fields
+      : undefined;
+
+  if (Array.isArray(constraintFields)) {
+    const normalizedFields = constraintFields.map((field) => String(field).replace(/"/g, ''));
+
+    return USER_GITHUB_UNIQUE_FIELDS.every((field) => normalizedFields.includes(field));
+  }
+
+  return false;
+}
 
 @Injectable()
 export class ProjectRepository implements IProjectRepository {
@@ -45,37 +79,53 @@ export class ProjectRepository implements IProjectRepository {
   }
 
   public async create(data: CreateProjectData): Promise<ProjectRecord> {
-    return await this.prisma.project.create({
-      data: {
-        userId: data.userId,
+    try {
+      return await this.prisma.project.create({
+        data: {
+          userId: data.userId,
 
-        ...(data.githubId !== undefined && {
-          githubId: data.githubId,
-        }),
+          ...(data.githubId !== undefined && {
+            githubId: data.githubId,
+          }),
 
-        ...(data.githubOwner !== undefined && {
-          githubOwner: data.githubOwner,
-        }),
+          ...(data.githubOwner !== undefined && {
+            githubOwner: data.githubOwner,
+          }),
 
-        ...(data.githubRepo !== undefined && {
-          githubRepo: data.githubRepo,
-        }),
+          ...(data.githubRepo !== undefined && {
+            githubRepo: data.githubRepo,
+          }),
 
-        name: data.name,
+          name: data.name,
 
-        ...(data.description !== undefined && {
-          description: data.description,
-        }),
+          ...(data.description !== undefined && {
+            description: data.description,
+          }),
 
-        ...(data.url !== undefined && {
-          url: data.url,
-        }),
+          ...(data.repoUrl !== undefined && {
+            repoUrl: data.repoUrl,
+          }),
 
-        ...(data.imageUrl !== undefined && {
-          imageUrl: data.imageUrl,
-        }),
-      },
-    });
+          ...(data.liveUrl !== undefined && {
+            liveUrl: data.liveUrl,
+          }),
+
+          ...(data.tags !== undefined && {
+            tags: data.tags,
+          }),
+
+          ...(data.imageUrl !== undefined && {
+            imageUrl: data.imageUrl,
+          }),
+        },
+      });
+    } catch (error) {
+      if (isUserGithubUniqueViolation(error)) {
+        throw new ConflictException('This GitHub project is already imported');
+      }
+
+      throw error;
+    }
   }
 
   public async update(id: string, userId: string, data: UpdateProjectData): Promise<ProjectRecord | null> {
@@ -90,40 +140,56 @@ export class ProjectRepository implements IProjectRepository {
       return null;
     }
 
-    return await this.prisma.project.update({
-      where: {
-        id,
-      },
-      data: {
-        ...(data.githubId !== undefined && {
-          githubId: data.githubId,
-        }),
+    try {
+      return await this.prisma.project.update({
+        where: {
+          id,
+        },
+        data: {
+          ...(data.githubId !== undefined && {
+            githubId: data.githubId,
+          }),
 
-        ...(data.githubOwner !== undefined && {
-          githubOwner: data.githubOwner,
-        }),
+          ...(data.githubOwner !== undefined && {
+            githubOwner: data.githubOwner,
+          }),
 
-        ...(data.githubRepo !== undefined && {
-          githubRepo: data.githubRepo,
-        }),
+          ...(data.githubRepo !== undefined && {
+            githubRepo: data.githubRepo,
+          }),
 
-        ...(data.name !== undefined && {
-          name: data.name,
-        }),
+          ...(data.name !== undefined && {
+            name: data.name,
+          }),
 
-        ...(data.description !== undefined && {
-          description: data.description,
-        }),
+          ...(data.description !== undefined && {
+            description: data.description,
+          }),
 
-        ...(data.url !== undefined && {
-          url: data.url,
-        }),
+          ...(data.repoUrl !== undefined && {
+            repoUrl: data.repoUrl,
+          }),
 
-        ...(data.imageUrl !== undefined && {
-          imageUrl: data.imageUrl,
-        }),
-      },
-    });
+          ...(data.liveUrl !== undefined && {
+            liveUrl: data.liveUrl,
+          }),
+
+          ...(data.tags !== undefined && {
+            tags: data.tags,
+          }),
+
+          ...(data.imageUrl !== undefined && {
+            imageUrl: data.imageUrl,
+          }),
+        },
+      });
+    } catch (error) {
+      if (isUserGithubUniqueViolation(error)) {
+        throw new ConflictException('This GitHub project is already imported');
+      }
+
+      throw error;
+    }
   }
 
   public async delete(id: string, userId: string): Promise<boolean> {
