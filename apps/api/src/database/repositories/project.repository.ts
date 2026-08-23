@@ -1,9 +1,10 @@
+import { IProjectRepository } from '@app/database/interfaces/project.repository.interface';
 import { PrismaService } from '@app/database/prisma';
 import { CreateProjectData, ProjectRecord, UpdateProjectData } from '@app/database/types/project.types';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class ProjectRepository {
+export class ProjectRepository implements IProjectRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   public async findManyByUserId(userId: string): Promise<ProjectRecord[]> {
