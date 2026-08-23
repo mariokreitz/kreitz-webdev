@@ -1,9 +1,8 @@
 import { WebsiteRepository } from '@app/database/repositories/website.repository';
-import { WEBSITE_REPOSITORY } from '@app/modules/website/tokens/website.tokens';
-import { WebsiteService } from '@app/modules/website/website.service';
 import { Module } from '@nestjs/common';
-
+import { WEBSITE_REPOSITORY } from './tokens/website.tokens';
 import { WebsiteController } from './website.controller';
+import { WebsiteService } from './website.service';
 
 @Module({
   controllers: [WebsiteController],
@@ -14,6 +13,6 @@ import { WebsiteController } from './website.controller';
       useClass: WebsiteRepository,
     },
   ],
-  exports: [WebsiteService],
+  exports: [WebsiteService, WEBSITE_REPOSITORY],
 })
 export class WebsiteModule {}
