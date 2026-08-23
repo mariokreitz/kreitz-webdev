@@ -1,3 +1,5 @@
+import type { RedisConfig } from '@app/config/redis.config';
+import type { CacheService } from '@app/database/cache';
 import type { IWebsiteDomainRepository } from '@app/database/interfaces/website-domain.repository.interface';
 import type { IWebsiteTokenRepository } from '@app/database/interfaces/website-token.repository.interface';
 import type { IWebsiteRepository } from '@app/database/interfaces/website.repository.interface';
@@ -14,6 +16,7 @@ import { WebsiteTokenGuard } from '../website-token.guard';
 const RAW_TOKEN = 'wst_live_test-raw-token-value';
 const TOKEN_HASH = createHash('sha256').update(RAW_TOKEN, 'utf8').digest('hex');
 const NOW = new Date('2026-01-01T00:00:00.000Z');
+const TTL_MS = 60_000;
 
 function buildToken(overrides: Partial<WebsiteTokenRecord> = {}): WebsiteTokenRecord {
   return {
@@ -95,11 +98,49 @@ function buildLogger(): MockedPinoLogger {
   };
 }
 
+interface MockedCacheService {
+  get: jest.Mock;
+  set: jest.Mock;
+  del: jest.Mock;
+  getOrSet: jest.Mock;
+}
+
+function buildCacheService(): MockedCacheService {
+  const cacheService: MockedCacheService = {
+    get: jest.fn(),
+    set: jest.fn(),
+    del: jest.fn(),
+    getOrSet: jest.fn(),
+  };
+
+  // WHY: default behavior passes through to the loader, so existing tests that mock repositories directly keep working unless a test overrides getOrSet to assert cache-hit/negative-cache behavior.
+  cacheService.getOrSet.mockImplementation(
+    async (_key: string, _ttlMs: number | undefined, loader: () => Promise<unknown>) => loader(),
+  );
+
+  return cacheService;
+}
+
+function buildRedisConfig(overrides: Partial<RedisConfig> = {}): RedisConfig {
+  return {
+    url: 'redis://localhost:6379',
+    keyPrefix: 'app',
+    commandTimeoutMs: 1_000,
+    connectTimeoutMs: 5_000,
+    ttlMs: TTL_MS,
+    memoryTtlMs: 10_000,
+    memoryLruSize: 1_000,
+    queuePrefix: 'app-queue',
+    ...overrides,
+  };
+}
+
 function buildGuard(): {
   guard: WebsiteTokenGuard;
   websiteTokenRepository: jest.Mocked<IWebsiteTokenRepository>;
   websiteDomainRepository: jest.Mocked<IWebsiteDomainRepository>;
   websiteRepository: jest.Mocked<IWebsiteRepository>;
+  cacheService: MockedCacheService;
   logger: MockedPinoLogger;
 } {
   const websiteTokenRepository: jest.Mocked<IWebsiteTokenRepository> = {
@@ -134,16 +175,20 @@ function buildGuard(): {
 
   websiteTokenRepository.updateLastUsedAt.mockResolvedValue(undefined);
 
+  const cacheService = buildCacheService();
+  const redis = buildRedisConfig();
   const logger = buildLogger();
 
   const guard = new WebsiteTokenGuard(
     websiteTokenRepository,
     websiteDomainRepository,
     websiteRepository,
+    redis,
+    cacheService as unknown as CacheService,
     logger as unknown as PinoLogger,
   );
 
-  return { guard, websiteTokenRepository, websiteDomainRepository, websiteRepository, logger };
+  return { guard, websiteTokenRepository, websiteDomainRepository, websiteRepository, cacheService, logger };
 }
 
 describe('WebsiteTokenGuard', () => {
@@ -401,5 +446,216 @@ describe('WebsiteTokenGuard', () => {
 
     await expect(guard.canActivate(context)).resolves.toBe(true);
     expect(websiteDomainRepository.findVerifiedByDomain).not.toHaveBeenCalled();
+  });
+
+  describe('caching', () => {
+    it('looks up the token through the cache using the token-hash key and the configured L2 ttl', async () => {
+      const { guard, websiteTokenRepository, websiteRepository, cacheService } = buildGuard();
+
+      websiteTokenRepository.findByTokenHash.mockResolvedValue(buildToken());
+      websiteRepository.findById.mockResolvedValue(buildWebsite());
+
+      const request = buildRequest({ headers: { authorization: `Bearer ${RAW_TOKEN}` } });
+      const context = buildContext(request);
+
+      await expect(guard.canActivate(context)).resolves.toBe(true);
+
+      expect(cacheService.getOrSet).toHaveBeenCalledWith(`token:${TOKEN_HASH}`, TTL_MS, expect.any(Function));
+    });
+
+    it('resolves a cache hit without querying the token repository', async () => {
+      const { guard, websiteTokenRepository, websiteRepository, cacheService } = buildGuard();
+
+      cacheService.getOrSet.mockImplementation((key: string) => {
+        if (key === `token:${TOKEN_HASH}`) {
+          return buildToken();
+        }
+
+        return buildWebsite();
+      });
+
+      const request = buildRequest({ headers: { authorization: `Bearer ${RAW_TOKEN}` } });
+      const context = buildContext(request);
+
+      await expect(guard.canActivate(context)).resolves.toBe(true);
+      expect(websiteTokenRepository.findByTokenHash).not.toHaveBeenCalled();
+      expect(websiteRepository.findById).not.toHaveBeenCalled();
+    });
+
+    it('rejects a negative-cached token without re-querying the token repository', async () => {
+      const { guard, websiteTokenRepository, cacheService, logger } = buildGuard();
+
+      cacheService.getOrSet.mockResolvedValue(null);
+
+      const request = buildRequest({
+        headers: { authorization: `Bearer ${RAW_TOKEN}` },
+        ip: '203.0.113.10',
+      });
+      const context = buildContext(request);
+
+      await expect(guard.canActivate(context)).rejects.toBeInstanceOf(UnauthorizedException);
+      expect(websiteTokenRepository.findByTokenHash).not.toHaveBeenCalled();
+      expect(logger.warn).toHaveBeenCalledWith({
+        event: 'website_token.guard.rejected',
+        reason: 'invalid_token',
+        ip: '203.0.113.10',
+      });
+    });
+
+    it('looks up the website through the cache using the website-id key and the configured L2 ttl', async () => {
+      const { guard, websiteTokenRepository, websiteRepository, cacheService } = buildGuard();
+
+      websiteTokenRepository.findByTokenHash.mockResolvedValue(buildToken());
+      websiteRepository.findById.mockResolvedValue(buildWebsite());
+
+      const request = buildRequest({ headers: { authorization: `Bearer ${RAW_TOKEN}` } });
+      const context = buildContext(request);
+
+      await expect(guard.canActivate(context)).resolves.toBe(true);
+
+      expect(cacheService.getOrSet).toHaveBeenCalledWith('website:website-a', TTL_MS, expect.any(Function));
+    });
+
+    it('normalizes a token record whose dates were serialized to strings by the redis cache layer', async () => {
+      const { guard, websiteRepository, cacheService } = buildGuard();
+
+      const serializedToken = {
+        ...buildToken({ lastUsedAt: null }),
+        expiresAt: new Date('2027-01-01T00:00:00.000Z').toISOString(),
+      } as unknown as WebsiteTokenRecord;
+
+      cacheService.getOrSet.mockImplementation((key: string) => {
+        if (key === `token:${TOKEN_HASH}`) {
+          return serializedToken;
+        }
+
+        return buildWebsite();
+      });
+      websiteRepository.findById.mockResolvedValue(buildWebsite());
+
+      const request = buildRequest({ headers: { authorization: `Bearer ${RAW_TOKEN}` } });
+      const context = buildContext(request);
+
+      await expect(guard.canActivate(context)).resolves.toBe(true);
+    });
+  });
+
+  describe('lastUsedAt debounce', () => {
+    it('writes updateLastUsedAt when the token has never been used', async () => {
+      const { guard, websiteTokenRepository, websiteRepository } = buildGuard();
+
+      websiteTokenRepository.findByTokenHash.mockResolvedValue(buildToken({ lastUsedAt: null }));
+      websiteRepository.findById.mockResolvedValue(buildWebsite());
+
+      const request = buildRequest({ headers: { authorization: `Bearer ${RAW_TOKEN}` } });
+      const context = buildContext(request);
+
+      await expect(guard.canActivate(context)).resolves.toBe(true);
+      expect(websiteTokenRepository.updateLastUsedAt).toHaveBeenCalledWith('token-a', expect.any(Date));
+    });
+
+    it('refreshes the cached token record with the new lastUsedAt after a debounce-triggered write, so the next request within the ttl does not re-trigger it', async () => {
+      const { guard, websiteTokenRepository, websiteRepository, cacheService } = buildGuard();
+
+      const token = buildToken({ lastUsedAt: null });
+      websiteTokenRepository.findByTokenHash.mockResolvedValue(token);
+      websiteRepository.findById.mockResolvedValue(buildWebsite());
+
+      const request = buildRequest({ headers: { authorization: `Bearer ${RAW_TOKEN}` } });
+      const context = buildContext(request);
+
+      await expect(guard.canActivate(context)).resolves.toBe(true);
+
+      expect(cacheService.set).toHaveBeenCalledWith(
+        `token:${TOKEN_HASH}`,
+        expect.objectContaining({ ...token, lastUsedAt: expect.any(Date) as Date }),
+        TTL_MS,
+      );
+
+      const [, refreshedToken] = cacheService.set.mock.calls[0] as [string, WebsiteTokenRecord, number | undefined];
+
+      cacheService.getOrSet.mockImplementation((key: string) => {
+        if (key === `token:${TOKEN_HASH}`) {
+          return refreshedToken;
+        }
+
+        return buildWebsite();
+      });
+      websiteTokenRepository.updateLastUsedAt.mockClear();
+
+      await expect(guard.canActivate(context)).resolves.toBe(true);
+      expect(websiteTokenRepository.updateLastUsedAt).not.toHaveBeenCalled();
+    });
+
+    it('writes updateLastUsedAt when the existing lastUsedAt is older than the debounce threshold', async () => {
+      const { guard, websiteTokenRepository, websiteRepository } = buildGuard();
+
+      jest.useFakeTimers().setSystemTime(NOW);
+
+      const staleLastUsedAt = new Date(NOW.getTime() - 6 * 60 * 1000);
+      websiteTokenRepository.findByTokenHash.mockResolvedValue(buildToken({ lastUsedAt: staleLastUsedAt }));
+      websiteRepository.findById.mockResolvedValue(buildWebsite());
+
+      const request = buildRequest({ headers: { authorization: `Bearer ${RAW_TOKEN}` } });
+      const context = buildContext(request);
+
+      try {
+        await expect(guard.canActivate(context)).resolves.toBe(true);
+        expect(websiteTokenRepository.updateLastUsedAt).toHaveBeenCalledWith('token-a', expect.any(Date));
+      } finally {
+        jest.useRealTimers();
+      }
+    });
+
+    it('skips the updateLastUsedAt write when the token was used within the debounce window', async () => {
+      const { guard, websiteTokenRepository, websiteRepository } = buildGuard();
+
+      jest.useFakeTimers().setSystemTime(NOW);
+
+      const recentLastUsedAt = new Date(NOW.getTime() - 60 * 1000);
+      websiteTokenRepository.findByTokenHash.mockResolvedValue(buildToken({ lastUsedAt: recentLastUsedAt }));
+      websiteRepository.findById.mockResolvedValue(buildWebsite());
+
+      const request = buildRequest({ headers: { authorization: `Bearer ${RAW_TOKEN}` } });
+      const context = buildContext(request);
+
+      try {
+        await expect(guard.canActivate(context)).resolves.toBe(true);
+        expect(websiteTokenRepository.updateLastUsedAt).not.toHaveBeenCalled();
+      } finally {
+        jest.useRealTimers();
+      }
+    });
+
+    it('treats a cache-serialized string lastUsedAt the same as a Date instance', async () => {
+      const { guard, websiteRepository, cacheService, websiteTokenRepository } = buildGuard();
+
+      jest.useFakeTimers().setSystemTime(NOW);
+
+      const recentLastUsedAt = new Date(NOW.getTime() - 60 * 1000);
+      const serializedToken = {
+        ...buildToken(),
+        lastUsedAt: recentLastUsedAt.toISOString(),
+      } as unknown as WebsiteTokenRecord;
+
+      cacheService.getOrSet.mockImplementation((key: string) => {
+        if (key === `token:${TOKEN_HASH}`) {
+          return serializedToken;
+        }
+
+        return buildWebsite();
+      });
+      websiteRepository.findById.mockResolvedValue(buildWebsite());
+
+      const request = buildRequest({ headers: { authorization: `Bearer ${RAW_TOKEN}` } });
+      const context = buildContext(request);
+
+      try {
+        await expect(guard.canActivate(context)).resolves.toBe(true);
+        expect(websiteTokenRepository.updateLastUsedAt).not.toHaveBeenCalled();
+      } finally {
+        jest.useRealTimers();
+      }
+    });
   });
 });

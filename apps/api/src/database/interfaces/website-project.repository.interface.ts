@@ -12,6 +12,8 @@ export interface IWebsiteProjectRepository {
 
   findManyByWebsiteId: (websiteId: string) => Promise<WebsiteProjectWithProjectRecord[]>;
 
+  findWebsiteIdsByProjectId: (projectId: string) => Promise<string[]>;
+
   create: (data: CreateWebsiteProjectData) => Promise<WebsiteProjectRecord>;
 
   update: (id: string, websiteId: string, data: UpdateWebsiteProjectData) => Promise<WebsiteProjectRecord | null>;

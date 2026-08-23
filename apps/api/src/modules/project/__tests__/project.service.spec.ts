@@ -1,4 +1,6 @@
+import type { CacheService } from '@app/database/cache';
 import type { IProjectRepository } from '@app/database/interfaces/project.repository.interface';
+import type { IWebsiteProjectRepository } from '@app/database/interfaces/website-project.repository.interface';
 import type { CreateProjectData, ProjectRecord } from '@app/database/types/project.types';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import type { PinoLogger } from 'nestjs-pino';
@@ -34,9 +36,27 @@ function buildLogger(): jest.Mocked<PinoLogger> {
   } as unknown as jest.Mocked<PinoLogger>;
 }
 
+interface MockedCacheService {
+  get: jest.Mock;
+  set: jest.Mock;
+  del: jest.Mock;
+  getOrSet: jest.Mock;
+}
+
+function buildCacheService(): MockedCacheService {
+  return {
+    get: jest.fn(),
+    set: jest.fn(),
+    del: jest.fn().mockResolvedValue(undefined),
+    getOrSet: jest.fn(),
+  };
+}
+
 function buildService(): {
   service: ProjectService;
   projectRepository: jest.Mocked<IProjectRepository>;
+  websiteProjectRepository: jest.Mocked<IWebsiteProjectRepository>;
+  cacheService: MockedCacheService;
   logger: jest.Mocked<PinoLogger>;
 } {
   const projectRepository: jest.Mocked<IProjectRepository> = {
@@ -49,11 +69,27 @@ function buildService(): {
     delete: jest.fn(),
   };
 
+  const websiteProjectRepository: jest.Mocked<IWebsiteProjectRepository> = {
+    findById: jest.fn(),
+    findByWebsiteAndProject: jest.fn(),
+    findManyByWebsiteId: jest.fn(),
+    findWebsiteIdsByProjectId: jest.fn().mockResolvedValue([]),
+    create: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
+  };
+
+  const cacheService = buildCacheService();
   const logger = buildLogger();
 
-  const service = new ProjectService(projectRepository, logger);
+  const service = new ProjectService(
+    projectRepository,
+    websiteProjectRepository,
+    cacheService as unknown as CacheService,
+    logger,
+  );
 
-  return { service, projectRepository, logger };
+  return { service, projectRepository, websiteProjectRepository, cacheService, logger };
 }
 
 const baseCreateInput: CreateProjectData = {
@@ -181,6 +217,104 @@ describe('ProjectService', () => {
         NotFoundException,
       );
       expect(projectRepository.findRepoUrlsByUserId).not.toHaveBeenCalled();
+    });
+
+    it('evicts the cached public listing for every website the project is linked to', async () => {
+      const { service, projectRepository, websiteProjectRepository, cacheService } = buildService();
+
+      const existing = buildProject({ id: 'project-a' });
+
+      projectRepository.findByIdAndUserId.mockResolvedValue(existing);
+      projectRepository.update.mockResolvedValue(existing);
+      websiteProjectRepository.findWebsiteIdsByProjectId.mockResolvedValue(['website-a', 'website-b']);
+
+      await service.update('project-a', 'user-a', { name: 'Renamed project' });
+
+      expect(websiteProjectRepository.findWebsiteIdsByProjectId).toHaveBeenCalledWith('project-a');
+      expect(cacheService.del).toHaveBeenCalledTimes(2);
+      expect(cacheService.del).toHaveBeenCalledWith('website:website-a:projects');
+      expect(cacheService.del).toHaveBeenCalledWith('website:website-b:projects');
+    });
+
+    it('does not evict any cache when the project is not linked to any website', async () => {
+      const { service, projectRepository, websiteProjectRepository, cacheService } = buildService();
+
+      const existing = buildProject({ id: 'project-a' });
+
+      projectRepository.findByIdAndUserId.mockResolvedValue(existing);
+      projectRepository.update.mockResolvedValue(existing);
+      websiteProjectRepository.findWebsiteIdsByProjectId.mockResolvedValue([]);
+
+      await service.update('project-a', 'user-a', { name: 'Renamed project' });
+
+      expect(cacheService.del).not.toHaveBeenCalled();
+    });
+
+    it('does not evict any cache when the update fails because the project does not belong to the user', async () => {
+      const { service, projectRepository, cacheService } = buildService();
+
+      projectRepository.findByIdAndUserId.mockResolvedValue(null);
+
+      await expect(service.update('project-a', 'user-a', { name: 'Renamed project' })).rejects.toBeInstanceOf(
+        NotFoundException,
+      );
+      expect(cacheService.del).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('delete', () => {
+    it('deletes a project owned by the user', async () => {
+      const { service, projectRepository } = buildService();
+
+      projectRepository.delete.mockResolvedValue(true);
+
+      await service.delete('project-a', 'user-a');
+
+      expect(projectRepository.delete).toHaveBeenCalledWith('project-a', 'user-a');
+    });
+
+    it('evicts the cached public listing for every website the project was linked to', async () => {
+      const { service, projectRepository, websiteProjectRepository, cacheService } = buildService();
+
+      websiteProjectRepository.findWebsiteIdsByProjectId.mockResolvedValue(['website-a', 'website-b']);
+      projectRepository.delete.mockResolvedValue(true);
+
+      await service.delete('project-a', 'user-a');
+
+      expect(cacheService.del).toHaveBeenCalledTimes(2);
+      expect(cacheService.del).toHaveBeenCalledWith('website:website-a:projects');
+      expect(cacheService.del).toHaveBeenCalledWith('website:website-b:projects');
+    });
+
+    it('looks up linked websiteIds before deleting, since the join rows cascade-delete with the project', async () => {
+      const { service, projectRepository, websiteProjectRepository } = buildService();
+
+      const callOrder: string[] = [];
+
+      websiteProjectRepository.findWebsiteIdsByProjectId.mockImplementation(async () => {
+        await Promise.resolve();
+        callOrder.push('findWebsiteIdsByProjectId');
+        return ['website-a'];
+      });
+      projectRepository.delete.mockImplementation(async () => {
+        await Promise.resolve();
+        callOrder.push('delete');
+        return true;
+      });
+
+      await service.delete('project-a', 'user-a');
+
+      expect(callOrder).toEqual(['findWebsiteIdsByProjectId', 'delete']);
+    });
+
+    it('throws NotFoundException and does not evict any cache when the project does not belong to the user', async () => {
+      const { service, projectRepository, websiteProjectRepository, cacheService } = buildService();
+
+      websiteProjectRepository.findWebsiteIdsByProjectId.mockResolvedValue(['website-a']);
+      projectRepository.delete.mockResolvedValue(false);
+
+      await expect(service.delete('project-a', 'user-a')).rejects.toBeInstanceOf(NotFoundException);
+      expect(cacheService.del).not.toHaveBeenCalled();
     });
   });
 });

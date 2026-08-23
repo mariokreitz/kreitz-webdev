@@ -1,3 +1,4 @@
+import type { CacheService } from '@app/database/cache';
 import type { IProjectRepository } from '@app/database/interfaces/project.repository.interface';
 import type { IWebsiteProjectRepository } from '@app/database/interfaces/website-project.repository.interface';
 import type { IWebsiteRepository } from '@app/database/interfaces/website.repository.interface';
@@ -64,11 +65,28 @@ function buildLogger(): jest.Mocked<PinoLogger> {
   } as unknown as jest.Mocked<PinoLogger>;
 }
 
+interface MockedCacheService {
+  get: jest.Mock;
+  set: jest.Mock;
+  del: jest.Mock;
+  getOrSet: jest.Mock;
+}
+
+function buildCacheService(): MockedCacheService {
+  return {
+    get: jest.fn(),
+    set: jest.fn(),
+    del: jest.fn().mockResolvedValue(undefined),
+    getOrSet: jest.fn(),
+  };
+}
+
 function buildService(): {
   service: WebsiteProjectService;
   websiteRepository: jest.Mocked<IWebsiteRepository>;
   projectRepository: jest.Mocked<IProjectRepository>;
   websiteProjectRepository: jest.Mocked<IWebsiteProjectRepository>;
+  cacheService: MockedCacheService;
   logger: jest.Mocked<PinoLogger>;
 } {
   const websiteRepository: jest.Mocked<IWebsiteRepository> = {
@@ -96,16 +114,24 @@ function buildService(): {
     findById: jest.fn(),
     findByWebsiteAndProject: jest.fn(),
     findManyByWebsiteId: jest.fn(),
+    findWebsiteIdsByProjectId: jest.fn(),
     create: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
   };
 
+  const cacheService = buildCacheService();
   const logger = buildLogger();
 
-  const service = new WebsiteProjectService(websiteRepository, projectRepository, websiteProjectRepository, logger);
+  const service = new WebsiteProjectService(
+    websiteRepository,
+    projectRepository,
+    websiteProjectRepository,
+    cacheService as unknown as CacheService,
+    logger,
+  );
 
-  return { service, websiteRepository, projectRepository, websiteProjectRepository, logger };
+  return { service, websiteRepository, projectRepository, websiteProjectRepository, cacheService, logger };
 }
 
 describe('WebsiteProjectService', () => {
@@ -129,6 +155,19 @@ describe('WebsiteProjectService', () => {
       expect(result).toEqual(buildLink());
     });
 
+    it('evicts the website public projects cache after successfully creating the link', async () => {
+      const { service, websiteRepository, projectRepository, websiteProjectRepository, cacheService } = buildService();
+
+      websiteRepository.findByIdAndUserId.mockResolvedValue(buildWebsite());
+      projectRepository.findByIdAndUserId.mockResolvedValue(buildProject());
+      websiteProjectRepository.findByWebsiteAndProject.mockResolvedValue(null);
+      websiteProjectRepository.create.mockResolvedValue(buildLink());
+
+      await service.create('website-a', 'user-a', 'project-a', true, 2);
+
+      expect(cacheService.del).toHaveBeenCalledWith('website:website-a:projects');
+    });
+
     it('omits published and sortOrder from the create payload when they were not provided', async () => {
       const { service, websiteRepository, projectRepository, websiteProjectRepository } = buildService();
 
@@ -145,8 +184,8 @@ describe('WebsiteProjectService', () => {
       });
     });
 
-    it('throws ConflictException when the website/project pair is already linked', async () => {
-      const { service, websiteRepository, projectRepository, websiteProjectRepository } = buildService();
+    it('throws ConflictException when the website/project pair is already linked, and does not evict the cache', async () => {
+      const { service, websiteRepository, projectRepository, websiteProjectRepository, cacheService } = buildService();
 
       websiteRepository.findByIdAndUserId.mockResolvedValue(buildWebsite());
       projectRepository.findByIdAndUserId.mockResolvedValue(buildProject());
@@ -156,6 +195,7 @@ describe('WebsiteProjectService', () => {
         ConflictException,
       );
       expect(websiteProjectRepository.create).not.toHaveBeenCalled();
+      expect(cacheService.del).not.toHaveBeenCalled();
     });
 
     it('throws NotFoundException when the website does not belong to the user', async () => {
@@ -226,8 +266,20 @@ describe('WebsiteProjectService', () => {
       expect(result).toEqual(buildLink({ published: true, sortOrder: 5 }));
     });
 
-    it('throws NotFoundException when no link exists for the website/project pair', async () => {
-      const { service, websiteRepository, websiteProjectRepository } = buildService();
+    it('evicts the website public projects cache after successfully updating the link', async () => {
+      const { service, websiteRepository, websiteProjectRepository, cacheService } = buildService();
+
+      websiteRepository.findByIdAndUserId.mockResolvedValue(buildWebsite());
+      websiteProjectRepository.findByWebsiteAndProject.mockResolvedValue(buildLink());
+      websiteProjectRepository.update.mockResolvedValue(buildLink({ published: true, sortOrder: 5 }));
+
+      await service.update('website-a', 'project-a', 'user-a', { published: true, sortOrder: 5 });
+
+      expect(cacheService.del).toHaveBeenCalledWith('website:website-a:projects');
+    });
+
+    it('throws NotFoundException when no link exists for the website/project pair, and does not evict the cache', async () => {
+      const { service, websiteRepository, websiteProjectRepository, cacheService } = buildService();
 
       websiteRepository.findByIdAndUserId.mockResolvedValue(buildWebsite());
       websiteProjectRepository.findByWebsiteAndProject.mockResolvedValue(null);
@@ -236,6 +288,7 @@ describe('WebsiteProjectService', () => {
         NotFoundException,
       );
       expect(websiteProjectRepository.update).not.toHaveBeenCalled();
+      expect(cacheService.del).not.toHaveBeenCalled();
     });
 
     it('throws NotFoundException when the website does not belong to the user', async () => {
@@ -263,14 +316,27 @@ describe('WebsiteProjectService', () => {
       expect(websiteProjectRepository.delete).toHaveBeenCalledWith('link-a', 'website-a');
     });
 
-    it('throws NotFoundException when no link exists for the website/project pair', async () => {
-      const { service, websiteRepository, websiteProjectRepository } = buildService();
+    it('evicts the website public projects cache after successfully unlinking the project', async () => {
+      const { service, websiteRepository, websiteProjectRepository, cacheService } = buildService();
+
+      websiteRepository.findByIdAndUserId.mockResolvedValue(buildWebsite());
+      websiteProjectRepository.findByWebsiteAndProject.mockResolvedValue(buildLink());
+      websiteProjectRepository.delete.mockResolvedValue(true);
+
+      await service.delete('website-a', 'project-a', 'user-a');
+
+      expect(cacheService.del).toHaveBeenCalledWith('website:website-a:projects');
+    });
+
+    it('throws NotFoundException when no link exists for the website/project pair, and does not evict the cache', async () => {
+      const { service, websiteRepository, websiteProjectRepository, cacheService } = buildService();
 
       websiteRepository.findByIdAndUserId.mockResolvedValue(buildWebsite());
       websiteProjectRepository.findByWebsiteAndProject.mockResolvedValue(null);
 
       await expect(service.delete('website-a', 'project-a', 'user-a')).rejects.toBeInstanceOf(NotFoundException);
       expect(websiteProjectRepository.delete).not.toHaveBeenCalled();
+      expect(cacheService.del).not.toHaveBeenCalled();
     });
 
     it('throws NotFoundException when the website does not belong to the user', async () => {

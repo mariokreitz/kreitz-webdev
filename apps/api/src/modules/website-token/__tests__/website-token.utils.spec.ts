@@ -1,4 +1,4 @@
-import { generateWebsiteToken, hashWebsiteToken } from '../utils/website-token.utils';
+import { buildWebsiteTokenCacheKey, generateWebsiteToken, hashWebsiteToken } from '../utils/website-token.utils';
 
 describe('generateWebsiteToken', () => {
   it('produces a prefix that distinguishes it from the bare constant', () => {
@@ -25,5 +25,11 @@ describe('generateWebsiteToken', () => {
     const generated = generateWebsiteToken();
 
     expect(generated.tokenHash).toBe(hashWebsiteToken(generated.token));
+  });
+});
+
+describe('buildWebsiteTokenCacheKey', () => {
+  it('prefixes the token hash with the token cache namespace', () => {
+    expect(buildWebsiteTokenCacheKey('abc123')).toBe('token:abc123');
   });
 });

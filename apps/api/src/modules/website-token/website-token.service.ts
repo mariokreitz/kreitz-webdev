@@ -1,10 +1,11 @@
+import { CacheService } from '@app/database/cache';
 import { IWebsiteTokenRepository } from '@app/database/interfaces/website-token.repository.interface';
 
 import { WebsiteService } from '@app/modules/website';
 import { CreatedWebsiteTokenResponse } from '@app/modules/website-token/dto/created-website-token.response';
 import { WebsiteTokenSummaryResponse } from '@app/modules/website-token/dto/website-token-summary.response';
 
-import { generateWebsiteToken } from '@app/modules/website-token/utils/website-token.utils';
+import { buildWebsiteTokenCacheKey, generateWebsiteToken } from '@app/modules/website-token/utils/website-token.utils';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PinoLogger } from 'nestjs-pino';
 
@@ -17,6 +18,8 @@ export class WebsiteTokenService {
 
     @Inject(WEBSITE_TOKEN_REPOSITORY)
     private readonly websiteTokenRepository: IWebsiteTokenRepository,
+
+    private readonly cacheService: CacheService,
 
     private readonly logger: PinoLogger,
   ) {
@@ -74,6 +77,8 @@ export class WebsiteTokenService {
 
       throw new NotFoundException('Website token not found');
     }
+
+    await this.cacheService.del(buildWebsiteTokenCacheKey(deleted.tokenHash));
 
     this.logger.info({ event: 'website_token.deleted', websiteId, tokenId });
   }

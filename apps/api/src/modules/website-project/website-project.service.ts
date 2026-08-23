@@ -1,3 +1,4 @@
+import { CacheService } from '@app/database/cache';
 import { IProjectRepository } from '@app/database/interfaces/project.repository.interface';
 import { IWebsiteProjectRepository } from '@app/database/interfaces/website-project.repository.interface';
 import { IWebsiteRepository } from '@app/database/interfaces/website.repository.interface';
@@ -23,6 +24,8 @@ export class WebsiteProjectService {
 
     @Inject(WEBSITE_PROJECT_REPOSITORY)
     private readonly websiteProjectRepository: IWebsiteProjectRepository,
+
+    private readonly cacheService: CacheService,
 
     private readonly logger: PinoLogger,
   ) {
@@ -60,6 +63,8 @@ export class WebsiteProjectService {
       ...(sortOrder !== undefined && { sortOrder }),
     });
 
+    await this.cacheService.del(`website:${websiteId}:projects`);
+
     this.logger.info({ event: 'website_project.created', websiteId, projectId: created.projectId });
 
     return created;
@@ -87,6 +92,8 @@ export class WebsiteProjectService {
       throw new NotFoundException('Website project not found');
     }
 
+    await this.cacheService.del(`website:${websiteId}:projects`);
+
     this.logger.info({ event: 'website_project.updated', websiteId, projectId });
 
     return updated;
@@ -108,6 +115,8 @@ export class WebsiteProjectService {
       this.logger.warn({ event: 'website_project.rejected', reason: 'link_not_found', websiteId, projectId, userId });
       throw new NotFoundException('Website project not found');
     }
+
+    await this.cacheService.del(`website:${websiteId}:projects`);
 
     this.logger.info({ event: 'website_project.deleted', websiteId, projectId });
   }

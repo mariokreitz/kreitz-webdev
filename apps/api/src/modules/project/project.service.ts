@@ -1,5 +1,9 @@
+import { CacheService } from '@app/database/cache';
 import { IProjectRepository } from '@app/database/interfaces/project.repository.interface';
+import { IWebsiteProjectRepository } from '@app/database/interfaces/website-project.repository.interface';
 import { CreateProjectData, ProjectRecord, UpdateProjectData } from '@app/database/types/project.types';
+// WHY: importing the website-project barrel here would create a circular module load (WebsiteProjectModule already imports ProjectModule for project-ownership checks); this leaf import breaks the cycle while still letting ProjectService find every website a project is linked to for cache invalidation.
+import { WEBSITE_PROJECT_REPOSITORY } from '@app/modules/website-project/tokens/website-project.tokens';
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PinoLogger } from 'nestjs-pino';
 import { PROJECT_REPOSITORY } from './tokens/project.tokens';
@@ -10,6 +14,11 @@ export class ProjectService {
   constructor(
     @Inject(PROJECT_REPOSITORY)
     private readonly projectRepository: IProjectRepository,
+
+    @Inject(WEBSITE_PROJECT_REPOSITORY)
+    private readonly websiteProjectRepository: IWebsiteProjectRepository,
+
+    private readonly cacheService: CacheService,
 
     private readonly logger: PinoLogger,
   ) {
@@ -85,12 +94,17 @@ export class ProjectService {
       throw new NotFoundException('Project not found');
     }
 
+    await this.invalidatePublicListingCache(id);
+
     this.logger.info({ event: 'project.updated', projectId: updatedProject.id, userId });
 
     return updatedProject;
   }
 
   public async delete(id: string, userId: string): Promise<void> {
+    // WHY: WebsiteProject.projectId is onDelete: Cascade, so the join rows are gone the instant the delete succeeds — the linked websiteIds must be captured before, not after.
+    const websiteIds = await this.websiteProjectRepository.findWebsiteIdsByProjectId(id);
+
     const deleted = await this.projectRepository.delete(id, userId);
 
     if (!deleted) {
@@ -98,7 +112,24 @@ export class ProjectService {
       throw new NotFoundException('Project not found');
     }
 
+    await this.invalidateCacheForWebsites(websiteIds);
+
     this.logger.info({ event: 'project.deleted', projectId: id, userId });
+  }
+
+  private async invalidatePublicListingCache(projectId: string): Promise<void> {
+    const websiteIds = await this.websiteProjectRepository.findWebsiteIdsByProjectId(projectId);
+
+    await this.invalidateCacheForWebsites(websiteIds);
+  }
+
+  // WHY: a project can be linked to multiple websites via WebsiteProject, so every affected website's cached public listing must be evicted, not just one.
+  private async invalidateCacheForWebsites(websiteIds: string[]): Promise<void> {
+    await Promise.all(
+      websiteIds.map(async (websiteId) => {
+        await this.cacheService.del(`website:${websiteId}:projects`);
+      }),
+    );
   }
 
   private async assertNoRepoUrlConflict(userId: string, repoUrl: string, excludeProjectId?: string): Promise<void> {

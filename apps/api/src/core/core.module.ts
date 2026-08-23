@@ -13,6 +13,7 @@ import {
   validateEnv,
   verificationConfig,
 } from '@app/config';
+import { CacheModule } from '@app/database/cache';
 import { PrismaModule } from '@app/database/prisma';
 import { RedisModule } from '@app/database/redis';
 import { ArcjetModule, shield } from '@arcjet/nest';
@@ -60,11 +61,12 @@ const NODE_ENV = process.env['NODE_ENV'] ?? 'development';
     }),
     PrismaModule,
     RedisModule,
+    CacheModule,
     EmailModule,
     AuthModule,
     HealthModule,
     LoggingModule,
   ],
-  exports: [ConfigModule, PrismaModule, RedisModule, EmailModule],
+  exports: [ConfigModule, PrismaModule, RedisModule, CacheModule, EmailModule],
 })
 export class CoreModule {}

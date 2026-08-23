@@ -47,6 +47,19 @@ export class WebsiteProjectRepository implements IWebsiteProjectRepository {
     });
   }
 
+  public async findWebsiteIdsByProjectId(projectId: string): Promise<string[]> {
+    const links = await this.prisma.websiteProject.findMany({
+      where: {
+        projectId,
+      },
+      select: {
+        websiteId: true,
+      },
+    });
+
+    return links.map((link) => link.websiteId);
+  }
+
   public async create(data: CreateWebsiteProjectData): Promise<WebsiteProjectRecord> {
     return this.prisma.websiteProject.create({
       data: {

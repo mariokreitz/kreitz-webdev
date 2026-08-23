@@ -1,10 +1,15 @@
+import { RedisConfig, redisConfig } from '@app/config/redis.config';
+import { WEBSITE_TOKEN_LAST_USED_DEBOUNCE_MS } from '@app/common/constants/website-token-guard.constants';
+import { CacheService } from '@app/database/cache';
 import { IWebsiteDomainRepository } from '@app/database/interfaces/website-domain.repository.interface';
 import { IWebsiteTokenRepository } from '@app/database/interfaces/website-token.repository.interface';
 import { IWebsiteRepository } from '@app/database/interfaces/website.repository.interface';
+import type { WebsiteTokenRecord } from '@app/database/types/website-token.types';
+import type { WebsiteRecord } from '@app/database/types/website.repository.types';
 import { WEBSITE_DOMAIN_REPOSITORY } from '@app/modules/website-domain/tokens/website-domain.tokens';
 import { normalizeDomain } from '@app/modules/website-domain/utils/normalize-domain';
 import { WEBSITE_TOKEN_REPOSITORY } from '@app/modules/website-token/tokens/website-token.tokens';
-import { hashWebsiteToken } from '@app/modules/website-token/utils/website-token.utils';
+import { buildWebsiteTokenCacheKey, hashWebsiteToken } from '@app/modules/website-token/utils/website-token.utils';
 import { WEBSITE_REPOSITORY } from '@app/modules/website/tokens/website.tokens';
 import {
   CanActivate,
@@ -29,6 +34,11 @@ export class WebsiteTokenGuard implements CanActivate {
     @Inject(WEBSITE_REPOSITORY)
     private readonly websiteRepository: IWebsiteRepository,
 
+    @Inject(redisConfig.KEY)
+    private readonly redis: RedisConfig,
+
+    private readonly cacheService: CacheService,
+
     private readonly logger: PinoLogger,
   ) {
     this.logger.setContext(WebsiteTokenGuard.name);
@@ -47,7 +57,11 @@ export class WebsiteTokenGuard implements CanActivate {
 
     const tokenHash = hashWebsiteToken(rawToken);
 
-    const token = await this.websiteTokenRepository.findByTokenHash(tokenHash);
+    const token = await this.cacheService.getOrSet<WebsiteTokenRecord | null>(
+      buildWebsiteTokenCacheKey(tokenHash),
+      this.redis.ttlMs,
+      async () => this.websiteTokenRepository.findByTokenHash(tokenHash),
+    );
 
     if (!token) {
       this.logger.warn({ event: 'website_token.guard.rejected', reason: 'invalid_token', ip: request.ip });
@@ -55,7 +69,10 @@ export class WebsiteTokenGuard implements CanActivate {
       throw new UnauthorizedException('Invalid website token');
     }
 
-    if (token.expiresAt && token.expiresAt.getTime() <= Date.now()) {
+    // WHY: a token round-tripped through the Redis (L2) cache layer is JSON-serialized, so Date fields come back as ISO strings; normalizing here keeps this correct whether the record is fresh from Prisma or served from either cache tier.
+    const expiresAt = token.expiresAt ? new Date(token.expiresAt) : null;
+
+    if (expiresAt && expiresAt.getTime() <= Date.now()) {
       this.logger.warn({
         event: 'website_token.guard.rejected',
         reason: 'expired_token',
@@ -66,7 +83,11 @@ export class WebsiteTokenGuard implements CanActivate {
       throw new UnauthorizedException('Website token has expired');
     }
 
-    const website = await this.websiteRepository.findById(token.websiteId);
+    const website = await this.cacheService.getOrSet<WebsiteRecord | null>(
+      `website:${token.websiteId}`,
+      this.redis.ttlMs,
+      async () => this.websiteRepository.findById(token.websiteId),
+    );
 
     if (!website) {
       this.logger.warn({
@@ -95,7 +116,21 @@ export class WebsiteTokenGuard implements CanActivate {
     request.websiteId = token.websiteId;
     request.websiteTokenId = token.id;
 
-    await this.websiteTokenRepository.updateLastUsedAt(token.id, new Date());
+    const lastUsedAt = token.lastUsedAt ? new Date(token.lastUsedAt) : null;
+    const isLastUsedStale = !lastUsedAt || Date.now() - lastUsedAt.getTime() >= WEBSITE_TOKEN_LAST_USED_DEBOUNCE_MS;
+
+    if (isLastUsedStale) {
+      const usedAt = new Date();
+
+      await this.websiteTokenRepository.updateLastUsedAt(token.id, usedAt);
+
+      // WHY: without refreshing the cached record, every subsequent request within the ttl would keep reading the stale lastUsedAt and re-triggering the write, defeating the debounce.
+      await this.cacheService.set(
+        buildWebsiteTokenCacheKey(tokenHash),
+        { ...token, lastUsedAt: usedAt },
+        this.redis.ttlMs,
+      );
+    }
 
     return true;
   }
