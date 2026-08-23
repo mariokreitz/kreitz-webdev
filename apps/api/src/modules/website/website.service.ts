@@ -1,4 +1,4 @@
-import { WebsiteRepository } from '@app/database/repositories/website.repository';
+import { IWebsiteRepository } from '@app/database/interfaces/website.repository.interface';
 import { UpdateWebsiteData, WebsiteRecord } from '@app/database/types/website.repository.types';
 import { WEBSITE_REPOSITORY } from '@app/modules/website/tokens/website.tokens';
 import { CreateWebsiteInput } from '@app/modules/website/types/website.types';
@@ -8,7 +8,7 @@ import { ConflictException, Inject, Injectable, NotFoundException } from '@nestj
 export class WebsiteService {
   constructor(
     @Inject(WEBSITE_REPOSITORY)
-    private readonly websiteRepository: WebsiteRepository,
+    private readonly websiteRepository: IWebsiteRepository,
   ) {}
 
   public async getAllForUser(userId: string): Promise<WebsiteRecord[]> {

@@ -7,3 +7,12 @@ export interface WebsiteDomainRecord {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface CreateWebsiteDomainData {
+  websiteId: string;
+  domain: string;
+}
+
+export interface UpdateWebsiteDomainData {
+  domain: string;
+}
