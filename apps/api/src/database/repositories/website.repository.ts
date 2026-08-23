@@ -1,4 +1,4 @@
-import { IWebsiteRepository } from '@app/database/interfaces/website-repository.interface';
+import { IWebsiteRepository } from '@app/database/interfaces/website.repository.interface';
 import { PrismaService } from '@app/database/prisma';
 import { CreateWebsiteData, UpdateWebsiteData, WebsiteRecord } from '@app/database/types/website.repository.types';
 import { Injectable } from '@nestjs/common';

@@ -1,9 +1,8 @@
 import { WebsiteRepository } from '@app/database/repositories/website.repository';
 import { UpdateWebsiteData, WebsiteRecord } from '@app/database/types/website.repository.types';
-import { CreateWebsiteInput } from '@app/modules/website/website.types';
+import { WEBSITE_REPOSITORY } from '@app/modules/website/tokens/website.tokens';
+import { CreateWebsiteInput } from '@app/modules/website/types/website.types';
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
-
-export const WEBSITE_REPOSITORY = Symbol('WEBSITE_REPOSITORY');
 
 @Injectable()
 export class WebsiteService {
