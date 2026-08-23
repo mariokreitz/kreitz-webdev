@@ -1891,6 +1891,12 @@
       "skillPath": "skills/napkin/SKILL.md",
       "computedHash": "333e4b2870be463bb1bdc84862d152800c44ccbfe3758157b8cbee9c2538db7a"
     },
+    "nestjs-best-practices": {
+      "source": "ejirocodes/agent-skills",
+      "sourceType": "github",
+      "skillPath": "nestjs/skills/nestjs-best-practices/SKILL.md",
+      "computedHash": "4b25f4f6067d77c6c4e35a49a494baab1bb6bf74066bc0de811f00a63dd7a8fb"
+    },
     "nestjs-expert": {
       "source": "sickn33/agentic-awesome-skills",
       "sourceType": "github",

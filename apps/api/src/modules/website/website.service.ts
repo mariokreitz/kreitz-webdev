@@ -1,5 +1,6 @@
 import { IWebsiteRepository } from '@app/database/interfaces/website.repository.interface';
 import { UpdateWebsiteData, WebsiteRecord } from '@app/database/types/website.repository.types';
+// Leaf import, not the barrel — website-domain's barrel pulls in WebsiteModule, which would cycle back here.
 import { normalizeDomain } from '@app/modules/website-domain/utils/normalize-domain';
 import { CreateWebsiteInput } from '@app/modules/website/types/website.types';
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
