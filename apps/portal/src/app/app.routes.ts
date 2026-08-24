@@ -44,6 +44,11 @@ export const appRoutes: Route[] = [
     loadComponent: () => import('./pages/auth-error/auth-error.component'),
   },
   {
+    path: 'error',
+    title: 'Error — Kreitz-WebDev',
+    loadComponent: () => import('./pages/error/error.component'),
+  },
+  {
     path: '**',
     title: 'Not Found — Kreitz-WebDev',
     loadComponent: () => import('./pages/not-found/not-found.component'),
