@@ -8,6 +8,7 @@ import {
   verificationConfig,
 } from '@app/config';
 import { PrismaPg } from '@prisma/adapter-pg';
+import { PinoLogger } from 'nestjs-pino';
 
 import { PrismaClient } from '../../../generated/prisma/client';
 import { createAuth } from './strategies/auth.factory';
@@ -22,8 +23,12 @@ const reset = resetConfig();
 
 const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: database.url }) });
 
+const logger = new PinoLogger({});
+logger.setContext('AuthFactory');
+
 export const auth = createAuth({
   prisma,
+  logger,
   apiKey: authCfg.apiKey,
   secret: authCfg.secret,
   baseUrl: authCfg.baseUrl,

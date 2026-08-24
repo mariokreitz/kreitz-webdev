@@ -4,6 +4,7 @@ import { type Auth, betterAuth, type BetterAuthOptions } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { openAPI } from 'better-auth/plugins';
 import { AUTH_REFERENCE_CSP_NONCE } from '../constants/auth-reference.constants';
+import { trackUserLogin } from './track-user-login';
 
 import type { CreateAuthOptions } from '../interfaces/create-auth-options.interface';
 
@@ -25,6 +26,7 @@ export function createAuth(options: CreateAuthOptions): Auth {
     sendExistingAccountNotice,
     verificationTokenTtlMs,
     enableDocs,
+    logger,
   } = options;
 
   const DEFAULT_PLUGINS = [dash({ apiKey })];
@@ -38,6 +40,29 @@ export function createAuth(options: CreateAuthOptions): Auth {
     secondaryStorage: redisClient ? redisStorage({ client: redisClient }) : undefined,
     session: {
       storeSessionInDatabase: true,
+    },
+    user: {
+      additionalFields: {
+        lastLoginAt: {
+          type: 'date',
+          required: false,
+          input: false,
+        },
+        previousLoginAt: {
+          type: 'date',
+          required: false,
+          input: false,
+        },
+      },
+    },
+    databaseHooks: {
+      session: {
+        create: {
+          after: async (session) => {
+            await trackUserLogin(prisma, session.userId, logger);
+          },
+        },
+      },
     },
     rateLimit: redisClient ? { storage: 'secondary-storage' } : undefined,
     plugins: enableDocs ? [openAPI({ nonce: AUTH_REFERENCE_CSP_NONCE }), ...DEFAULT_PLUGINS] : [...DEFAULT_PLUGINS],

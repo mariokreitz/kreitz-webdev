@@ -1,10 +1,12 @@
 import type { Redis } from 'ioredis';
+import type { PinoLogger } from 'nestjs-pino';
 
 import type { PrismaClient } from '../../../../generated/prisma/client';
 
 export interface CreateAuthOptions {
   readonly prisma: PrismaClient;
   readonly redisClient?: Redis;
+  readonly logger: PinoLogger;
   readonly secret: string;
   readonly baseUrl: string;
   readonly apiKey: string;

@@ -21,6 +21,9 @@ model User {
   websites Website[]
   projects Project[]
 
+  lastLoginAt     DateTime?
+  previousLoginAt DateTime?
+
   @@unique([email])
   @@map("user")
 }
