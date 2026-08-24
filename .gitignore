@@ -60,3 +60,6 @@ vitest.config.*.timestamp*
 .nx/polygraph
 .nx/self-healing
 .nx/migrate-runs
+.env.local
+.verbatra-local/
+verbatra.cache.json

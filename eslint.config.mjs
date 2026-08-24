@@ -87,7 +87,9 @@ export default tseslint.config(
     extends: [tseslint.configs.strict, tseslint.configs.stylistic],
     languageOptions: {
       parserOptions: {
-        projectService: true,
+        projectService: {
+          allowDefaultProject: ['verbatra.config.ts'],
+        },
         tsconfigRootDir: process.cwd(),
       },
     },
