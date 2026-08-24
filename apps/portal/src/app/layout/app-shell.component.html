@@ -1,0 +1,12 @@
+<div class="flex min-h-screen flex-col bg-(--color-background) text-(--color-on-background) md:flex-row">
+  <kwd-ui-sidebar [items]="navItems" [user]="user()" (signOut)="onSignOut()" />
+
+  <div class="flex flex-1 flex-col">
+    <kwd-ui-header [theme]="theme()" [user]="user()" (toggleTheme)="toggleTheme()" (signOut)="onSignOut()" />
+
+    <main
+      class="mx-auto w-full max-w-(--spacing-max-width) flex-1 px-(--spacing-margin-mobile) py-6 pb-20 md:px-(--spacing-margin-desktop) md:pb-6">
+      <router-outlet />
+    </main>
+  </div>
+</div>

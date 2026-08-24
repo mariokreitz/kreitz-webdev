@@ -2,3 +2,8 @@ export * from './lib/card/card.component';
 export * from './lib/button/button.component';
 export * from './lib/oauth-button/oauth-button.component';
 export * from './lib/theme-toggle/theme-toggle.component';
+export * from './lib/nav-item/nav-item.component';
+export * from './lib/user-chip/user-chip.component';
+export * from './lib/sidebar/sidebar.component';
+export * from './lib/sidebar/sidebar.types';
+export * from './lib/header/header.component';

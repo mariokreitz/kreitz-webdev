@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { EMAIL_NOT_VERIFIED_CODE, LOGIN_ROUTE } from './constants';
 import { AUTH_CLIENT } from './tokens/auth-client.token';
-import type { AuthClient, AuthResult, SocialAuthResult } from './types/auth.types';
+import type { AuthClient, AuthResult, SocialAuthResult, UserProfile } from './types/auth.types';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -46,9 +46,9 @@ export class AuthService {
     return { ok: true };
   }
 
-  public async hasActiveSession(): Promise<boolean> {
+  public async getProfile(): Promise<UserProfile | null> {
     const { data } = await this.authClient.getSession();
-    return data !== null;
+    return data?.user ?? null;
   }
 
   public async logout(): Promise<void> {

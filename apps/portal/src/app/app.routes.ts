@@ -14,10 +14,16 @@ export const appRoutes: Route[] = [
     loadComponent: () => import('./pages/login/login.component'),
   },
   {
-    path: 'dashboard',
-    title: 'Dashboard — Kreitz-WebDev',
+    path: '',
     canActivate: [authGuard],
-    loadComponent: () => import('./pages/dashboard/dashboard.component'),
+    loadComponent: () => import('./layout/app-shell.component'),
+    children: [
+      {
+        path: 'dashboard',
+        title: 'Dashboard — Kreitz-WebDev',
+        loadComponent: () => import('./pages/dashboard/dashboard.component'),
+      },
+    ],
   },
   {
     path: 'imprint',

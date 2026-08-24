@@ -1,14 +1,29 @@
-<div class="flex min-h-screen items-center justify-center bg-[var(--color-surface-muted)] px-4">
-  <div class="w-full max-w-sm rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-sm">
-    <h1 class="text-center text-xl font-semibold text-[var(--color-text)]">Dashboard</h1>
-    <p class="mt-2 text-center text-sm text-[var(--color-text-muted)]">You're signed in. This is a placeholder.</p>
-
-    <button
-      class="mt-6 w-full rounded-md bg-brand-600 px-4 py-2 font-medium text-white transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
-      type="button"
-      [disabled]="loggingOut()"
-      (click)="onLogout()">
-      {{ loggingOut() ? 'Signing out…' : 'Sign out' }}
-    </button>
+<section class="flex flex-col gap-8">
+  <div>
+    <h1 class="text-headline-lg text-(--color-on-surface)">Welcome back, {{ greetingName() }}</h1>
+    <p class="mt-1 text-body-md text-(--color-on-surface-variant)">Here's what's happening with your account.</p>
   </div>
-</div>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    @for (metric of metrics(); track metric.label) {
+      <kwd-ui-card>
+        <p class="text-code-sm uppercase text-(--color-on-surface-variant)">{{ metric.label }}</p>
+        <p class="mt-2 text-headline-md text-(--color-on-surface)">{{ metric.value }}</p>
+        <p class="mt-1 text-body-sm text-(--color-on-surface-variant)">{{ metric.hint }}</p>
+      </kwd-ui-card>
+    }
+  </div>
+
+  <kwd-ui-card>
+    <h2 class="text-headline-md text-(--color-on-surface)">Recent activity</h2>
+    <ul class="mt-4 flex flex-col gap-3">
+      @for (entry of activity(); track entry.timestamp) {
+        <li
+          class="flex items-center justify-between border-b border-(--color-outline-variant) pb-3 text-body-sm text-(--color-on-surface-variant) last:border-0 last:pb-0">
+          <span>{{ entry.label }}</span>
+          <span class="text-code-sm">{{ entry.timestamp }}</span>
+        </li>
+      }
+    </ul>
+  </kwd-ui-card>
+</section>

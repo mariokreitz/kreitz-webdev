@@ -1,21 +1,22 @@
-<div class="flex min-h-screen items-center justify-center bg-[var(--color-surface-muted)] px-4">
-  <div
-    class="w-full max-w-sm rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-6 text-center shadow-sm">
-    <h1 class="text-xl font-semibold text-[var(--color-text)]">Sign-in failed</h1>
-    <p class="mt-2 text-sm text-[var(--color-text-muted)]">
-      Something went wrong while signing you in. Please try again.
-    </p>
-
-    @if (errorLabel(); as label) {
-      <p class="mt-4 text-xs text-[var(--color-text-muted)]">
-        Error code: <code>{{ label }}</code>
+<div class="flex min-h-screen items-center justify-center bg-(--color-background) px-4">
+  <kwd-ui-card>
+    <div class="text-center">
+      <h1 class="text-headline-md text-(--color-on-surface)">Sign-in failed</h1>
+      <p class="mt-2 text-body-sm text-(--color-on-surface-variant)">
+        Something went wrong while signing you in. Please try again.
       </p>
-    }
 
-    <a
-      class="mt-6 inline-block rounded-md bg-brand-600 px-4 py-2 font-medium text-white transition-colors hover:bg-brand-700"
-      routerLink="/login">
-      Back to sign in
-    </a>
-  </div>
+      @if (errorLabel(); as label) {
+        <p class="mt-4 text-code-sm text-(--color-on-surface-variant)">
+          Error code: <code>{{ label }}</code>
+        </p>
+      }
+
+      <a
+        class="mt-6 inline-block rounded-(--radius-md) bg-secondary-500 px-4 py-2.5 text-label-caps uppercase text-on-secondary-container transition-colors hover:bg-secondary-400"
+        routerLink="/login">
+        Back to sign in
+      </a>
+    </div>
+  </kwd-ui-card>
 </div>

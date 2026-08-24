@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { Card } from '@shared/ui';
 
 @Component({
   selector: 'kwd-portal-auth-error',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink],
+  imports: [RouterLink, Card],
   templateUrl: './auth-error.component.html',
 })
 export default class AuthError {

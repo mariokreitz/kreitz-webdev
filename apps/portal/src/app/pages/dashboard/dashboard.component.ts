@@ -1,21 +1,35 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService, LOGIN_ROUTE } from '../../core/auth';
+import { ChangeDetectionStrategy, Component, computed, inject, signal, type Signal } from '@angular/core';
+import { Card } from '@shared/ui';
+import { CurrentUserStore } from '../../core/user';
+
+interface MetricCard {
+  readonly label: string;
+  readonly value: string;
+  readonly hint: string;
+}
+
+interface ActivityEntry {
+  readonly label: string;
+  readonly timestamp: string;
+}
 
 @Component({
   selector: 'kwd-portal-dashboard',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [Card],
   templateUrl: './dashboard.component.html',
 })
 export default class Dashboard {
-  public readonly loggingOut = signal(false);
-  private readonly authService: AuthService = inject(AuthService);
-  private readonly router: Router = inject(Router);
+  private readonly currentUserStore: CurrentUserStore = inject(CurrentUserStore);
 
-  public async onLogout(): Promise<void> {
-    this.loggingOut.set(true);
+  public readonly greetingName: Signal<string> = computed(() => this.currentUserStore.profile()?.name ?? 'there');
 
-    await this.authService.logout();
-    await this.router.navigateByUrl(LOGIN_ROUTE);
-  }
+  public readonly metrics: Signal<readonly MetricCard[]> = signal([
+    { label: 'Active Projects', value: '0', hint: 'No projects yet' },
+    { label: 'Active Domains', value: '0', hint: 'No domains yet' },
+    { label: 'Last Login', value: 'Just now', hint: 'Current session' },
+    { label: 'System Alerts', value: '0', hint: 'All clear' },
+  ]);
+
+  public readonly activity: Signal<readonly ActivityEntry[]> = signal([{ label: 'Signed in', timestamp: 'Just now' }]);
 }
