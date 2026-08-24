@@ -1,7 +1,8 @@
 import { httpResource } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, inject, type Signal } from '@angular/core';
-import { Card, Spinner } from '@shared/ui';
+import { Card, Skeleton } from '@shared/ui';
 import { environment } from '@shared/environments';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import type { ApiEnvelope, Project, Website } from '../../core/api';
 import { CurrentUserStore } from '../../core/user';
 
@@ -9,6 +10,8 @@ interface MetricCard {
   readonly label: string;
   readonly value: string;
   readonly hint: string;
+  readonly loading: boolean;
+  readonly error: boolean;
 }
 
 interface ActivityEntry {
@@ -20,11 +23,12 @@ interface ActivityEntry {
 @Component({
   selector: 'kwd-portal-dashboard',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Card, Spinner],
+  imports: [Card, Skeleton, TranslatePipe],
   templateUrl: './dashboard.component.html',
 })
 export default class Dashboard {
   private readonly currentUserStore: CurrentUserStore = inject(CurrentUserStore);
+  private readonly translate: TranslateService = inject(TranslateService);
 
   private readonly projectsResource = httpResource<readonly Project[]>(
     () => ({ url: `${environment.api.kreitzWebdev}/projects`, withCredentials: true }),
@@ -38,36 +42,57 @@ export default class Dashboard {
 
   public readonly greetingName: Signal<string> = computed(() => this.currentUserStore.profile()?.name ?? 'there');
 
-  public readonly isLoading: Signal<boolean> = computed(
-    () => this.projectsResource.isLoading() || this.websitesResource.isLoading(),
-  );
+  public readonly isActivityLoading: Signal<boolean> = computed(() => this.projectsResource.isLoading());
 
-  public readonly hasError: Signal<boolean> = computed(
-    () => this.projectsResource.error() !== undefined || this.websitesResource.error() !== undefined,
-  );
+  public readonly isActivityError: Signal<boolean> = computed(() => this.projectsResource.error() !== undefined);
 
   public readonly metrics: Signal<readonly MetricCard[]> = computed(() => {
+    const projectsLoading = this.projectsResource.isLoading();
+    const projectsError = this.projectsResource.error() !== undefined;
+    const websitesLoading = this.websitesResource.isLoading();
+    const websitesError = this.websitesResource.error() !== undefined;
     const projectCount = this.projectsResource.value().length;
     const websiteCount = this.websitesResource.value().filter((website) => website.enabled).length;
+    const previousLoginAt = this.currentUserStore.previousLoginAt();
 
     return [
       {
-        label: 'Active Projects',
+        label: 'dashboard.metrics.activeProjects.label',
         value: String(projectCount),
-        hint: projectCount === 0 ? 'No projects yet' : 'In your account',
+        hint:
+          projectCount === 0 ? 'dashboard.metrics.activeProjects.hintEmpty' : 'dashboard.metrics.activeProjects.hint',
+        loading: projectsLoading,
+        error: projectsError,
       },
       {
-        label: 'Active Websites',
+        label: 'dashboard.metrics.activeWebsites.label',
         value: String(websiteCount),
-        hint: websiteCount === 0 ? 'No websites yet' : 'Currently configured',
+        hint:
+          websiteCount === 0 ? 'dashboard.metrics.activeWebsites.hintEmpty' : 'dashboard.metrics.activeWebsites.hint',
+        loading: websitesLoading,
+        error: websitesError,
       },
-      { label: 'Active Domains', value: '—', hint: 'Coming soon' },
       {
-        label: 'Last Login',
-        value: this.currentUserStore.sessionCreatedAt()?.toLocaleString() ?? 'Just now',
-        hint: 'Current session',
+        label: 'dashboard.metrics.activeDomains.label',
+        value: '—',
+        hint: 'dashboard.metrics.activeDomains.hint',
+        loading: false,
+        error: false,
       },
-      { label: 'System Alerts', value: '0', hint: 'All clear' },
+      {
+        label: 'dashboard.metrics.lastLogin.label',
+        value: previousLoginAt?.toLocaleString() ?? this.translate.instant('dashboard.metrics.lastLogin.firstLogin'),
+        hint: 'dashboard.metrics.lastLogin.hint',
+        loading: false,
+        error: false,
+      },
+      {
+        label: 'dashboard.metrics.systemAlerts.label',
+        value: '0',
+        hint: 'dashboard.metrics.systemAlerts.hint',
+        loading: false,
+        error: false,
+      },
     ];
   });
 

@@ -1,46 +1,55 @@
 <section class="flex flex-col gap-8">
   <div>
-    <h1 class="text-headline-lg text-(--color-on-surface)">Welcome back, {{ greetingName() }}</h1>
-    <p class="mt-1 text-body-md text-(--color-on-surface-variant)">Here's what's happening with your account.</p>
+    <h1 class="text-headline-lg text-(--color-on-surface)">
+      {{ 'dashboard.welcome' | translate: { name: greetingName() } }}
+    </h1>
+    <p class="mt-1 text-body-md text-(--color-on-surface-variant)">{{ 'dashboard.subtitle' | translate }}</p>
   </div>
 
-  @if (isLoading()) {
-    <kwd-ui-card>
-      <div class="flex items-center justify-center gap-3 py-8">
-        <kwd-ui-spinner size="md" />
-        <p class="text-body-sm text-(--color-on-surface-variant)">Loading your dashboard…</p>
-      </div>
-    </kwd-ui-card>
-  } @else if (hasError()) {
-    <kwd-ui-card>
-      <p class="text-body-sm text-(--color-error)">
-        Couldn't load your dashboard data. Please try refreshing the page.
-      </p>
-    </kwd-ui-card>
-  } @else {
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      @for (metric of metrics(); track metric.label) {
-        <kwd-ui-card>
-          <p class="text-code-sm uppercase text-(--color-on-surface-variant)">{{ metric.label }}</p>
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    @for (metric of metrics(); track metric.label) {
+      <kwd-ui-card>
+        @if (metric.loading) {
+          <kwd-ui-skeleton variant="metric" />
+        } @else if (metric.error) {
+          <p class="text-code-sm uppercase text-(--color-on-surface-variant)">{{ metric.label | translate }}</p>
+          <p class="mt-2 text-body-sm text-(--color-error)">{{ 'dashboard.metrics.loadError' | translate }}</p>
+        } @else {
+          <p class="text-code-sm uppercase text-(--color-on-surface-variant)">{{ metric.label | translate }}</p>
           <p class="mt-2 text-headline-md text-(--color-on-surface)">{{ metric.value }}</p>
-          <p class="mt-1 text-body-sm text-(--color-on-surface-variant)">{{ metric.hint }}</p>
-        </kwd-ui-card>
-      }
-    </div>
-
-    <kwd-ui-card>
-      <h2 class="text-headline-md text-(--color-on-surface)">Recent activity</h2>
-      <ul class="mt-4 flex flex-col gap-3">
-        @for (entry of activity(); track entry.id) {
-          <li
-            class="flex items-center justify-between border-b border-(--color-outline-variant) pb-3 text-body-sm text-(--color-on-surface-variant) last:border-0 last:pb-0">
-            <span>{{ entry.label }}</span>
-            <span class="text-code-sm">{{ entry.timestamp }}</span>
-          </li>
-        } @empty {
-          <li class="text-body-sm text-(--color-on-surface-variant)">No projects yet</li>
+          <p class="mt-1 text-body-sm text-(--color-on-surface-variant)">{{ metric.hint | translate }}</p>
         }
-      </ul>
-    </kwd-ui-card>
-  }
+      </kwd-ui-card>
+    }
+  </div>
+
+  <kwd-ui-card>
+    @defer (on viewport) {
+      @if (isActivityLoading()) {
+        <kwd-ui-skeleton variant="activity" [rows]="5" />
+      } @else if (isActivityError()) {
+        <h2 class="text-headline-md text-(--color-on-surface)">{{ 'dashboard.activity.title' | translate }}</h2>
+        <p class="mt-4 text-body-sm text-(--color-error)">
+          {{ 'dashboard.activity.loadError' | translate }}
+        </p>
+      } @else {
+        <h2 class="text-headline-md text-(--color-on-surface)">{{ 'dashboard.activity.title' | translate }}</h2>
+        <ul class="mt-4 flex flex-col gap-3">
+          @for (entry of activity(); track entry.id) {
+            <li
+              class="flex items-center justify-between border-b border-(--color-outline-variant) pb-3 text-body-sm text-(--color-on-surface-variant) last:border-0 last:pb-0">
+              <span>{{ entry.label }}</span>
+              <span class="text-code-sm">{{ entry.timestamp }}</span>
+            </li>
+          } @empty {
+            <li class="text-body-sm text-(--color-on-surface-variant)">{{ 'dashboard.activity.empty' | translate }}</li>
+          }
+        </ul>
+      }
+    } @placeholder {
+      <kwd-ui-skeleton variant="activity" [rows]="5" />
+    } @loading (minimum 200ms) {
+      <kwd-ui-skeleton variant="activity" [rows]="5" />
+    }
+  </kwd-ui-card>
 </section>
