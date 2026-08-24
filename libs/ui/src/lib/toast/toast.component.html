@@ -1,0 +1,26 @@
+<div
+  role="status"
+  class="group relative w-full overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-high)] p-4"
+  [attr.aria-live]="ariaLive()">
+  <div class="flex items-start gap-3">
+    <span [class]="`mt-1 inline-block h-2 w-2 shrink-0 rounded-full ${dotClass()}`"></span>
+
+    <p class="flex-1 text-body-sm text-[var(--color-on-surface)]">{{ message() }}</p>
+
+    <button
+      class="flex h-6 w-6 shrink-0 items-center justify-center rounded-[var(--radius-sm)] text-[var(--color-on-surface-variant)] transition-colors hover:text-[var(--color-on-surface)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]"
+      type="button"
+      aria-label="Dismiss"
+      (click)="dismiss.emit()">
+      <fa-icon class="text-sm" [icon]="dismissIcon" />
+    </button>
+  </div>
+
+  <!-- eslint-disable-next-line @angular-eslint/template/no-inline-styles -- per-instance CSS custom property (animation duration) has no Tailwind utility equivalent -->
+  <span
+    [class]="
+      `toast-progress-bar absolute inset-x-0 bottom-0 h-1 origin-left animate-[toast-progress_var(--toast-duration)_linear_forwards] group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused] ${dotClass()}`
+    "
+    [style.--toast-duration.ms]="durationMs()"
+    (animationend)="dismiss.emit()"></span>
+</div>

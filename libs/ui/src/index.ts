@@ -8,3 +8,5 @@ export * from './lib/sidebar/sidebar.component';
 export * from './lib/sidebar/sidebar.types';
 export * from './lib/header/header.component';
 export * from './lib/spinner/spinner.component';
+export * from './lib/toast/toast.component';
+export * from './lib/toast/toast.types';

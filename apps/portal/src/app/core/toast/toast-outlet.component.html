@@ -1,0 +1,12 @@
+<div
+  class="pointer-events-none fixed inset-x-0 bottom-[calc(5.5rem+var(--spacing-safe-bottom))] z-50 flex flex-col items-center gap-2 px-4 sm:inset-x-auto sm:right-4 sm:bottom-[calc(1rem+var(--spacing-safe-bottom))] sm:items-end sm:px-0">
+  @for (toast of toasts(); track toast.id) {
+    <div class="pointer-events-auto w-full sm:max-w-sm">
+      <kwd-ui-toast
+        [severity]="toast.severity"
+        [message]="toast.message"
+        [durationMs]="toast.durationMs"
+        (dismiss)="dismiss(toast.id)" />
+    </div>
+  }
+</div>

@@ -68,7 +68,11 @@ export class AuthService {
   }
 
   public async logout(): Promise<void> {
-    await this.authClient.signOut();
+    try {
+      await this.authClient.signOut();
+    } catch {
+      // Caller's finally block already clears session state, so this only prevents an unhandled rejection.
+    }
   }
 
   public isEmailNotVerifiedError(code: string | undefined): boolean {

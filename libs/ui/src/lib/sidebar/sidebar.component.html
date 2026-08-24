@@ -14,7 +14,7 @@
 </aside>
 
 <nav
-  class="fixed inset-x-0 bottom-0 z-40 flex items-center justify-around border-t border-(--color-outline-variant) bg-(--color-surface-container-low) py-2 md:hidden">
+  class="fixed inset-x-0 bottom-0 z-40 flex items-center justify-around border-t border-(--color-outline-variant) bg-(--color-surface-container-low) pb-[calc(0.5rem+var(--spacing-safe-bottom))] pt-2 md:hidden">
   @for (item of items(); track item.route + item.label) {
     <kwd-ui-nav-item variant="bottom-nav" [icon]="item.icon" [label]="item.label" [route]="item.route" />
   }
