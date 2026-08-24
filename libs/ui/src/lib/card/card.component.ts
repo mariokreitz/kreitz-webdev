@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+
+export type CardVariant = 'default' | 'narrow';
 
 @Component({
   selector: 'kwd-ui-card',
@@ -6,4 +8,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   host: { class: 'contents' },
   templateUrl: './card.component.html',
 })
-export class Card {}
+export class Card {
+  public readonly variant = input<CardVariant>('default');
+}
