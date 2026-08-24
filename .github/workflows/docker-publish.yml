@@ -16,8 +16,10 @@ jobs:
         include:
           - service: api
             dockerfile: docker/kwd.api.Dockerfile
+            deploy_webhook_secret: DOKPLOY_DEPLOY_WEBHOOK_API
           - service: portal
             dockerfile: docker/kwd.portal.Dockerfile
+            deploy_webhook_secret: DOKPLOY_DEPLOY_WEBHOOK_PORTAL
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -57,3 +59,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=${{ matrix.service }}
           cache-to: type=gha,mode=max,scope=${{ matrix.service }}
+
+      - name: Trigger Dokploy deploy
+        if: github.event_name != 'pull_request'
+        run: curl -fsS -X POST "${{ secrets[matrix.deploy_webhook_secret] }}"
