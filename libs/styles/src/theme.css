@@ -130,7 +130,7 @@
   --spacing-gutter: 1rem;
   --spacing-margin-mobile: 1rem;
   --spacing-margin-desktop: 2rem;
-  --spacing-max-width: 80rem;
+  --spacing-max-width: 90rem;
   --spacing-safe-bottom: env(safe-area-inset-bottom, 0px);
 
   --shadow-menu: 4px 0 0 rgba(0, 0, 0, 0.18);

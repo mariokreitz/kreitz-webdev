@@ -24,7 +24,7 @@
   </div>
 
   @if (isLoading()) {
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       @for (row of [0, 1, 2]; track row) {
         <div
           class="rounded-(--radius-lg) border border-(--color-outline-variant) bg-(--color-surface-container-low) p-5">
@@ -41,7 +41,7 @@
       <p class="text-body-md text-(--color-on-surface-variant)">{{ 'projects.empty' | translate }}</p>
     </div>
   } @else {
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       @for (project of projects(); track project.id) {
         <kwd-portal-project-card [project]="project" (deleteRequested)="onDeleteRequested($event)" />
       }

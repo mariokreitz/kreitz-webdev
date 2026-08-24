@@ -4,9 +4,11 @@
   <div class="flex h-full flex-1 flex-col overflow-hidden">
     <kwd-ui-header [theme]="theme()" [user]="user()" (toggleTheme)="toggleTheme()" (signOut)="onSignOut()" />
 
-    <main
-      class="mx-auto h-full w-full max-w-(--spacing-max-width) flex-1 overflow-y-auto px-(--spacing-margin-mobile) py-6 pb-[calc(6rem+var(--spacing-safe-bottom))] md:px-(--spacing-margin-desktop) md:pb-6">
-      <router-outlet />
+    <main class="h-full w-full flex-1 overflow-y-auto">
+      <div
+        class="mx-auto w-full max-w-(--spacing-max-width) px-(--spacing-margin-mobile) py-6 pb-[calc(6rem+var(--spacing-safe-bottom))] md:px-(--spacing-margin-desktop) md:pb-6">
+        <router-outlet />
+      </div>
     </main>
   </div>
 </div>
