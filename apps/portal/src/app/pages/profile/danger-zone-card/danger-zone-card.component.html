@@ -1,0 +1,16 @@
+<div class="flex items-center gap-2">
+  <fa-icon class="text-(--color-error)" [icon]="warningIcon" />
+  <h2 class="text-headline-md text-(--color-error)">{{ 'profile.dangerZone.title' | translate }}</h2>
+</div>
+
+<p class="mt-2 text-body-sm text-(--color-on-surface-variant)">
+  {{ 'profile.dangerZone.description' | translate }}
+</p>
+
+<button
+  class="mt-4 rounded-(--radius) border border-(--color-error) px-4 py-2.5 text-label-caps uppercase text-(--color-error) opacity-60 disabled:cursor-not-allowed"
+  type="button"
+  disabled
+  [title]="'profile.dangerZone.notAvailable' | translate">
+  {{ 'profile.dangerZone.deleteAccount' | translate }}
+</button>
