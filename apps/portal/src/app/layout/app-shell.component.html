@@ -1,11 +1,11 @@
-<div class="flex min-h-dvh flex-col bg-(--color-background) text-(--color-on-background) md:flex-row">
+<div class="flex h-dvh flex-col overflow-hidden bg-(--color-background) text-(--color-on-background) md:flex-row">
   <kwd-ui-sidebar [items]="navItems" [user]="user()" (signOut)="onSignOut()" />
 
-  <div class="flex flex-1 flex-col">
+  <div class="flex h-full flex-1 flex-col overflow-hidden">
     <kwd-ui-header [theme]="theme()" [user]="user()" (toggleTheme)="toggleTheme()" (signOut)="onSignOut()" />
 
     <main
-      class="mx-auto w-full max-w-(--spacing-max-width) flex-1 px-(--spacing-margin-mobile) py-6 pb-[calc(6rem+var(--spacing-safe-bottom))] md:px-(--spacing-margin-desktop) md:pb-6">
+      class="mx-auto h-full w-full max-w-(--spacing-max-width) flex-1 overflow-y-auto px-(--spacing-margin-mobile) py-6 pb-[calc(6rem+var(--spacing-safe-bottom))] md:px-(--spacing-margin-desktop) md:pb-6">
       <router-outlet />
     </main>
   </div>
