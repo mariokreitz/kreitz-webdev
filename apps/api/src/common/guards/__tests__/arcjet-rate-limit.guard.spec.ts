@@ -59,9 +59,37 @@ function buildLogger(): MockedPinoLogger {
   };
 }
 
-function buildGuard(protectImpl: jest.Mock): { guard: ArcjetRateLimitGuard; logger: MockedPinoLogger } {
-  const bucket = { protect: protectImpl };
-  const arcjet = { withRule: jest.fn().mockReturnValue(bucket) } as unknown as ArcjetNest;
+interface MockBucket {
+  protect: jest.Mock;
+}
+
+interface MockBuckets {
+  website: MockBucket;
+  user: MockBucket;
+  ipFallback: MockBucket;
+}
+
+function buildBuckets(): MockBuckets {
+  return {
+    website: { protect: jest.fn() },
+    user: { protect: jest.fn() },
+    ipFallback: { protect: jest.fn() },
+  };
+}
+
+function buildGuard(buckets: MockBuckets): { guard: ArcjetRateLimitGuard; logger: MockedPinoLogger } {
+  const withRule = jest.fn((config: { characteristics?: string[] }) => {
+    if (config.characteristics?.includes('websiteId')) {
+      return buckets.website;
+    }
+
+    if (config.characteristics?.includes('userId')) {
+      return buckets.user;
+    }
+
+    return buckets.ipFallback;
+  });
+  const arcjet = { withRule } as unknown as ArcjetNest;
   const appConfig = { env: 'test' } as unknown as AppConfig;
   const logger = buildLogger();
 
@@ -70,16 +98,18 @@ function buildGuard(protectImpl: jest.Mock): { guard: ArcjetRateLimitGuard; logg
 
 describe('ArcjetRateLimitGuard', () => {
   it('allows the request when Arcjet returns an allow decision', async () => {
-    const protectMock = jest.fn().mockResolvedValue(buildDecision());
-    const { guard } = buildGuard(protectMock);
+    const buckets = buildBuckets();
+    buckets.ipFallback.protect.mockResolvedValue(buildDecision());
+    const { guard } = buildGuard(buckets);
     const context = buildContext(buildRequest());
 
     await expect(guard.canActivate(context)).resolves.toBe(true);
   });
 
-  it('throws a 429 HttpException when Arcjet denies the request for exceeding the rate limit', async () => {
-    const protectMock = jest.fn().mockResolvedValue(buildDecision({ denied: true, rateLimit: true }));
-    const { guard, logger } = buildGuard(protectMock);
+  it('protects using the website bucket and throws a 429 when it denies for exceeding the rate limit', async () => {
+    const buckets = buildBuckets();
+    buckets.website.protect.mockResolvedValue(buildDecision({ denied: true, rateLimit: true }));
+    const { guard, logger } = buildGuard(buckets);
     const context = buildContext(buildRequest({ websiteId: 'website-a' }));
 
     let thrown: unknown;
@@ -92,6 +122,9 @@ describe('ArcjetRateLimitGuard', () => {
 
     expect(thrown).toBeInstanceOf(HttpException);
     expect((thrown as HttpException).getStatus()).toBe(HttpStatus.TOO_MANY_REQUESTS);
+    expect(buckets.website.protect).toHaveBeenCalledWith(expect.anything(), { requested: 1, websiteId: 'website-a' });
+    expect(buckets.user.protect).not.toHaveBeenCalled();
+    expect(buckets.ipFallback.protect).not.toHaveBeenCalled();
     expect(logger.warn).toHaveBeenCalledWith(
       expect.objectContaining({
         event: 'arcjet.rate_limit.denied',
@@ -101,24 +134,61 @@ describe('ArcjetRateLimitGuard', () => {
     );
   });
 
-  it('logs the ip_fallback bucket when a rate-limited request has no websiteId', async () => {
-    const protectMock = jest.fn().mockResolvedValue(buildDecision({ denied: true, rateLimit: true }));
-    const { guard, logger } = buildGuard(protectMock);
+  it('protects using the ip fallback bucket when a request has no websiteId or session', async () => {
+    const buckets = buildBuckets();
+    buckets.ipFallback.protect.mockResolvedValue(buildDecision({ denied: true, rateLimit: true }));
+    const { guard, logger } = buildGuard(buckets);
     const context = buildContext(buildRequest());
 
     await expect(guard.canActivate(context)).rejects.toBeInstanceOf(HttpException);
+    expect(buckets.ipFallback.protect).toHaveBeenCalledWith(expect.anything(), { requested: 1 });
+    expect(buckets.website.protect).not.toHaveBeenCalled();
+    expect(buckets.user.protect).not.toHaveBeenCalled();
     expect(logger.warn).toHaveBeenCalledWith(
       expect.objectContaining({
         event: 'arcjet.rate_limit.denied',
         bucket: 'ip_fallback',
         websiteId: undefined,
+        userId: undefined,
       }),
     );
   });
 
+  it('protects using the user bucket when a request carries a session but no websiteId', async () => {
+    const buckets = buildBuckets();
+    buckets.user.protect.mockResolvedValue(buildDecision({ denied: true, rateLimit: true }));
+    const { guard, logger } = buildGuard(buckets);
+    const context = buildContext(buildRequest({ session: { user: { id: 'user-a' } } }));
+
+    await expect(guard.canActivate(context)).rejects.toBeInstanceOf(HttpException);
+    expect(buckets.user.protect).toHaveBeenCalledWith(expect.anything(), { requested: 1, userId: 'user-a' });
+    expect(buckets.website.protect).not.toHaveBeenCalled();
+    expect(buckets.ipFallback.protect).not.toHaveBeenCalled();
+    expect(logger.warn).toHaveBeenCalledWith(
+      expect.objectContaining({
+        event: 'arcjet.rate_limit.denied',
+        bucket: 'user',
+        websiteId: undefined,
+        userId: 'user-a',
+      }),
+    );
+  });
+
+  it('prefers the website bucket over the user bucket when a request carries both', async () => {
+    const buckets = buildBuckets();
+    buckets.website.protect.mockResolvedValue(buildDecision());
+    const { guard } = buildGuard(buckets);
+    const context = buildContext(buildRequest({ websiteId: 'website-a', session: { user: { id: 'user-a' } } }));
+
+    await expect(guard.canActivate(context)).resolves.toBe(true);
+    expect(buckets.website.protect).toHaveBeenCalledWith(expect.anything(), { requested: 1, websiteId: 'website-a' });
+    expect(buckets.user.protect).not.toHaveBeenCalled();
+  });
+
   it('fails open and allows the request when the Arcjet client throws', async () => {
-    const protectMock = jest.fn().mockRejectedValue(new Error('arcjet unreachable'));
-    const { guard } = buildGuard(protectMock);
+    const buckets = buildBuckets();
+    buckets.ipFallback.protect.mockRejectedValue(new Error('arcjet unreachable'));
+    const { guard } = buildGuard(buckets);
     const context = buildContext(buildRequest());
 
     await expect(guard.canActivate(context)).resolves.toBe(true);

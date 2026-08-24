@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { EMAIL_NOT_VERIFIED_CODE, LOGIN_ROUTE } from './constants';
+import { EMAIL_NOT_VERIFIED_CODE, LOGIN_ROUTE, NETWORK_ERROR_MESSAGE } from './constants';
 import { AUTH_CLIENT } from './tokens/auth-client.token';
 import type { AuthClient, AuthResult, SessionData, SocialAuthResult } from './types/auth.types';
 
@@ -8,47 +8,63 @@ export class AuthService {
   private readonly authClient: AuthClient = inject(AUTH_CLIENT);
 
   public async login(email: string, password: string): Promise<AuthResult> {
-    const { data, error } = await this.authClient.signIn.email({ email, password });
+    try {
+      const { data, error } = await this.authClient.signIn.email({ email, password });
 
-    if (error) {
-      return this.toFailure(error.code, error.message ?? 'Login failed.');
+      if (error) {
+        return this.toFailure(error.code, error.message ?? 'Login failed.');
+      }
+
+      return { ok: true, email: data.user.email };
+    } catch {
+      return this.toFailure(undefined, NETWORK_ERROR_MESSAGE);
     }
-
-    return { ok: true, email: data.user.email };
   }
 
   public async register(email: string, password: string, name: string): Promise<AuthResult> {
-    const { data, error } = await this.authClient.signUp.email({
-      email,
-      password,
-      name,
-      callbackURL: this.toAbsoluteUrl(LOGIN_ROUTE),
-    });
+    try {
+      const { data, error } = await this.authClient.signUp.email({
+        email,
+        password,
+        name,
+        callbackURL: this.toAbsoluteUrl(LOGIN_ROUTE),
+      });
 
-    if (error) {
-      return this.toFailure(error.code, error.message ?? 'Registration failed.');
+      if (error) {
+        return this.toFailure(error.code, error.message ?? 'Registration failed.');
+      }
+
+      return { ok: true, email: data.user.email };
+    } catch {
+      return this.toFailure(undefined, NETWORK_ERROR_MESSAGE);
     }
-
-    return { ok: true, email: data.user.email };
   }
 
   public async loginWithGithub(callbackURL: string, errorCallbackURL: string): Promise<SocialAuthResult> {
-    const { error } = await this.authClient.signIn.social({
-      provider: 'github',
-      callbackURL: this.toAbsoluteUrl(callbackURL),
-      errorCallbackURL: this.toAbsoluteUrl(errorCallbackURL),
-    });
+    try {
+      const { error } = await this.authClient.signIn.social({
+        provider: 'github',
+        callbackURL: this.toAbsoluteUrl(callbackURL),
+        errorCallbackURL: this.toAbsoluteUrl(errorCallbackURL),
+      });
 
-    if (error) {
-      return { ok: false, message: error.message ?? 'GitHub sign-in failed.' };
+      if (error) {
+        return { ok: false, message: error.message ?? 'GitHub sign-in failed.' };
+      }
+
+      return { ok: true };
+    } catch {
+      return { ok: false, message: NETWORK_ERROR_MESSAGE };
     }
-
-    return { ok: true };
   }
 
   public async getSession(): Promise<SessionData | null> {
-    const { data } = await this.authClient.getSession();
-    return data ?? null;
+    try {
+      const { data } = await this.authClient.getSession();
+      return data ?? null;
+    } catch {
+      return null;
+    }
   }
 
   public async logout(): Promise<void> {

@@ -1,7 +1,8 @@
+import { ArcjetRateLimitGuard } from '@app/common/guards/arcjet-rate-limit.guard';
 import { SkipResponseEnvelope } from '@app/common/decorators/skip-response-envelope.decorator';
 import { WebsiteProjectService } from '@app/modules/website-project/website-project.service';
 
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiCookieAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { Session, UserSession } from '@thallesp/nestjs-better-auth';
@@ -13,6 +14,7 @@ import { WebsiteProjectDto, WebsiteProjectWithProjectDto } from './dto/website-p
 @ApiTags('Website Projects')
 @ApiCookieAuth('session-cookie')
 @ApiResponse({ status: 401, description: 'No valid session' })
+@UseGuards(ArcjetRateLimitGuard)
 @Controller('websites/:websiteId/projects')
 export class WebsiteProjectController {
   constructor(private readonly websiteProjectService: WebsiteProjectService) {}

@@ -1,14 +1,16 @@
+import { ArcjetRateLimitGuard } from '@app/common/guards/arcjet-rate-limit.guard';
 import { GithubRepoSummaryResponse } from '@app/modules/github-import/dto/github-repo-summary.response';
 import { ImportGithubRepoDto } from '@app/modules/github-import/dto/import-github-repo.dto';
 import { GithubImportService } from '@app/modules/github-import/github-import.service';
 import { ProjectDto } from '@app/modules/project';
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { ApiCookieAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Session, UserSession } from '@thallesp/nestjs-better-auth';
 
 @ApiTags('GitHub Import')
 @ApiCookieAuth('session-cookie')
 @ApiResponse({ status: 401, description: 'No valid session' })
+@UseGuards(ArcjetRateLimitGuard)
 @Controller('projects/github')
 export class GithubImportController {
   constructor(private readonly githubImportService: GithubImportService) {}

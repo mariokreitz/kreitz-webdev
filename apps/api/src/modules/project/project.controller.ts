@@ -1,14 +1,16 @@
+import { ArcjetRateLimitGuard } from '@app/common/guards/arcjet-rate-limit.guard';
 import { CreateProjectDto } from '@app/modules/project/dto/create-project.dto';
 import { ProjectDto } from '@app/modules/project/dto/project.dto';
 import { UpdateProjectDto } from '@app/modules/project/dto/update-project.dto';
 import { ProjectService } from '@app/modules/project/project.service';
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiCookieAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Session, UserSession } from '@thallesp/nestjs-better-auth';
 
 @ApiTags('Projects')
 @ApiCookieAuth('session-cookie')
 @ApiResponse({ status: 401, description: 'No valid session' })
+@UseGuards(ArcjetRateLimitGuard)
 @Controller('projects')
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}

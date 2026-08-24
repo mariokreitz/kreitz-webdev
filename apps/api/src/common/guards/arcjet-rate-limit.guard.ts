@@ -21,6 +21,7 @@ import { PinoLogger } from 'nestjs-pino';
 @Injectable()
 export class ArcjetRateLimitGuard implements CanActivate {
   private readonly websiteBucket: ArcjetNest;
+  private readonly userBucket: ArcjetNest;
   private readonly ipFallbackBucket: ArcjetNest;
 
   constructor(
@@ -36,12 +37,17 @@ export class ArcjetRateLimitGuard implements CanActivate {
       tokenBucket({ mode, characteristics: ['websiteId'], refillRate: 60, interval: 60, capacity: 100 }),
     );
 
+    this.userBucket = this.arcjet.withRule(
+      tokenBucket({ mode, characteristics: ['userId'], refillRate: 120, interval: 60, capacity: 120 }),
+    );
+
     this.ipFallbackBucket = this.arcjet.withRule(tokenBucket({ mode, refillRate: 20, interval: 60, capacity: 20 }));
   }
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
     const websiteId = request.websiteId;
+    const userId = request.session?.user.id;
 
     let decision: ArcjetDecision;
 
@@ -49,22 +55,25 @@ export class ArcjetRateLimitGuard implements CanActivate {
       const arcjetRequest = toArcjetRequest(request);
       decision = websiteId
         ? await this.websiteBucket.protect(arcjetRequest, { requested: 1, websiteId })
-        : await this.ipFallbackBucket.protect(arcjetRequest, { requested: 1 });
+        : userId
+          ? await this.userBucket.protect(arcjetRequest, { requested: 1, userId })
+          : await this.ipFallbackBucket.protect(arcjetRequest, { requested: 1 });
     } catch (error) {
       this.logger.error({ event: 'arcjet.rate_limit.failed_open', reason: toErrorReason(error) });
       return true;
     }
 
-    return this.handleDecision(decision, websiteId);
+    return this.handleDecision(decision, websiteId, userId);
   }
 
-  private handleDecision(decision: ArcjetDecision, websiteId: string | undefined): boolean {
+  private handleDecision(decision: ArcjetDecision, websiteId: string | undefined, userId: string | undefined): boolean {
     if (decision.isDenied()) {
       if (decision.reason.isRateLimit()) {
         this.logger.warn({
           event: 'arcjet.rate_limit.denied',
-          bucket: websiteId ? 'website' : 'ip_fallback',
+          bucket: websiteId ? 'website' : userId ? 'user' : 'ip_fallback',
           websiteId,
+          userId,
         });
 
         throw new HttpException('Too many requests', HttpStatus.TOO_MANY_REQUESTS);

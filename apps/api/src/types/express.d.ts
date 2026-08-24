@@ -1,3 +1,5 @@
+import type { UserSession } from '@thallesp/nestjs-better-auth';
+
 export {};
 
 declare global {
@@ -7,6 +9,7 @@ declare global {
       websiteId?: string;
       websiteTokenId?: string;
       skipResponseEnvelope?: boolean;
+      session?: UserSession | null;
     }
   }
 }

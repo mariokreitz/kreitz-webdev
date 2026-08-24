@@ -1,6 +1,7 @@
+import { ArcjetRateLimitGuard } from '@app/common/guards/arcjet-rate-limit.guard';
 import { WebsiteDomainService } from '@app/modules/website-domain/website-domain.service';
 
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiCookieAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { Session, UserSession } from '@thallesp/nestjs-better-auth';
@@ -12,6 +13,7 @@ import { WebsiteDomainDto } from './dto/website-domain.dto';
 @ApiTags('Website Domains')
 @ApiCookieAuth('session-cookie')
 @ApiResponse({ status: 401, description: 'No valid session' })
+@UseGuards(ArcjetRateLimitGuard)
 @Controller('websites/:websiteId/domains')
 export class WebsiteDomainController {
   constructor(private readonly websiteDomainService: WebsiteDomainService) {}
