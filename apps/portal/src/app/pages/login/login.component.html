@@ -1,16 +1,15 @@
 <div
-  class="login-shell flex min-h-screen items-center justify-center bg-[var(--color-background)] px-4 py-8 text-[var(--color-on-background)]">
-  <div
-    class="w-full max-w-md rounded-[var(--radius-lg)] border border-[var(--color-outline)] bg-[var(--color-surface-container)] p-6 sm:p-8">
-    <div class="mb-6">
-      <h1 class="text-2xl font-semibold tracking-[-0.03em] text-[var(--color-on-surface)]">
+  class="login-shell flex min-h-screen flex-col items-center justify-center gap-6 bg-(--color-background) px-4 py-8 text-(--color-on-background)">
+  <kwd-ui-card>
+    <div class="login-card-header mb-6">
+      <h1 class="text-headline-md text-(--color-on-surface)">
         {{ mode() === 'register' ? 'Create an account' : 'Sign in' }}
       </h1>
     </div>
 
     @if (infoMessage()) {
       <p
-        class="mb-4 rounded-[var(--radius-md)] border border-[var(--color-outline)] bg-[var(--color-surface-container-low)] px-3 py-2 text-sm text-[var(--color-on-surface)]">
+        class="mb-4 rounded-(--radius) border border-(--color-primary)/30 bg-(--color-primary)/10 px-3 py-2 text-body-sm text-(--color-on-surface)">
         {{ infoMessage() }}
       </p>
     }
@@ -23,5 +22,5 @@
       (login)="onLogin($event)"
       (register)="onRegister($event)"
       (toggleMode)="onToggleMode()" />
-  </div>
+  </kwd-ui-card>
 </div>

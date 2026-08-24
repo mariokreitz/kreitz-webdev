@@ -42,7 +42,8 @@
     "baseUrl": "./",
     "paths": {
       "@shared/environments": ["libs/environments/src/index.ts"],
-      "@shared/environments/*": ["libs/environments/src/*"]
+      "@shared/environments/*": ["libs/environments/src/*"],
+      "@shared/ui": ["libs/ui/src/index.ts"]
     }
   },
   "angularCompilerOptions": {

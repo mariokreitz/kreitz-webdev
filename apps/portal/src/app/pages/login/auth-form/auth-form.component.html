@@ -1,58 +1,56 @@
 @if (isRegister()) {
-  <form class="auth-form flex min-h-[23rem] flex-col gap-4" (submit)="onRegisterSubmit($event)">
+  <form class="flex min-h-[23rem] flex-col gap-4" (submit)="onRegisterSubmit($event)">
     <div class="flex flex-col gap-2">
-      <label
-        class="font-mono text-[0.625rem] font-bold uppercase tracking-[0.12em] text-[var(--color-on-surface-variant)]"
-        for="register-name"
+      <label class="font-mono text-label-caps uppercase text-[var(--color-on-surface-variant)]" for="register-name"
         >Name</label
       >
       <input
         autocomplete="name"
-        class="rounded-[var(--radius-md)] border border-[var(--color-outline)] bg-[var(--color-surface-container-lowest)] px-3 py-2.5 text-sm text-[var(--color-on-surface)] outline-none transition-colors placeholder:text-[var(--color-on-surface-variant)] focus:border-[var(--color-primary)]"
+        class="rounded-[var(--radius)] border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-lowest)] px-3 py-2.5 font-mono text-code-md text-[var(--color-on-surface)] outline-none transition-colors placeholder:text-[var(--color-on-surface-variant)] focus:border-[var(--color-primary)]"
         id="register-name"
         type="text"
         [formField]="registerForm.name" />
       @if (registerForm.name().touched() && registerForm.name().errors().length) {
-        <p class="min-h-[1.25rem] text-sm text-[var(--color-error)]">{{ registerForm.name().errors()[0]?.message }}</p>
+        <p class="min-h-[1.25rem] text-body-sm text-[var(--color-error)]">
+          {{ registerForm.name().errors()[0]?.message }}
+        </p>
       } @else {
         <p class="min-h-[1.25rem]"></p>
       }
     </div>
 
     <div class="flex flex-col gap-2">
-      <label
-        class="font-mono text-[0.625rem] font-bold uppercase tracking-[0.12em] text-[var(--color-on-surface-variant)]"
-        for="register-email"
+      <label class="font-mono text-label-caps uppercase text-[var(--color-on-surface-variant)]" for="register-email"
         >Email</label
       >
 
       <input
         autocomplete="email"
-        class="rounded-[var(--radius-md)] border border-[var(--color-outline)] bg-[var(--color-surface-container-lowest)] px-3 py-2.5 text-sm text-[var(--color-on-surface)] outline-none transition-colors placeholder:text-[var(--color-on-surface-variant)] focus:border-[var(--color-primary)]"
+        class="rounded-[var(--radius)] border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-lowest)] px-3 py-2.5 font-mono text-code-md text-[var(--color-on-surface)] outline-none transition-colors placeholder:text-[var(--color-on-surface-variant)] focus:border-[var(--color-primary)]"
         id="register-email"
         type="email"
         [formField]="registerForm.email" />
       @if (registerForm.email().touched() && registerForm.email().errors().length) {
-        <p class="min-h-[1.25rem] text-sm text-[var(--color-error)]">{{ registerForm.email().errors()[0]?.message }}</p>
+        <p class="min-h-[1.25rem] text-body-sm text-[var(--color-error)]">
+          {{ registerForm.email().errors()[0]?.message }}
+        </p>
       } @else {
         <p class="min-h-[1.25rem]"></p>
       }
     </div>
 
     <div class="flex flex-col gap-2">
-      <label
-        class="font-mono text-[0.625rem] font-bold uppercase tracking-[0.12em] text-[var(--color-on-surface-variant)]"
-        for="register-password"
+      <label class="font-mono text-label-caps uppercase text-[var(--color-on-surface-variant)]" for="register-password"
         >Password</label
       >
       <input
         autocomplete="new-password"
-        class="rounded-[var(--radius-md)] border border-[var(--color-outline)] bg-[var(--color-surface-container-lowest)] px-3 py-2.5 text-sm text-[var(--color-on-surface)] outline-none transition-colors placeholder:text-[var(--color-on-surface-variant)] focus:border-[var(--color-primary)]"
+        class="rounded-[var(--radius)] border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-lowest)] px-3 py-2.5 font-mono text-code-md text-[var(--color-on-surface)] outline-none transition-colors placeholder:text-[var(--color-on-surface-variant)] focus:border-[var(--color-primary)]"
         id="register-password"
         type="password"
         [formField]="registerForm.password" />
       @if (registerForm.password().touched() && registerForm.password().errors().length) {
-        <p class="min-h-[1.25rem] text-sm text-[var(--color-error)]">
+        <p class="min-h-[1.25rem] text-body-sm text-[var(--color-error)]">
           {{ registerForm.password().errors()[0]?.message }}
         </p>
       } @else {
@@ -61,111 +59,95 @@
     </div>
 
     @if (errorMessage()) {
-      <p class="min-h-[1.25rem] text-sm text-[var(--color-error)]">{{ errorMessage() }}</p>
+      <p class="min-h-[1.25rem] text-body-sm text-[var(--color-error)]">{{ errorMessage() }}</p>
     } @else {
       <p class="min-h-[1.25rem]"></p>
     }
 
-    <button
-      class="auth-submit rounded-[var(--radius-md)] bg-[var(--color-primary)] px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.08em] text-[var(--color-on-primary)] disabled:cursor-not-allowed disabled:opacity-60"
-      type="submit"
-      [disabled]="registerForm().invalid() || loading()">
-      <span class="inline-flex items-center justify-center gap-2">
-        @if (loading()) {
-          <span aria-label="Processing" class="loading-spinner"></span>
-        } @else {
-          <fa-icon size="sm" [icon]="faArrowRight" />
-        }
-        <span>{{ loading() ? 'Creating account…' : 'Create account' }}</span>
-      </span>
-    </button>
+    <kwd-ui-button
+      label="Create account"
+      loadingLabel="Creating account…"
+      [disabled]="registerForm().invalid() || loading()"
+      [icon]="faArrowRight"
+      [loading]="loading()" />
   </form>
 } @else {
-  <form class="auth-form flex min-h-[20rem] flex-col gap-4" (submit)="onLoginSubmit($event)">
+  <form class="flex min-h-[20rem] flex-col gap-4" (submit)="onLoginSubmit($event)">
     <div class="flex flex-col gap-2">
-      <label
-        class="font-mono text-[0.625rem] font-bold uppercase tracking-[0.12em] text-[var(--color-on-surface-variant)]"
-        for="login-email"
+      <label class="font-mono text-label-caps uppercase text-[var(--color-on-surface-variant)]" for="login-email"
         >Email</label
       >
       <input
         autocomplete="email"
-        class="rounded-[var(--radius-md)] border border-[var(--color-outline)] bg-[var(--color-surface-container-lowest)] px-3 py-2.5 text-sm text-[var(--color-on-surface)] outline-none transition-colors placeholder:text-[var(--color-on-surface-variant)] focus:border-[var(--color-primary)]"
+        class="rounded-[var(--radius)] border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-lowest)] px-3 py-2.5 font-mono text-code-md text-[var(--color-on-surface)] outline-none transition-colors placeholder:text-[var(--color-on-surface-variant)] focus:border-[var(--color-primary)]"
         id="login-email"
         type="email"
         [formField]="loginForm.email" />
       @if (loginForm.email().touched() && loginForm.email().errors().length) {
-        <p class="min-h-[1.25rem] text-sm text-[var(--color-error)]">{{ loginForm.email().errors()[0]?.message }}</p>
+        <p class="min-h-[1.25rem] text-body-sm text-[var(--color-error)]">
+          {{ loginForm.email().errors()[0]?.message }}
+        </p>
       } @else {
         <p class="min-h-[1.25rem]"></p>
       }
     </div>
 
     <div class="flex flex-col gap-2">
-      <label
-        class="font-mono text-[0.625rem] font-bold uppercase tracking-[0.12em] text-[var(--color-on-surface-variant)]"
-        for="login-password"
+      <label class="font-mono text-label-caps uppercase text-[var(--color-on-surface-variant)]" for="login-password"
         >Password</label
       >
       <input
         autocomplete="current-password"
-        class="rounded-[var(--radius-md)] border border-[var(--color-outline)] bg-[var(--color-surface-container-lowest)] px-3 py-2.5 text-sm text-[var(--color-on-surface)] outline-none transition-colors placeholder:text-[var(--color-on-surface-variant)] focus:border-[var(--color-primary)]"
+        class="rounded-[var(--radius)] border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-lowest)] px-3 py-2.5 font-mono text-code-md text-[var(--color-on-surface)] outline-none transition-colors placeholder:text-[var(--color-on-surface-variant)] focus:border-[var(--color-primary)]"
         id="login-password"
         type="password"
         [formField]="loginForm.password" />
       @if (loginForm.password().touched() && loginForm.password().errors().length) {
-        <p class="min-h-[1.25rem] text-sm text-[var(--color-error)]">{{ loginForm.password().errors()[0]?.message }}</p>
+        <p class="min-h-[1.25rem] text-body-sm text-[var(--color-error)]">
+          {{ loginForm.password().errors()[0]?.message }}
+        </p>
       } @else {
         <p class="min-h-[1.25rem]"></p>
       }
     </div>
 
     @if (errorMessage()) {
-      <p class="min-h-[1.25rem] text-sm text-[var(--color-error)]">{{ errorMessage() }}</p>
+      <p class="min-h-[1.25rem] text-body-sm text-[var(--color-error)]">{{ errorMessage() }}</p>
     } @else {
       <p class="min-h-[1.25rem]"></p>
     }
 
-    <button
-      class="auth-submit rounded-[var(--radius-md)] bg-[var(--color-primary)] px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.08em] text-[var(--color-on-primary)] disabled:cursor-not-allowed disabled:opacity-60"
-      type="submit"
-      [disabled]="loginForm().invalid() || loading()">
-      <span class="inline-flex items-center justify-center gap-2">
-        @if (loading()) {
-          <span aria-label="Processing" class="loading-spinner"></span>
-        } @else {
-          <fa-icon size="sm" [icon]="faArrowRight" />
-        }
-        <span>{{ loading() ? 'Signing in…' : 'Sign in' }}</span>
-      </span>
-    </button>
+    <kwd-ui-button
+      label="Sign in"
+      loadingLabel="Signing in…"
+      [disabled]="loginForm().invalid() || loading()"
+      [icon]="faArrowRight"
+      [loading]="loading()" />
   </form>
 
   <div class="mt-4 flex items-center gap-3">
-    <div class="h-px flex-1 bg-[var(--color-outline)]"></div>
-    <span class="font-mono text-[0.625rem] font-bold uppercase tracking-[0.12em] text-[var(--color-on-surface-variant)]"
-      >or</span
-    >
-    <div class="h-px flex-1 bg-[var(--color-outline)]"></div>
+    <div class="h-px flex-1 bg-[var(--color-outline-variant)]"></div>
+    <span class="font-mono text-label-caps uppercase text-[var(--color-on-surface-variant)]">or</span>
+    <div class="h-px flex-1 bg-[var(--color-outline-variant)]"></div>
   </div>
 
-  <button
-    class="mt-4 flex w-full items-center justify-center gap-2 rounded-[var(--radius-md)] border border-[var(--color-outline)] bg-[var(--color-surface-container-low)] px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.08em] text-[var(--color-on-surface)] transition-colors hover:bg-[var(--color-surface-container-high)] disabled:cursor-not-allowed disabled:opacity-60"
-    type="button"
-    [disabled]="loading()"
-    (click)="onGithubLogin()">
-    @if (loading()) {
-      <span aria-label="Connecting" class="loading-spinner"></span>
-    } @else {
-      <fa-icon [icon]="faGithub" />
-    }
-    {{ loading() ? 'Connecting…' : 'Continue with GitHub' }}
-  </button>
+  <div class="mt-4">
+    <kwd-ui-oauth-button
+      label="Continue with GitHub"
+      loadingLabel="Connecting…"
+      [disabled]="loading()"
+      [icon]="faGithub"
+      [loading]="loading()"
+      (buttonClick)="onGithubLogin()" />
+  </div>
 }
 
-<button
-  class="mt-4 text-sm text-[var(--color-on-surface-variant)] transition-colors hover:text-[var(--color-on-surface)]"
-  type="button"
-  (click)="onToggleMode()">
-  {{ isRegister() ? 'Already have an account? Sign in' : "Don't have an account? Create one" }}
-</button>
+<div class="mt-6 text-center text-body-sm text-[var(--color-on-surface-variant)]">
+  {{ isRegister() ? 'Already have an account?' : "Don't have an account?" }}
+  <button
+    class="rounded-[var(--radius-sm)] text-[var(--color-primary)] underline-offset-2 transition-colors hover:text-[var(--color-primary-300)] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]"
+    type="button"
+    (click)="onToggleMode()">
+    {{ isRegister() ? 'Sign in' : 'Create one' }}
+  </button>
+</div>

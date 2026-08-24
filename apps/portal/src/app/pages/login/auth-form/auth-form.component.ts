@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { ChangeDetectionStrategy, Component, computed, effect, input, output, signal, untracked } from '@angular/core';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { form, FormField, submit, validateStandardSchema } from '@angular/forms/signals';
+import { Button, OauthButton } from '@shared/ui';
 import * as z from 'zod';
 import type { LoginPayload, RegisterPayload } from './types/auth-form.types';
 
@@ -20,7 +20,7 @@ const registerSchema = z.object({
 @Component({
   selector: 'kwd-portal-auth-form',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormField, FontAwesomeModule],
+  imports: [FormField, Button, OauthButton],
   templateUrl: './auth-form.component.html',
 })
 export class AuthForm {
@@ -48,6 +48,19 @@ export class AuthForm {
   public readonly registerForm = form(this.registerModel, (path) => {
     validateStandardSchema(path, registerSchema);
   });
+
+  constructor() {
+    effect(() => {
+      this.mode();
+
+      untracked(() => {
+        this.loginModel.set({ email: '', password: '' });
+        this.registerModel.set({ name: '', email: '', password: '' });
+        this.loginForm().reset();
+        this.registerForm().reset();
+      });
+    });
+  }
 
   public async onLoginSubmit(event: Event): Promise<void> {
     event.preventDefault();

@@ -132,6 +132,81 @@
   --shadow-menu: 4px 0 0 rgba(0, 0, 0, 0.18);
 }
 
+/* Values duplicated between this media query and the [data-theme='light'] block below: the media query auto-detects the OS preference, the attribute selector lets a stored user choice win regardless of OS preference. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    color-scheme: light;
+
+    --color-surface: #f7f9fd;
+    --color-surface-dim: #dcdfe6;
+    --color-surface-bright: #f7f9fd;
+    --color-surface-container-lowest: #ffffff;
+    --color-surface-container-low: #f1f3f9;
+    --color-surface-container: #eceef5;
+    --color-surface-container-high: #e6e8f0;
+    --color-surface-container-highest: #e0e2eb;
+    --color-on-surface: #1a1d24;
+    --color-on-surface-variant: #454a5b;
+    --color-inverse-surface: #2d3137;
+    --color-inverse-on-surface: #eef0f7;
+    --color-outline: #6c7180;
+    --color-outline-variant: #c8ccd8;
+    --color-surface-tint: #005bbf;
+
+    --color-primary: #005bbf;
+    --color-primary-300: #2a73ff;
+    --color-secondary: #005317;
+    --color-tertiary: #5928a2;
+
+    --color-error: #ba1a1a;
+    --color-error-container: #ffdad6;
+    --color-on-error: #ffffff;
+    --color-on-error-container: #410002;
+
+    --color-background: #f7f9fd;
+    --color-on-background: #1a1d24;
+    --color-on-primary: #eaf2ff;
+    --color-on-secondary: #ebffef;
+    --color-on-tertiary: #f4ebff;
+  }
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --color-surface: #f7f9fd;
+  --color-surface-dim: #dcdfe6;
+  --color-surface-bright: #f7f9fd;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f1f3f9;
+  --color-surface-container: #eceef5;
+  --color-surface-container-high: #e6e8f0;
+  --color-surface-container-highest: #e0e2eb;
+  --color-on-surface: #1a1d24;
+  --color-on-surface-variant: #454a5b;
+  --color-inverse-surface: #2d3137;
+  --color-inverse-on-surface: #eef0f7;
+  --color-outline: #6c7180;
+  --color-outline-variant: #c8ccd8;
+  --color-surface-tint: #005bbf;
+
+  --color-primary: #005bbf;
+  --color-primary-300: #2a73ff;
+  --color-secondary: #005317;
+  --color-tertiary: #5928a2;
+
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-on-error: #ffffff;
+  --color-on-error-container: #410002;
+
+  --color-background: #f7f9fd;
+  --color-on-background: #1a1d24;
+  --color-on-primary: #eaf2ff;
+  --color-on-secondary: #ebffef;
+  --color-on-tertiary: #f4ebff;
+}
+
 :root {
   color-scheme: dark;
   --background: var(--color-background);
@@ -154,18 +229,6 @@
   }
 }
 
-@keyframes login-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @keyframes login-pulse {
   0%,
   100% {
@@ -176,24 +239,6 @@
   50% {
     transform: scale(1.04);
     box-shadow: 0 0 0 8px rgba(172, 199, 255, 0.08);
-  }
-}
-
-@keyframes form-reveal {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes spinner-spin {
-  to {
-    transform: rotate(360deg);
   }
 }
 
@@ -224,11 +269,16 @@
   button,
   a,
   [role='button'],
-  input,
   select,
-  textarea,
-  summary {
+  summary,
+  input[type='checkbox'],
+  input[type='radio'] {
     cursor: pointer;
+  }
+
+  input,
+  textarea {
+    cursor: text;
   }
 
   code,
@@ -244,11 +294,6 @@
 }
 
 @layer components {
-  .login-shell {
-    opacity: 0;
-    animation: login-fade-in 0.35s ease-out forwards;
-  }
-
   .login-card-header {
     display: inline-flex;
     align-items: center;
@@ -257,37 +302,5 @@
 
   .login-card-locked {
     animation: login-pulse 1.2s ease-in-out infinite;
-  }
-
-  .auth-form {
-    animation: form-reveal 0.3s ease-out;
-  }
-
-  .auth-submit {
-    position: relative;
-    overflow: hidden;
-    transition:
-      transform 0.2s ease,
-      filter 0.2s ease;
-  }
-
-  .auth-submit:not(:disabled):hover {
-    transform: translateY(-1px);
-    filter: brightness(1.03);
-  }
-
-  .auth-submit:focus-visible {
-    outline: 2px solid var(--color-primary);
-    outline-offset: 2px;
-  }
-
-  .loading-spinner {
-    display: inline-block;
-    width: 0.875rem;
-    height: 0.875rem;
-    border: 2px solid rgba(2, 6, 23, 0.3);
-    border-top-color: currentColor;
-    border-radius: 9999px;
-    animation: spinner-spin 0.8s linear infinite;
   }
 }

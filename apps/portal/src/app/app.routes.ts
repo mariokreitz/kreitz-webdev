@@ -9,11 +9,13 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'login',
+    title: 'Sign in — Kreitz-WebDev',
     canActivate: [guestGuard],
     loadComponent: () => import('./pages/login/login.component'),
   },
   {
     path: 'dashboard',
+    title: 'Dashboard — Kreitz-WebDev',
     canActivate: [authGuard],
     loadComponent: () => import('./pages/dashboard/dashboard.component'),
   },
@@ -27,10 +29,12 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'auth/error',
+    title: 'Error — Kreitz-WebDev',
     loadComponent: () => import('./pages/auth-error/auth-error.component'),
   },
   {
     path: '**',
+    title: 'Not Found — Kreitz-WebDev',
     loadComponent: () => import('./pages/not-found/not-found.component'),
   },
 ];

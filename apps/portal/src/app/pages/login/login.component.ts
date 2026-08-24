@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, inject, type OnDestroy, type OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { Card } from '@shared/ui';
 import { AuthService, DASHBOARD_ROUTE, LOGIN_ROUTE } from '../../core/auth';
 import { AuthForm } from './auth-form/auth-form.component';
 import type { LoginPayload, RegisterPayload } from './auth-form/types/auth-form.types';
@@ -8,24 +9,22 @@ import type { LoginPayload, RegisterPayload } from './auth-form/types/auth-form.
 @Component({
   selector: 'kwd-portal-login',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FontAwesomeModule, AuthForm],
+  imports: [AuthForm, Card],
   templateUrl: './login.component.html',
 })
-export default class Login implements OnInit, OnDestroy {
+export default class Login {
   public readonly mode = signal<'login' | 'register'>('login');
   public readonly loading = signal(false);
   public readonly errorMessage = signal<string | null>(null);
   public readonly infoMessage = signal<string | null>(null);
   private readonly authService: AuthService = inject(AuthService);
   private readonly router: Router = inject(Router);
-  private readonly previousBodyOverflow = document.body.style.overflow;
+  private readonly title: Title = inject(Title);
 
-  public ngOnInit(): void {
-    document.body.style.overflow = 'hidden';
-  }
-
-  public ngOnDestroy(): void {
-    document.body.style.overflow = this.previousBodyOverflow;
+  constructor() {
+    effect(() => {
+      this.title.setTitle(this.mode() === 'register' ? 'Create account — Kreitz-WebDev' : 'Sign in — Kreitz-WebDev');
+    });
   }
 
   public async onLogin({ email, password }: LoginPayload): Promise<void> {
@@ -37,11 +36,13 @@ export default class Login implements OnInit, OnDestroy {
 
     if (!result.ok) {
       this.loading.set(false);
-      this.errorMessage.set(
-        this.authService.isEmailNotVerifiedError(result.code)
-          ? 'Please verify your email before signing in — check your inbox.'
-          : result.message,
-      );
+
+      if (this.authService.isEmailNotVerifiedError(result.code)) {
+        this.infoMessage.set('Please verify your email before signing in — check your inbox.');
+        return;
+      }
+
+      this.errorMessage.set(result.message);
       return;
     }
 
