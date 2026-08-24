@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, type Signal } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { faGauge } from '@fortawesome/free-solid-svg-icons';
+import { faCircleUser, faDiagramProject, faGauge, faGlobe } from '@fortawesome/free-solid-svg-icons';
 import { Header, Sidebar, type NavItemConfig, type SidebarUser } from '@shared/ui';
 import { LOGOUT_ROUTE } from '../core/auth';
 import { ThemeService, type Theme } from '../core/theme';
@@ -13,7 +13,12 @@ import { CurrentUserStore } from '../core/user';
   templateUrl: './app-shell.component.html',
 })
 export default class AppShell {
-  public readonly navItems: readonly NavItemConfig[] = [{ icon: faGauge, label: 'Dashboard', route: '/dashboard' }];
+  public readonly navItems: readonly NavItemConfig[] = [
+    { icon: faGauge, label: 'nav.dashboard', route: '/dashboard' },
+    { icon: faDiagramProject, label: 'nav.projects', route: '/projects' },
+    { icon: faGlobe, label: 'nav.websites', route: '/websites' },
+    { icon: faCircleUser, label: 'nav.profile', route: '/profile' },
+  ];
 
   private readonly themeService: ThemeService = inject(ThemeService);
   private readonly currentUserStore: CurrentUserStore = inject(CurrentUserStore);

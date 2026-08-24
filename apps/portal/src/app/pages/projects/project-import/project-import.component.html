@@ -1,0 +1,28 @@
+<section class="mx-auto flex max-w-2xl flex-col gap-6">
+  <div>
+    <a class="text-body-sm text-(--color-primary) hover:underline" routerLink="/projects">{{
+      'projects.backToList' | translate
+    }}</a>
+    <h1 class="mt-2 text-headline-lg text-(--color-on-surface)">{{ 'projects.import.title' | translate }}</h1>
+    <p class="mt-1 text-body-md text-(--color-on-surface-variant)">{{ 'projects.import.subtitle' | translate }}</p>
+  </div>
+
+  <kwd-ui-card>
+    @defer (on interaction) {
+      <kwd-portal-github-repo-browser [importingRepoId]="importingRepoId()" (repoSelected)="onRepoSelected($event)" />
+    } @placeholder {
+      <button
+        class="flex w-full items-center justify-center gap-2 rounded-(--radius) border border-(--color-outline-variant) bg-(--color-surface-container-high) px-4 py-3 text-label-caps uppercase text-(--color-on-surface) transition-colors hover:bg-(--color-surface-container-highest)"
+        type="button">
+        <fa-icon [icon]="githubIcon" />
+        {{ 'projects.import.browse' | translate }}
+      </button>
+    } @loading (minimum 200ms) {
+      <div class="flex items-center justify-center py-8">
+        <kwd-ui-spinner size="lg" />
+      </div>
+    } @error {
+      <p class="text-body-sm text-(--color-error)">{{ 'projects.import.loadError' | translate }}</p>
+    }
+  </kwd-ui-card>
+</section>
