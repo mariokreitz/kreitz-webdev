@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component, computed, input, output, type Signal } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { TranslatePipe } from '@ngx-translate/core';
 import type { ToastSeverity } from './toast.types';
 
 @Component({
   selector: 'kwd-ui-toast',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'contents' },
-  imports: [FontAwesomeModule],
+  imports: [FontAwesomeModule, TranslatePipe],
   templateUrl: './toast.component.html',
 })
 export class Toast {

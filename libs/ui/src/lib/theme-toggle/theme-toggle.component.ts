@@ -2,11 +2,12 @@ import { ChangeDetectionStrategy, Component, computed, input, output, type Signa
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'kwd-ui-theme-toggle',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FontAwesomeModule],
+  imports: [FontAwesomeModule, TranslatePipe],
   templateUrl: './theme-toggle.component.html',
 })
 export class ThemeToggle {
@@ -15,6 +16,6 @@ export class ThemeToggle {
 
   public readonly icon: Signal<IconDefinition> = computed(() => (this.theme() === 'dark' ? faSun : faMoon));
   public readonly label: Signal<string> = computed(() =>
-    this.theme() === 'dark' ? 'Switch to light theme' : 'Switch to dark theme',
+    this.theme() === 'dark' ? 'common.themeToggle.toLight' : 'common.themeToggle.toDark',
   );
 }

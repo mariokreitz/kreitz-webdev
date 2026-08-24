@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ThemeToggle } from '../theme-toggle/theme-toggle.component';
 import type { SidebarUser } from '../sidebar/sidebar.types';
 
@@ -8,7 +9,7 @@ import type { SidebarUser } from '../sidebar/sidebar.types';
   selector: 'kwd-ui-header',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'contents' },
-  imports: [FontAwesomeModule, ThemeToggle],
+  imports: [FontAwesomeModule, ThemeToggle, TranslatePipe],
   templateUrl: './header.component.html',
 })
 export class Header {

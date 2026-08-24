@@ -1,9 +1,9 @@
 @if (isRegister()) {
   <form class="flex min-h-[23rem] flex-col gap-4" (submit)="onRegisterSubmit($event)">
     <div class="flex flex-col gap-2">
-      <label class="font-mono text-label-caps uppercase text-[var(--color-on-surface-variant)]" for="register-name"
-        >Name</label
-      >
+      <label class="font-mono text-label-caps uppercase text-[var(--color-on-surface-variant)]" for="register-name">{{
+        'auth.fields.name' | translate
+      }}</label>
       <input
         autocomplete="name"
         class="rounded-[var(--radius)] border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-lowest)] px-3 py-2.5 font-mono text-code-md text-[var(--color-on-surface)] outline-none transition-colors placeholder:text-[var(--color-on-surface-variant)] focus:border-[var(--color-primary)]"
@@ -12,7 +12,7 @@
         [formField]="registerForm.name" />
       @if (registerForm.name().touched() && registerForm.name().errors().length) {
         <p class="min-h-[1.25rem] text-body-sm text-[var(--color-error)]">
-          {{ registerForm.name().errors()[0]?.message }}
+          {{ registerForm.name().errors()[0]?.message | translate }}
         </p>
       } @else {
         <p class="min-h-[1.25rem]"></p>
@@ -20,9 +20,9 @@
     </div>
 
     <div class="flex flex-col gap-2">
-      <label class="font-mono text-label-caps uppercase text-[var(--color-on-surface-variant)]" for="register-email"
-        >Email</label
-      >
+      <label class="font-mono text-label-caps uppercase text-[var(--color-on-surface-variant)]" for="register-email">{{
+        'auth.fields.email' | translate
+      }}</label>
 
       <input
         autocomplete="email"
@@ -32,7 +32,7 @@
         [formField]="registerForm.email" />
       @if (registerForm.email().touched() && registerForm.email().errors().length) {
         <p class="min-h-[1.25rem] text-body-sm text-[var(--color-error)]">
-          {{ registerForm.email().errors()[0]?.message }}
+          {{ registerForm.email().errors()[0]?.message | translate }}
         </p>
       } @else {
         <p class="min-h-[1.25rem]"></p>
@@ -40,8 +40,10 @@
     </div>
 
     <div class="flex flex-col gap-2">
-      <label class="font-mono text-label-caps uppercase text-[var(--color-on-surface-variant)]" for="register-password"
-        >Password</label
+      <label
+        class="font-mono text-label-caps uppercase text-[var(--color-on-surface-variant)]"
+        for="register-password"
+        >{{ 'auth.fields.password' | translate }}</label
       >
       <input
         autocomplete="new-password"
@@ -51,7 +53,7 @@
         [formField]="registerForm.password" />
       @if (registerForm.password().touched() && registerForm.password().errors().length) {
         <p class="min-h-[1.25rem] text-body-sm text-[var(--color-error)]">
-          {{ registerForm.password().errors()[0]?.message }}
+          {{ registerForm.password().errors()[0]?.message | translate }}
         </p>
       } @else {
         <p class="min-h-[1.25rem]"></p>
@@ -65,8 +67,8 @@
     }
 
     <kwd-ui-button
-      label="Create account"
-      loadingLabel="Creating account…"
+      [label]="'auth.register.submit' | translate"
+      [loadingLabel]="'auth.register.submitting' | translate"
       [disabled]="registerForm().invalid() || loading()"
       [icon]="faArrowRight"
       [loading]="loading()" />
@@ -74,9 +76,9 @@
 } @else {
   <form class="flex min-h-[20rem] flex-col gap-4" (submit)="onLoginSubmit($event)">
     <div class="flex flex-col gap-2">
-      <label class="font-mono text-label-caps uppercase text-[var(--color-on-surface-variant)]" for="login-email"
-        >Email</label
-      >
+      <label class="font-mono text-label-caps uppercase text-[var(--color-on-surface-variant)]" for="login-email">{{
+        'auth.fields.email' | translate
+      }}</label>
       <input
         autocomplete="email"
         class="rounded-[var(--radius)] border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-lowest)] px-3 py-2.5 font-mono text-code-md text-[var(--color-on-surface)] outline-none transition-colors placeholder:text-[var(--color-on-surface-variant)] focus:border-[var(--color-primary)]"
@@ -85,7 +87,7 @@
         [formField]="loginForm.email" />
       @if (loginForm.email().touched() && loginForm.email().errors().length) {
         <p class="min-h-[1.25rem] text-body-sm text-[var(--color-error)]">
-          {{ loginForm.email().errors()[0]?.message }}
+          {{ loginForm.email().errors()[0]?.message | translate }}
         </p>
       } @else {
         <p class="min-h-[1.25rem]"></p>
@@ -93,9 +95,9 @@
     </div>
 
     <div class="flex flex-col gap-2">
-      <label class="font-mono text-label-caps uppercase text-[var(--color-on-surface-variant)]" for="login-password"
-        >Password</label
-      >
+      <label class="font-mono text-label-caps uppercase text-[var(--color-on-surface-variant)]" for="login-password">{{
+        'auth.fields.password' | translate
+      }}</label>
       <input
         autocomplete="current-password"
         class="rounded-[var(--radius)] border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-lowest)] px-3 py-2.5 font-mono text-code-md text-[var(--color-on-surface)] outline-none transition-colors placeholder:text-[var(--color-on-surface-variant)] focus:border-[var(--color-primary)]"
@@ -104,7 +106,7 @@
         [formField]="loginForm.password" />
       @if (loginForm.password().touched() && loginForm.password().errors().length) {
         <p class="min-h-[1.25rem] text-body-sm text-[var(--color-error)]">
-          {{ loginForm.password().errors()[0]?.message }}
+          {{ loginForm.password().errors()[0]?.message | translate }}
         </p>
       } @else {
         <p class="min-h-[1.25rem]"></p>
@@ -118,8 +120,8 @@
     }
 
     <kwd-ui-button
-      label="Sign in"
-      loadingLabel="Signing in…"
+      [label]="'auth.login.submit' | translate"
+      [loadingLabel]="'auth.login.submitting' | translate"
       [disabled]="loginForm().invalid() || loading()"
       [icon]="faArrowRight"
       [loading]="loading()" />
@@ -127,14 +129,16 @@
 
   <div class="mt-4 flex items-center gap-3">
     <div class="h-px flex-1 bg-[var(--color-outline-variant)]"></div>
-    <span class="font-mono text-label-caps uppercase text-[var(--color-on-surface-variant)]">or</span>
+    <span class="font-mono text-label-caps uppercase text-[var(--color-on-surface-variant)]">{{
+      'auth.or' | translate
+    }}</span>
     <div class="h-px flex-1 bg-[var(--color-outline-variant)]"></div>
   </div>
 
   <div class="mt-4">
     <kwd-ui-oauth-button
-      label="Continue with GitHub"
-      loadingLabel="Connecting…"
+      [label]="'auth.github.submit' | translate"
+      [loadingLabel]="'auth.github.submitting' | translate"
       [disabled]="loading()"
       [icon]="faGithub"
       [loading]="loading()"
@@ -143,11 +147,11 @@
 }
 
 <div class="mt-6 text-center text-body-sm text-[var(--color-on-surface-variant)]">
-  {{ isRegister() ? 'Already have an account?' : "Don't have an account?" }}
+  {{ (isRegister() ? 'auth.toggle.hasAccount' : 'auth.toggle.noAccount') | translate }}
   <button
     class="rounded-[var(--radius-sm)] text-[var(--color-primary)] underline-offset-2 transition-colors hover:text-[var(--color-primary-300)] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]"
     type="button"
     (click)="onToggleMode()">
-    {{ isRegister() ? 'Sign in' : 'Create one' }}
+    {{ (isRegister() ? 'auth.toggle.signIn' : 'auth.toggle.createOne') | translate }}
   </button>
 </div>

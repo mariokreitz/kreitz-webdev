@@ -6,8 +6,8 @@
   <span class="flex h-5 w-5 shrink-0 items-center justify-center">
     @if (loading()) {
       <span
-        aria-label="Connecting"
-        class="inline-block h-3.5 w-3.5 animate-[spin_0.8s_linear_infinite] rounded-full border-2 border-[rgba(2,6,23,0.3)] border-t-current"></span>
+        class="inline-block h-3.5 w-3.5 animate-[spin_0.8s_linear_infinite] rounded-full border-2 border-[rgba(2,6,23,0.3)] border-t-current"
+        [attr.aria-label]="'common.connecting' | translate"></span>
     } @else {
       <fa-icon class="text-lg" [icon]="icon()" />
     }

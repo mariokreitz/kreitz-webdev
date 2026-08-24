@@ -10,7 +10,7 @@
     <button
       class="flex h-6 w-6 shrink-0 items-center justify-center rounded-[var(--radius-sm)] text-[var(--color-on-surface-variant)] transition-colors hover:text-[var(--color-on-surface)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]"
       type="button"
-      aria-label="Dismiss"
+      [attr.aria-label]="'common.dismiss' | translate"
       (click)="dismiss.emit()">
       <fa-icon class="text-sm" [icon]="dismissIcon" />
     </button>

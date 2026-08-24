@@ -3,7 +3,7 @@
   <kwd-ui-card>
     <div class="login-card-header mb-6">
       <h1 class="text-headline-md text-(--color-on-surface)">
-        {{ mode() === 'register' ? 'Create an account' : 'Sign in' }}
+        {{ (mode() === 'register' ? 'auth.heading.register' : 'auth.heading.login') | translate }}
       </h1>
     </div>
 

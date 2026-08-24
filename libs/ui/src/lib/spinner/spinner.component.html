@@ -1,7 +1,7 @@
 <span
   role="status"
-  aria-label="Loading"
   class="inline-block animate-[spin_0.8s_linear_infinite] rounded-full border-2 border-(--color-outline-variant) border-t-current"
+  [attr.aria-label]="'common.loading' | translate"
   [class.h-3]="size() === 'sm'"
   [class.w-3]="size() === 'sm'"
   [class.h-6]="size() === 'md'"

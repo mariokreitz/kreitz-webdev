@@ -9,7 +9,7 @@
       <button
         class="flex h-11 w-11 items-center justify-center rounded-(--radius-full) border border-(--color-outline-variant) bg-(--color-surface-container-high) text-(--color-on-surface-variant) transition-colors hover:bg-(--color-surface-container-highest) active:bg-(--color-surface-container-highest) md:hidden"
         type="button"
-        aria-label="Sign out"
+        [attr.aria-label]="'common.signOut' | translate"
         (click)="signOut.emit()">
         <fa-icon class="text-base" [icon]="signOutIcon" />
       </button>

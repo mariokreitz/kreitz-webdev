@@ -1,0 +1,441 @@
+{
+  "auth": {
+    "errors": {
+      "emailInvalid": "Please enter a valid email address.",
+      "githubFailed": "GitHub sign-in failed.",
+      "loginFailed": "Login failed.",
+      "nameRequired": "Please enter your name.",
+      "network": "Could not reach the server. Check your connection and try again.",
+      "passwordRequired": "Please enter your password.",
+      "passwordTooShort": "Use at least 8 characters.",
+      "registerFailed": "Registration failed.",
+      "requestBlocked": "We could not process your request. Please try again in a moment.",
+      "tooManyAttempts": "Too many attempts. Please wait a moment and try again.",
+      "updateNameFailed": "Could not update your name."
+    },
+    "fields": {
+      "email": "Email",
+      "name": "Name",
+      "password": "Password"
+    },
+    "github": {
+      "submit": "Continue with GitHub",
+      "submitting": "Connecting…"
+    },
+    "heading": {
+      "login": "Sign in",
+      "register": "Create an account"
+    },
+    "info": {
+      "checkEmail": "Check your email at {{email}} to verify your account, then sign in.",
+      "verifyEmail": "Please verify your email before signing in — check your inbox."
+    },
+    "login": {
+      "submit": "Sign in",
+      "submitting": "Signing in…"
+    },
+    "or": "or",
+    "register": {
+      "submit": "Create account",
+      "submitting": "Creating account…"
+    },
+    "title": {
+      "login": "Sign in — Kreitz-WebDev",
+      "register": "Create account — Kreitz-WebDev"
+    },
+    "toggle": {
+      "createOne": "Create one",
+      "hasAccount": "Already have an account?",
+      "noAccount": "Don't have an account?",
+      "signIn": "Sign in"
+    }
+  },
+  "authError": {
+    "errorCode": "Error code:",
+    "message": "Something went wrong while signing you in. Please try again.",
+    "title": "Sign-in failed"
+  },
+  "common": {
+    "backToSignIn": "Back to sign in",
+    "cancel": "Cancel",
+    "connecting": "Connecting",
+    "dismiss": "Dismiss",
+    "loading": "Loading",
+    "no": "No",
+    "processing": "Processing",
+    "save": "Save",
+    "signOut": "Sign out",
+    "themeToggle": {
+      "toDark": "Switch to dark theme",
+      "toLight": "Switch to light theme"
+    },
+    "yes": "Yes"
+  },
+  "dashboard": {
+    "activity": {
+      "empty": "No projects yet",
+      "loadError": "Couldn't load recent activity. Please try refreshing the page.",
+      "title": "Recent activity"
+    },
+    "metrics": {
+      "activeDomains": {
+        "hint": "Coming soon",
+        "label": "Active Domains"
+      },
+      "activeProjects": {
+        "hint": "In your account",
+        "hintEmpty": "No projects yet",
+        "label": "Active Projects"
+      },
+      "activeWebsites": {
+        "hint": "Currently configured",
+        "hintEmpty": "No websites yet",
+        "label": "Active Websites"
+      },
+      "lastLogin": {
+        "firstLogin": "First login",
+        "hint": "Previous session",
+        "label": "Last Login"
+      },
+      "loadError": "Couldn't load",
+      "systemAlerts": {
+        "hint": "All clear",
+        "label": "System Alerts"
+      }
+    },
+    "subtitle": "Here's what's happening with your account.",
+    "welcome": "Welcome back, {{name}}"
+  },
+  "error": {
+    "diagnostics": {
+      "occurredAt": "Occurred at",
+      "path": "Path",
+      "requestId": "Request ID",
+      "status": "Status"
+    },
+    "messages": {
+      "generic": "Something unexpected happened.",
+      "navigation": "This page could not be loaded.",
+      "network": "We could not reach the server. Check your connection and try again.",
+      "server": "Our server ran into a problem handling your request. Please try again shortly."
+    },
+    "title": "Something went wrong"
+  },
+  "http": {
+    "errors": {
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "legal": {
+    "imprint": {
+      "address": {
+        "body": "TODO: street, postal code, city, country",
+        "heading": "Address"
+      },
+      "contact": {
+        "email": "TODO: email address",
+        "heading": "Contact",
+        "phone": "TODO: phone number"
+      },
+      "entity": {
+        "body": "TODO: legal entity name",
+        "heading": "Company / Legal Entity"
+      },
+      "register": {
+        "body": "TODO: commercial register, register court, register number",
+        "heading": "Register Information"
+      },
+      "responsible": {
+        "body": "TODO: name of person responsible per applicable media law",
+        "heading": "Responsible for Content"
+      },
+      "title": "Imprint",
+      "vat": {
+        "body": "TODO: VAT identification number",
+        "heading": "VAT ID"
+      }
+    },
+    "tos": {
+      "changes": {
+        "body": "TODO: how and when these terms may change",
+        "heading": "Changes to Terms"
+      },
+      "governingLaw": {
+        "body": "TODO: governing law and jurisdiction",
+        "heading": "Governing Law"
+      },
+      "liability": {
+        "body": "TODO: liability provisions",
+        "heading": "Liability"
+      },
+      "scope": {
+        "body": "TODO: scope of these terms",
+        "heading": "Scope"
+      },
+      "services": {
+        "body": "TODO: description of services provided",
+        "heading": "Services"
+      },
+      "title": "Terms of Service"
+    }
+  },
+  "logout": {
+    "message": "Signing out…"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "projects": "Projects",
+    "websites": "Websites"
+  },
+  "notFound": {
+    "message": "This page doesn't exist."
+  },
+  "profile": {
+    "dangerZone": {
+      "deleteAccount": "Delete Account",
+      "description": "Deleting your account is permanent and cannot be undone. This feature isn't available yet — reach out to us if you need your account removed.",
+      "notAvailable": "Account deletion is not yet available.",
+      "title": "Danger Zone"
+    },
+    "diagnostics": {
+      "email": "Email",
+      "emailVerified": "Email Verified",
+      "firstLogin": "First login",
+      "lastLogin": "Last Login",
+      "lastUpdatedAt": "Last Updated At",
+      "registeredAt": "Registered At",
+      "title": "Account Diagnostics"
+    },
+    "editName": {
+      "errors": {
+        "required": "Please enter your name.",
+        "tooLong": "Name is too long."
+      },
+      "name": "Name",
+      "saving": "Saving…"
+    },
+    "identity": {
+      "editProfile": "Edit Profile",
+      "managedNotice": "Account details are managed via your sign-in provider and cannot be edited directly, aside from your display name.",
+      "verifiedAccount": "Verified account"
+    },
+    "subtitle": "Manage your account identity and technical details.",
+    "title": "User Profile",
+    "toast": {
+      "nameUpdated": "Your name was updated."
+    }
+  },
+  "projects": {
+    "actions": {
+      "create": "Create Project",
+      "importFromGithub": "Import from GitHub"
+    },
+    "backToList": "← Back to projects",
+    "card": {
+      "delete": "Delete project",
+      "manual": "Manually added",
+      "noDescription": "No description yet."
+    },
+    "create": {
+      "subtitle": "Add a project by hand — you can always import one from GitHub later.",
+      "title": "New Project"
+    },
+    "deleteDialog": {
+      "confirm": "Delete Project",
+      "message": "This will permanently delete \"{{name}}\". This action cannot be undone.",
+      "title": "Delete this project?"
+    },
+    "detail": {
+      "deleteHint": "Deleting a project is permanent and cannot be undone.",
+      "importedFrom": "Imported from {{repo}}",
+      "loadError": "Couldn't load this project. Please try refreshing the page.",
+      "title": "Edit Project",
+      "viewOnGithub": "View on GitHub"
+    },
+    "empty": "You don't have any projects yet. Create one or import a repository from GitHub.",
+    "form": {
+      "create": {
+        "submit": "Create Project",
+        "submitting": "Creating…"
+      },
+      "edit": {
+        "submit": "Save Changes",
+        "submitting": "Saving…"
+      },
+      "errors": {
+        "descriptionTooLong": "Description is too long.",
+        "nameRequired": "Please enter a project name.",
+        "nameTooLong": "Name is too long.",
+        "submitFailed": "Could not save this project. Please try again.",
+        "tagsTooLong": "Tags are too long.",
+        "urlInvalid": "Please enter a valid URL."
+      },
+      "fields": {
+        "description": "Description",
+        "imageUrl": "Image URL",
+        "liveUrl": "Live URL",
+        "name": "Name",
+        "repoUrl": "Repository URL",
+        "tags": "Tags",
+        "tagsHint": "Separate tags with commas."
+      }
+    },
+    "import": {
+      "action": "Import",
+      "browse": "Browse your GitHub repositories",
+      "empty": "No repositories match your search.",
+      "importing": "Importing…",
+      "loadError": "Couldn't load your GitHub repositories. Please try again.",
+      "private": "Private repository",
+      "searchPlaceholder": "Search repositories…",
+      "subtitle": "Pick a repository from your linked GitHub account to import as a project.",
+      "title": "Import from GitHub",
+      "toast": {
+        "success": "Imported \"{{name}}\" from GitHub."
+      }
+    },
+    "loadError": "Couldn't load your projects. Please try refreshing the page.",
+    "subtitle": "Manage the projects in your account.",
+    "title": "Projects",
+    "toast": {
+      "created": "\"{{name}}\" was created.",
+      "deleted": "\"{{name}}\" was deleted.",
+      "updated": "\"{{name}}\" was updated."
+    }
+  },
+  "websites": {
+    "actions": {
+      "close": "Close",
+      "copied": "Copied!",
+      "copy": "Copy",
+      "create": "Create Website",
+      "delete": "Delete"
+    },
+    "deleteDialog": {
+      "message": "This will permanently delete \"{{name}}\" and all of its domains, tokens, and project links. This cannot be undone.",
+      "title": "Delete website?"
+    },
+    "detail": {
+      "backLink": "Back to Websites",
+      "dangerZone": {
+        "delete": "Delete Website",
+        "description": "Deleting this website is permanent and removes all of its domains, tokens, and project links.",
+        "title": "Danger Zone"
+      },
+      "editForm": {
+        "enabled": "Website enabled",
+        "name": "Name",
+        "saving": "Saving…"
+      },
+      "loadError": "Couldn't load this website. Please try refreshing the page.",
+      "notFound": "This website could not be found."
+    },
+    "domains": {
+      "add": "Add Domain",
+      "deleteDialog": {
+        "message": "This will remove \"{{domain}}\" from this website.",
+        "title": "Delete domain?"
+      },
+      "empty": "No domains registered yet.",
+      "form": {
+        "adding": "Adding…",
+        "domain": "Domain",
+        "errors": {
+          "required": "Please enter a domain."
+        },
+        "placeholder": "example.com"
+      },
+      "loadError": "Couldn't load domains. Please try refreshing the page.",
+      "status": {
+        "unverified": "Unverified",
+        "verified": "Verified"
+      },
+      "title": "Domains",
+      "toast": {
+        "created": "Domain added.",
+        "deleted": "Domain deleted."
+      }
+    },
+    "form": {
+      "creating": "Creating…",
+      "errors": {
+        "nameRequired": "Please enter a website name.",
+        "nameTooLong": "Name is too long.",
+        "urlInvalid": "Please enter a valid URL, including https://."
+      },
+      "name": "Name",
+      "url": "URL"
+    },
+    "list": {
+      "empty": "You haven't created any websites yet.",
+      "loadError": "Couldn't load your websites. Please try refreshing the page.",
+      "title": "Your Websites"
+    },
+    "projects": {
+      "empty": "No projects linked yet.",
+      "form": {
+        "errors": {
+          "required": "Please choose a project."
+        },
+        "linking": "Linking…",
+        "noneAvailable": "All of your projects are already linked.",
+        "project": "Project",
+        "published": "Publish immediately"
+      },
+      "link": "Link Project",
+      "loadError": "Couldn't load linked projects. Please try refreshing the page.",
+      "published": "Published",
+      "title": "Linked Projects",
+      "toast": {
+        "linked": "Project linked.",
+        "unlinked": "Project unlinked."
+      },
+      "unlink": "Unlink",
+      "unlinkDialog": {
+        "message": "\"{{name}}\" will be removed from this website. The project itself is not deleted.",
+        "title": "Unlink project?"
+      },
+      "unpublished": "Unpublished"
+    },
+    "status": {
+      "disabled": "Disabled",
+      "enabled": "Enabled"
+    },
+    "subtitle": "Manage the websites connected to your account.",
+    "title": "Websites",
+    "toast": {
+      "created": "Website created.",
+      "deleted": "Website deleted.",
+      "updated": "Website updated."
+    },
+    "tokens": {
+      "add": "Create Token",
+      "deleteDialog": {
+        "message": "\"{{name}}\" will stop working immediately. This cannot be undone.",
+        "title": "Delete token?"
+      },
+      "empty": "No tokens created yet.",
+      "form": {
+        "creating": "Creating…",
+        "errors": {
+          "nameRequired": "Please enter a token name."
+        },
+        "expiresAt": "Expires at (optional)",
+        "name": "Token name"
+      },
+      "lastUsed": "Last used",
+      "loadError": "Couldn't load tokens. Please try refreshing the page.",
+      "neverUsed": "Never used",
+      "reveal": {
+        "neverShownAgain": "For your security, we only show the full token once.",
+        "title": "Token created",
+        "warning": "Copy this token now — you won't be able to see it again."
+      },
+      "title": "Tokens",
+      "toast": {
+        "deleted": "Token deleted."
+      }
+    }
+  }
+}

@@ -3,24 +3,25 @@ import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { form, FormField, submit, validateStandardSchema } from '@angular/forms/signals';
 import { Button, OauthButton } from '@shared/ui';
+import { TranslatePipe } from '@ngx-translate/core';
 import * as z from 'zod';
 import type { LoginPayload, RegisterPayload } from './types/auth-form.types';
 
 const loginSchema = z.object({
-  email: z.email('Please enter a valid email address.'),
-  password: z.string().min(1, 'Please enter your password.'),
+  email: z.email('auth.errors.emailInvalid'),
+  password: z.string().min(1, 'auth.errors.passwordRequired'),
 });
 
 const registerSchema = z.object({
-  name: z.string().min(1, 'Please enter your name.'),
-  email: z.email('Please enter a valid email address.'),
-  password: z.string().min(8, 'Use at least 8 characters.'),
+  name: z.string().min(1, 'auth.errors.nameRequired'),
+  email: z.email('auth.errors.emailInvalid'),
+  password: z.string().min(8, 'auth.errors.passwordTooShort'),
 });
 
 @Component({
   selector: 'kwd-portal-auth-form',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormField, Button, OauthButton],
+  imports: [FormField, Button, OauthButton, TranslatePipe],
   templateUrl: './auth-form.component.html',
 })
 export class AuthForm {

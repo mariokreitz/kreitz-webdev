@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@ang
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Card } from '@shared/ui';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService, DASHBOARD_ROUTE, LOGIN_ROUTE } from '../../core/auth';
 import { AuthForm } from './auth-form/auth-form.component';
 import type { LoginPayload, RegisterPayload } from './auth-form/types/auth-form.types';
@@ -9,7 +10,7 @@ import type { LoginPayload, RegisterPayload } from './auth-form/types/auth-form.
 @Component({
   selector: 'kwd-portal-login',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [AuthForm, Card],
+  imports: [AuthForm, Card, TranslatePipe],
   templateUrl: './login.component.html',
 })
 export default class Login {
@@ -20,10 +21,13 @@ export default class Login {
   private readonly authService: AuthService = inject(AuthService);
   private readonly router: Router = inject(Router);
   private readonly title: Title = inject(Title);
+  private readonly translate: TranslateService = inject(TranslateService);
 
   constructor() {
     effect(() => {
-      this.title.setTitle(this.mode() === 'register' ? 'Create account — Kreitz-WebDev' : 'Sign in — Kreitz-WebDev');
+      this.title.setTitle(
+        this.translate.instant(this.mode() === 'register' ? 'auth.title.register' : 'auth.title.login'),
+      );
     });
   }
 
@@ -38,7 +42,7 @@ export default class Login {
       this.loading.set(false);
 
       if (this.authService.isEmailNotVerifiedError(result.code)) {
-        this.infoMessage.set('Please verify your email before signing in — check your inbox.');
+        this.infoMessage.set(this.translate.instant('auth.info.verifyEmail'));
         return;
       }
 
@@ -64,7 +68,7 @@ export default class Login {
     }
 
     this.mode.set('login');
-    this.infoMessage.set(`Check your email at ${result.email} to verify your account, then sign in.`);
+    this.infoMessage.set(this.translate.instant('auth.info.checkEmail', { email: result.email }));
   }
 
   public async onGithubLogin(): Promise<void> {

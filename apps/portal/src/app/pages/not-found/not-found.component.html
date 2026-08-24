@@ -2,12 +2,12 @@
   <kwd-ui-card>
     <div class="text-center">
       <h1 class="text-headline-lg text-(--color-on-surface)">404</h1>
-      <p class="mt-2 text-body-sm text-(--color-on-surface-variant)">This page doesn't exist.</p>
+      <p class="mt-2 text-body-sm text-(--color-on-surface-variant)">{{ 'notFound.message' | translate }}</p>
 
       <a
         class="mt-6 inline-block rounded-(--radius-md) bg-secondary-500 px-4 py-2.5 text-label-caps uppercase text-on-secondary-container transition-colors hover:bg-secondary-400"
         routerLink="/login">
-        Back to sign in
+        {{ 'common.backToSignIn' | translate }}
       </a>
     </div>
   </kwd-ui-card>

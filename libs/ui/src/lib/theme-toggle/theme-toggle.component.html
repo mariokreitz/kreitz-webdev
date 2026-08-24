@@ -1,7 +1,7 @@
 <button
   class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-full)] border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-high)] text-[var(--color-on-surface-variant)] transition-colors hover:bg-[var(--color-surface-container-highest)] active:bg-[var(--color-surface-container-highest)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]"
   type="button"
-  [attr.aria-label]="label()"
+  [attr.aria-label]="label() | translate"
   (click)="toggleTheme.emit()">
   <fa-icon class="text-base" [icon]="icon()" />
 </button>
