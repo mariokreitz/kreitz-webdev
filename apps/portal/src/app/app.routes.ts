@@ -14,6 +14,11 @@ export const appRoutes: Route[] = [
     loadComponent: () => import('./pages/login/login.component'),
   },
   {
+    path: 'logout',
+    title: 'Signing out — Kreitz-WebDev',
+    loadComponent: () => import('./pages/logout/logout.component'),
+  },
+  {
     path: '',
     canActivate: [authGuard],
     loadComponent: () => import('./layout/app-shell.component'),

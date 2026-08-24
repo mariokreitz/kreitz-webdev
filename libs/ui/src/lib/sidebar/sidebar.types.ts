@@ -9,4 +9,5 @@ export interface NavItemConfig {
 export interface SidebarUser {
   readonly name: string;
   readonly email: string;
+  readonly avatarUrl?: string | null;
 }

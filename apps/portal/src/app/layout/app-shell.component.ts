@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, type Signal } fro
 import { Router, RouterOutlet } from '@angular/router';
 import { faGauge } from '@fortawesome/free-solid-svg-icons';
 import { Header, Sidebar, type NavItemConfig, type SidebarUser } from '@shared/ui';
-import { AuthService, LOGIN_ROUTE } from '../core/auth';
+import { LOGOUT_ROUTE } from '../core/auth';
 import { ThemeService, type Theme } from '../core/theme';
 import { CurrentUserStore } from '../core/user';
 
@@ -16,7 +16,6 @@ export default class AppShell {
   public readonly navItems: readonly NavItemConfig[] = [{ icon: faGauge, label: 'Dashboard', route: '/dashboard' }];
 
   private readonly themeService: ThemeService = inject(ThemeService);
-  private readonly authService: AuthService = inject(AuthService);
   private readonly currentUserStore: CurrentUserStore = inject(CurrentUserStore);
   private readonly router: Router = inject(Router);
 
@@ -29,16 +28,14 @@ export default class AppShell {
       return null;
     }
 
-    return { name: profile.name, email: profile.email };
+    return { name: profile.name, email: profile.email, avatarUrl: profile.image ?? null };
   });
 
   public toggleTheme(): void {
     this.themeService.toggle();
   }
 
-  public async onSignOut(): Promise<void> {
-    await this.authService.logout();
-    this.currentUserStore.clear();
-    await this.router.navigateByUrl(LOGIN_ROUTE);
+  public onSignOut(): void {
+    void this.router.navigateByUrl(LOGOUT_ROUTE);
   }
 }

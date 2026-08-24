@@ -4,6 +4,6 @@ export const environment: Environment = {
   production: true,
   api: {
     authBaseUrl: 'https://api.kreitz-webdev.de',
-    kreitzWebdev: 'https://api.kreitz-webdev.de/api',
+    kreitzWebdev: 'https://api.kreitz-webdev.de/api/v1',
   },
 };

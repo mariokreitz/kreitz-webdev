@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, input, output, type Signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  output,
+  signal,
+  type Signal,
+  type WritableSignal,
+} from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import type { SidebarUser } from '../sidebar/sidebar.types';
@@ -24,4 +33,17 @@ export class UserChip {
       .map((part) => part.charAt(0).toUpperCase())
       .join(''),
   );
+
+  private readonly avatarFailedSignal: WritableSignal<boolean> = signal(false);
+
+  public readonly avatarUrl: Signal<string | null> = computed(() => {
+    if (this.avatarFailedSignal()) {
+      return null;
+    }
+    return this.user().avatarUrl ?? null;
+  });
+
+  public onAvatarError(): void {
+    this.avatarFailedSignal.set(true);
+  }
 }
