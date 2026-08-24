@@ -24,32 +24,36 @@
   </div>
 
   <kwd-ui-card>
-    @defer (on viewport) {
-      @if (isActivityLoading()) {
+    <div #activityViewportAnchor>
+      @defer (on viewport(activityViewportAnchor)) {
+        @if (isActivityLoading()) {
+          <kwd-ui-skeleton variant="activity" [rows]="5" />
+        } @else if (isActivityError()) {
+          <h2 class="text-headline-md text-(--color-on-surface)">{{ 'dashboard.activity.title' | translate }}</h2>
+          <p class="mt-4 text-body-sm text-(--color-error)">
+            {{ 'dashboard.activity.loadError' | translate }}
+          </p>
+        } @else {
+          <h2 class="text-headline-md text-(--color-on-surface)">{{ 'dashboard.activity.title' | translate }}</h2>
+          <ul class="mt-4 flex flex-col gap-3">
+            @for (entry of activity(); track entry.id) {
+              <li
+                class="flex items-center justify-between border-b border-(--color-outline-variant) pb-3 text-body-sm text-(--color-on-surface-variant) last:border-0 last:pb-0">
+                <span>{{ entry.label }}</span>
+                <span class="text-code-sm">{{ entry.timestamp }}</span>
+              </li>
+            } @empty {
+              <li class="text-body-sm text-(--color-on-surface-variant)">
+                {{ 'dashboard.activity.empty' | translate }}
+              </li>
+            }
+          </ul>
+        }
+      } @placeholder {
         <kwd-ui-skeleton variant="activity" [rows]="5" />
-      } @else if (isActivityError()) {
-        <h2 class="text-headline-md text-(--color-on-surface)">{{ 'dashboard.activity.title' | translate }}</h2>
-        <p class="mt-4 text-body-sm text-(--color-error)">
-          {{ 'dashboard.activity.loadError' | translate }}
-        </p>
-      } @else {
-        <h2 class="text-headline-md text-(--color-on-surface)">{{ 'dashboard.activity.title' | translate }}</h2>
-        <ul class="mt-4 flex flex-col gap-3">
-          @for (entry of activity(); track entry.id) {
-            <li
-              class="flex items-center justify-between border-b border-(--color-outline-variant) pb-3 text-body-sm text-(--color-on-surface-variant) last:border-0 last:pb-0">
-              <span>{{ entry.label }}</span>
-              <span class="text-code-sm">{{ entry.timestamp }}</span>
-            </li>
-          } @empty {
-            <li class="text-body-sm text-(--color-on-surface-variant)">{{ 'dashboard.activity.empty' | translate }}</li>
-          }
-        </ul>
+      } @loading (minimum 200ms) {
+        <kwd-ui-skeleton variant="activity" [rows]="5" />
       }
-    } @placeholder {
-      <kwd-ui-skeleton variant="activity" [rows]="5" />
-    } @loading (minimum 200ms) {
-      <kwd-ui-skeleton variant="activity" [rows]="5" />
-    }
+    </div>
   </kwd-ui-card>
 </section>

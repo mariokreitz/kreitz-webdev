@@ -27,33 +27,39 @@
 
   @if (websiteResource.value()) {
     <kwd-ui-card>
-      @defer (on viewport) {
-        <kwd-portal-domains-section [websiteId]="id()" />
-      } @placeholder {
-        <kwd-ui-skeleton variant="activity" [rows]="3" />
-      } @loading (minimum 200ms) {
-        <kwd-ui-skeleton variant="activity" [rows]="3" />
-      }
+      <div #domainsViewportAnchor>
+        @defer (on viewport(domainsViewportAnchor)) {
+          <kwd-portal-domains-section [websiteId]="id()" />
+        } @placeholder {
+          <kwd-ui-skeleton variant="activity" [rows]="3" />
+        } @loading (minimum 200ms) {
+          <kwd-ui-skeleton variant="activity" [rows]="3" />
+        }
+      </div>
     </kwd-ui-card>
 
     <kwd-ui-card>
-      @defer (on viewport) {
-        <kwd-portal-tokens-section [websiteId]="id()" />
-      } @placeholder {
-        <kwd-ui-skeleton variant="activity" [rows]="3" />
-      } @loading (minimum 200ms) {
-        <kwd-ui-skeleton variant="activity" [rows]="3" />
-      }
+      <div #tokensViewportAnchor>
+        @defer (on viewport(tokensViewportAnchor)) {
+          <kwd-portal-tokens-section [websiteId]="id()" />
+        } @placeholder {
+          <kwd-ui-skeleton variant="activity" [rows]="3" />
+        } @loading (minimum 200ms) {
+          <kwd-ui-skeleton variant="activity" [rows]="3" />
+        }
+      </div>
     </kwd-ui-card>
 
     <kwd-ui-card>
-      @defer (on viewport) {
-        <kwd-portal-projects-section [websiteId]="id()" />
-      } @placeholder {
-        <kwd-ui-skeleton variant="activity" [rows]="3" />
-      } @loading (minimum 200ms) {
-        <kwd-ui-skeleton variant="activity" [rows]="3" />
-      }
+      <div #projectsViewportAnchor>
+        @defer (on viewport(projectsViewportAnchor)) {
+          <kwd-portal-projects-section [websiteId]="id()" />
+        } @placeholder {
+          <kwd-ui-skeleton variant="activity" [rows]="3" />
+        } @loading (minimum 200ms) {
+          <kwd-ui-skeleton variant="activity" [rows]="3" />
+        }
+      </div>
     </kwd-ui-card>
 
     <kwd-ui-card>
