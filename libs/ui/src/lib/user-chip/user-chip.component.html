@@ -1,12 +1,12 @@
 <div class="flex items-center gap-3 border-t border-(--color-outline-variant) px-3 py-4">
   @if (avatarUrl(); as url) {
-    <!-- eslint-disable @angular-eslint/template/prefer-ngsrc -- external GitHub avatar URL; NgOptimizedImage needs a configured loader for that, unjustified for one small fixed-size image -->
     <img
       class="h-9 w-9 shrink-0 rounded-(--radius-full) object-cover"
-      [src]="url"
+      width="36"
+      height="36"
+      [ngSrc]="url"
       [alt]="user().name"
       (error)="onAvatarError()" />
-    <!-- eslint-enable @angular-eslint/template/prefer-ngsrc -->
   } @else {
     <span
       class="flex h-9 w-9 shrink-0 items-center justify-center rounded-(--radius-full) bg-(--color-primary) text-code-sm text-(--color-on-primary)">
@@ -20,7 +20,7 @@
   <button
     class="flex h-8 w-8 shrink-0 items-center justify-center rounded-(--radius-md) text-(--color-on-surface-variant) transition-colors hover:bg-(--color-surface-container-high) hover:text-(--color-on-surface)"
     type="button"
-    aria-label="Sign out"
+    [attr.aria-label]="'common.signOut' | translate"
     (click)="signOut.emit()">
     <fa-icon class="text-base" [icon]="signOutIcon" />
   </button>

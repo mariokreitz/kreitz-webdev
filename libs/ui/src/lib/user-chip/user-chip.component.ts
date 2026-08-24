@@ -1,3 +1,4 @@
+import { NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -10,13 +11,14 @@ import {
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { TranslatePipe } from '@ngx-translate/core';
 import type { SidebarUser } from '../sidebar/sidebar.types';
 
 @Component({
   selector: 'kwd-ui-user-chip',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'contents' },
-  imports: [FontAwesomeModule],
+  imports: [FontAwesomeModule, NgOptimizedImage, TranslatePipe],
   templateUrl: './user-chip.component.html',
 })
 export class UserChip {
