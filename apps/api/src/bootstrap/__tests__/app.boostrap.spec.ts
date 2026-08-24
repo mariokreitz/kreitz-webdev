@@ -349,6 +349,22 @@ describe('configureApplication', () => {
 
       expect(app.enableCors).not.toHaveBeenCalled();
     });
+
+    it('enables CORS before wiring the Arcjet auth middleware, so denied responses still carry CORS headers', () => {
+      configureApplication(
+        app as unknown as NestExpressApplication,
+        buildContext({ security: { corsOrigins: ['https://example.com'] } }),
+      );
+
+      const [corsCallOrder] = app.enableCors.mock.invocationCallOrder;
+      const [arcjetResolveCallOrder] = app.get.mock.invocationCallOrder;
+
+      if (corsCallOrder === undefined || arcjetResolveCallOrder === undefined) {
+        throw new Error('expected both enableCors and app.get to have recorded an invocation order');
+      }
+
+      expect(corsCallOrder).toBeLessThan(arcjetResolveCallOrder);
+    });
   });
 
   describe('validation', () => {

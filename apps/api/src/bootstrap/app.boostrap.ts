@@ -27,6 +27,7 @@ export function configureApplication(app: NestExpressApplication, context: Boots
 
   hardenExpressInstance(expressApp, security);
   registerRobotsRoute(expressApp);
+  applyCors(app, security);
   applyArcjetAuthProtection(app, expressApp);
 
   app.setGlobalPrefix(API_GLOBAL_PREFIX);
@@ -36,7 +37,6 @@ export function configureApplication(app: NestExpressApplication, context: Boots
   applyAuthReferenceCsp(expressApp, security.enableSwagger);
   applyCookies(app, security);
   serveWellKnownAssets(expressApp);
-  applyCors(app, security);
   applyValidation(app, config.isProduction);
 
   app.enableShutdownHooks();
