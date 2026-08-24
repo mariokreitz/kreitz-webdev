@@ -1,0 +1,47 @@
+@if (availableProjects().length === 0) {
+  <p class="text-body-sm text-(--color-on-surface-variant)">{{ 'websites.projects.form.noneAvailable' | translate }}</p>
+  <button
+    class="mt-3 rounded-(--radius-sm) px-4 py-2.5 text-label-caps uppercase text-(--color-on-surface-variant) transition-colors hover:text-(--color-on-surface)"
+    type="button"
+    (click)="onCancel()">
+    {{ 'common.cancel' | translate }}
+  </button>
+} @else {
+  <form class="flex flex-wrap items-end gap-3" (submit)="onSubmit($event)">
+    <div class="flex flex-1 min-w-[12rem] flex-col gap-2">
+      <label class="font-mono text-label-caps uppercase text-(--color-on-surface-variant)" for="link-project-select">{{
+        'websites.projects.form.project' | translate
+      }}</label>
+      <select
+        class="rounded-(--radius) border border-(--color-outline-variant) bg-(--color-surface-container-lowest) px-3 py-2.5 font-mono text-code-md text-(--color-on-surface) outline-none transition-colors focus:border-(--color-primary)"
+        id="link-project-select"
+        [formField]="linkForm.projectId">
+        <option value="" disabled>{{ 'websites.projects.form.project' | translate }}</option>
+        @for (project of availableProjects(); track project.id) {
+          <option [value]="project.id">{{ project.name }}</option>
+        }
+      </select>
+    </div>
+
+    <label class="flex items-center gap-2 pb-2.5 text-body-sm text-(--color-on-surface)" for="link-project-published">
+      <input id="link-project-published" type="checkbox" [formField]="linkForm.published" />
+      {{ 'websites.projects.form.published' | translate }}
+    </label>
+
+    <kwd-ui-button
+      [label]="'websites.projects.link' | translate"
+      [loadingLabel]="'websites.projects.form.linking' | translate"
+      [disabled]="linkForm().invalid() || loading()"
+      [icon]="submitIcon"
+      [loading]="loading()" />
+
+    <button
+      class="rounded-(--radius-sm) px-4 py-2.5 text-label-caps uppercase text-(--color-on-surface-variant) transition-colors hover:text-(--color-on-surface) disabled:cursor-not-allowed disabled:opacity-60"
+      type="button"
+      [disabled]="loading()"
+      (click)="onCancel()">
+      <fa-icon [icon]="cancelIcon" />
+      {{ 'common.cancel' | translate }}
+    </button>
+  </form>
+}

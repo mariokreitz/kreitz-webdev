@@ -1,0 +1,81 @@
+<section class="flex flex-col gap-8">
+  <div>
+    <a
+      class="flex w-fit items-center gap-2 text-code-sm uppercase text-(--color-on-surface-variant) transition-colors hover:text-(--color-on-surface)"
+      routerLink="/websites">
+      <fa-icon [icon]="backIcon" />
+      {{ 'websites.detail.backLink' | translate }}
+    </a>
+  </div>
+
+  <kwd-ui-card>
+    @if (websiteResource.isLoading()) {
+      <kwd-ui-skeleton variant="activity" [rows]="2" />
+    } @else if (websiteResource.error()) {
+      <p class="text-body-sm text-(--color-error)">{{ 'websites.detail.loadError' | translate }}</p>
+    } @else if (websiteResource.value(); as website) {
+      <h1 class="text-headline-lg text-(--color-on-surface)">{{ website.name }}</h1>
+      <p class="mt-1 text-code-sm text-(--color-on-surface-variant)">{{ website.slug }}</p>
+
+      <div class="mt-6">
+        <kwd-portal-website-edit-form [initialValue]="editFormValue()" [loading]="saving()" (saved)="onSave($event)" />
+      </div>
+    } @else {
+      <p class="text-body-sm text-(--color-on-surface-variant)">{{ 'websites.detail.notFound' | translate }}</p>
+    }
+  </kwd-ui-card>
+
+  @if (websiteResource.value()) {
+    <kwd-ui-card>
+      @defer (on viewport) {
+        <kwd-portal-domains-section [websiteId]="id()" />
+      } @placeholder {
+        <kwd-ui-skeleton variant="activity" [rows]="3" />
+      } @loading (minimum 200ms) {
+        <kwd-ui-skeleton variant="activity" [rows]="3" />
+      }
+    </kwd-ui-card>
+
+    <kwd-ui-card>
+      @defer (on viewport) {
+        <kwd-portal-tokens-section [websiteId]="id()" />
+      } @placeholder {
+        <kwd-ui-skeleton variant="activity" [rows]="3" />
+      } @loading (minimum 200ms) {
+        <kwd-ui-skeleton variant="activity" [rows]="3" />
+      }
+    </kwd-ui-card>
+
+    <kwd-ui-card>
+      @defer (on viewport) {
+        <kwd-portal-projects-section [websiteId]="id()" />
+      } @placeholder {
+        <kwd-ui-skeleton variant="activity" [rows]="3" />
+      } @loading (minimum 200ms) {
+        <kwd-ui-skeleton variant="activity" [rows]="3" />
+      }
+    </kwd-ui-card>
+
+    <kwd-ui-card>
+      <h2 class="text-headline-md text-(--color-error)">{{ 'websites.detail.dangerZone.title' | translate }}</h2>
+      <p class="mt-2 text-body-sm text-(--color-on-surface-variant)">
+        {{ 'websites.detail.dangerZone.description' | translate }}
+      </p>
+      <button
+        class="mt-4 rounded-(--radius) border border-(--color-error) px-4 py-2.5 text-label-caps uppercase text-(--color-error) transition-colors hover:bg-(--color-error) hover:text-(--color-on-error)"
+        type="button"
+        (click)="onDeleteRequested()">
+        {{ 'websites.detail.dangerZone.delete' | translate }}
+      </button>
+    </kwd-ui-card>
+  }
+</section>
+
+<kwd-ui-confirm-dialog
+  [open]="deleteDialogOpen()"
+  [title]="'websites.deleteDialog.title' | translate"
+  [message]="'websites.deleteDialog.message' | translate: { name: websiteResource.value()?.name }"
+  [confirmLabel]="'websites.actions.delete' | translate"
+  [busy]="deleting()"
+  (confirmed)="onDeleteConfirmed()"
+  (cancelled)="onDeleteCancelled()" />

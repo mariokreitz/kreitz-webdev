@@ -1,0 +1,35 @@
+<form class="flex flex-wrap items-end gap-3" (submit)="onSubmit($event)">
+  <div class="flex flex-1 min-w-[12rem] flex-col gap-2">
+    <label class="font-mono text-label-caps uppercase text-(--color-on-surface-variant)" for="domain-input">{{
+      'websites.domains.form.domain' | translate
+    }}</label>
+    <input
+      autocomplete="off"
+      class="rounded-(--radius) border border-(--color-outline-variant) bg-(--color-surface-container-lowest) px-3 py-2.5 font-mono text-code-md text-(--color-on-surface) outline-none transition-colors placeholder:text-(--color-on-surface-variant) focus:border-(--color-primary)"
+      id="domain-input"
+      type="text"
+      [placeholder]="'websites.domains.form.placeholder' | translate"
+      [formField]="domainForm.domain" />
+    @if (domainForm.domain().touched() && domainForm.domain().errors().length) {
+      <p class="min-h-[1.25rem] text-body-sm text-(--color-error)">
+        {{ domainForm.domain().errors()[0]?.message | translate }}
+      </p>
+    }
+  </div>
+
+  <kwd-ui-button
+    [label]="'websites.domains.add' | translate"
+    [loadingLabel]="'websites.domains.form.adding' | translate"
+    [disabled]="domainForm().invalid() || loading()"
+    [icon]="submitIcon"
+    [loading]="loading()" />
+
+  <button
+    class="rounded-(--radius-sm) px-4 py-2.5 text-label-caps uppercase text-(--color-on-surface-variant) transition-colors hover:text-(--color-on-surface) disabled:cursor-not-allowed disabled:opacity-60"
+    type="button"
+    [disabled]="loading()"
+    (click)="onCancel()">
+    <fa-icon [icon]="cancelIcon" />
+    {{ 'common.cancel' | translate }}
+  </button>
+</form>

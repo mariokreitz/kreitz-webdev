@@ -1,0 +1,58 @@
+<form class="flex flex-col gap-4" (submit)="onSubmit($event)">
+  <div class="flex flex-col gap-2">
+    <label class="font-mono text-label-caps uppercase text-(--color-on-surface-variant)" for="website-name">{{
+      'websites.form.name' | translate
+    }}</label>
+    <input
+      autocomplete="off"
+      class="rounded-(--radius) border border-(--color-outline-variant) bg-(--color-surface-container-lowest) px-3 py-2.5 font-mono text-code-md text-(--color-on-surface) outline-none transition-colors placeholder:text-(--color-on-surface-variant) focus:border-(--color-primary)"
+      id="website-name"
+      type="text"
+      [formField]="websiteForm.name" />
+    @if (websiteForm.name().touched() && websiteForm.name().errors().length) {
+      <p class="min-h-[1.25rem] text-body-sm text-(--color-error)">
+        {{ websiteForm.name().errors()[0]?.message | translate }}
+      </p>
+    } @else {
+      <p class="min-h-[1.25rem]"></p>
+    }
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label class="font-mono text-label-caps uppercase text-(--color-on-surface-variant)" for="website-url">{{
+      'websites.form.url' | translate
+    }}</label>
+    <input
+      autocomplete="off"
+      class="rounded-(--radius) border border-(--color-outline-variant) bg-(--color-surface-container-lowest) px-3 py-2.5 font-mono text-code-md text-(--color-on-surface) outline-none transition-colors placeholder:text-(--color-on-surface-variant) focus:border-(--color-primary)"
+      id="website-url"
+      type="url"
+      placeholder="https://example.com"
+      [formField]="websiteForm.url" />
+    @if (websiteForm.url().touched() && websiteForm.url().errors().length) {
+      <p class="min-h-[1.25rem] text-body-sm text-(--color-error)">
+        {{ websiteForm.url().errors()[0]?.message | translate }}
+      </p>
+    } @else {
+      <p class="min-h-[1.25rem]"></p>
+    }
+  </div>
+
+  <div class="flex items-center gap-3">
+    <kwd-ui-button
+      [label]="'websites.actions.create' | translate"
+      [loadingLabel]="'websites.form.creating' | translate"
+      [disabled]="websiteForm().invalid() || loading()"
+      [icon]="submitIcon"
+      [loading]="loading()" />
+
+    <button
+      class="rounded-(--radius-sm) px-4 py-2.5 text-label-caps uppercase text-(--color-on-surface-variant) transition-colors hover:text-(--color-on-surface) disabled:cursor-not-allowed disabled:opacity-60"
+      type="button"
+      [disabled]="loading()"
+      (click)="onCancel()">
+      <fa-icon [icon]="cancelIcon" />
+      {{ 'common.cancel' | translate }}
+    </button>
+  </div>
+</form>
