@@ -1,0 +1,37 @@
+<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+  @for (metric of metrics(); track metric.label) {
+    <kwd-ui-card>
+      @if (metric.loading) {
+        <kwd-ui-skeleton variant="metric" />
+      } @else if (metric.error) {
+        <p class="text-code-sm uppercase text-(--color-on-surface-variant)">{{ metric.label | translate }}</p>
+        <p class="mt-2 text-body-sm text-(--color-error)">{{ 'dashboard.metrics.loadError' | translate }}</p>
+      } @else {
+        <p class="text-code-sm uppercase text-(--color-on-surface-variant)">{{ metric.label | translate }}</p>
+
+        @if (metric.kind === 'value') {
+          <p class="mt-2 text-headline-md text-(--color-on-surface)">{{ metric.value }}</p>
+          <p class="mt-1 text-body-sm text-(--color-on-surface-variant)">{{ metric.hint | translate }}</p>
+        } @else if (metric.kind === 'date') {
+          @if (metric.valueDate) {
+            <p class="mt-2 text-headline-md text-(--color-on-surface)">{{ metric.valueDate | date: 'medium' }}</p>
+          } @else {
+            <p class="mt-2 text-headline-md text-(--color-on-surface)">{{ metric.valueKey | translate }}</p>
+          }
+          <p class="mt-1 text-body-sm text-(--color-on-surface-variant)">{{ metric.hint | translate }}</p>
+        } @else {
+          <p class="mt-2 text-headline-md text-(--color-on-surface)">{{ metric.count }}</p>
+          @if (metric.hintKeys.length) {
+            <p class="mt-1 text-body-sm text-(--color-on-surface-variant)">
+              @for (key of metric.hintKeys; track key; let last = $last) {
+                {{ key | translate }}{{ last ? '' : ', ' }}
+              }
+            </p>
+          } @else {
+            <p class="mt-1 text-body-sm text-(--color-on-surface-variant)">{{ metric.hint | translate }}</p>
+          }
+        }
+      }
+    </kwd-ui-card>
+  }
+</div>

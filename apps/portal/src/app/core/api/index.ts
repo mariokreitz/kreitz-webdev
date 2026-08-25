@@ -1,4 +1,5 @@
 export * from './types/api-envelope';
+export * from './types/domains-summary';
 export * from './types/github-repo-summary';
 export * from './types/project';
 export * from './types/website';

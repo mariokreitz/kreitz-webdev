@@ -1,4 +1,5 @@
 import { CoreModule } from '@app/core/core.module';
+import { DashboardModule } from '@app/modules/dashboard';
 import { GithubImportModule } from '@app/modules/github-import';
 import { ProjectModule } from '@app/modules/project';
 import { PublicProjectModule } from '@app/modules/public-projects';
@@ -18,6 +19,7 @@ import { Module } from '@nestjs/common';
     WebsiteProjectModule,
     PublicProjectModule,
     GithubImportModule,
+    DashboardModule,
   ],
 })
 export class ApiModule {}
