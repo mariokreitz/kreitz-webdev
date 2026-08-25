@@ -8,10 +8,11 @@ export default defineConfig({
     pattern: 'apps/portal/public/assets/i18n/{locale}.json',
   },
   provider: {
-    id: 'anthropic',
+    id: 'gemini',
     options: {
-      model: 'claude-sonnet-4-6',
-      maxTokens: 4096,
+      model: 'gemini-2.5-flash',
+      maxOutputTokens: 8192,
     },
   },
+  tone: 'informal',
 });
