@@ -1,3 +1,5 @@
+# Canonical Node version lives in root .nvmrc; CI overrides this default via
+# --build-arg and keeps the two in sync with a drift-check in the pipeline.
 ARG NODE_IMAGE=node:26-slim
 
 FROM ${NODE_IMAGE} AS deps
