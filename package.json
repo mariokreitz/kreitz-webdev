@@ -104,7 +104,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@angular-devkit/core": "~22.0.0",
+    "@angular-devkit/core": "~22.1.5",
     "@angular-devkit/schematics": "~22.0.4",
     "@angular/build": "~22.0.4",
     "@angular/cli": "~22.0.4",
