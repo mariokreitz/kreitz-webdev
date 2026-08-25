@@ -1,0 +1,14 @@
+<button
+  type="button"
+  role="switch"
+  [class]="
+    `relative inline-flex h-6 w-11 shrink-0 items-center rounded-(--radius-full) transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)] ${checked() ? 'bg-(--color-primary)' : 'bg-(--color-surface-container-highest)'}`
+  "
+  [attr.aria-checked]="checked()"
+  [attr.aria-label]="ariaLabel() || null"
+  (click)="checkedChange.emit(!checked())">
+  <span
+    [class]="
+      `inline-block h-4 w-4 rounded-(--radius-full) bg-(--color-surface-container-lowest) shadow transition-transform duration-200 ${checked() ? 'translate-x-6' : 'translate-x-1'}`
+    "></span>
+</button>

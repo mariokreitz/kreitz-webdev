@@ -12,7 +12,7 @@ import {
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe } from '@ngx-translate/core';
-import type { SidebarUser } from '../sidebar/sidebar.types';
+import type { SidebarUser } from '../../navigation/sidebar/sidebar.types';
 
 @Component({
   selector: 'kwd-ui-user-chip',

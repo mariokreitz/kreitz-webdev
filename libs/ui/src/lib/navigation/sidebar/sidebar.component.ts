@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { NavItem } from '../nav-item/nav-item.component';
-import { UserChip } from '../user-chip/user-chip.component';
+import { UserChip } from '../../data-display/user-chip/user-chip.component';
 import type { NavItemConfig, SidebarUser } from './sidebar.types';
 
 @Component({

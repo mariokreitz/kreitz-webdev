@@ -5,9 +5,7 @@
   (click)="buttonClick.emit()">
   <span class="flex h-5 w-5 shrink-0 items-center justify-center">
     @if (loading()) {
-      <span
-        class="inline-block h-3.5 w-3.5 animate-[spin_0.8s_linear_infinite] rounded-full border-2 border-[rgba(2,6,23,0.3)] border-t-current"
-        [attr.aria-label]="'common.connecting' | translate"></span>
+      <kwd-ui-spinner size="sm" />
     } @else {
       <fa-icon class="text-lg" [icon]="icon()" />
     }

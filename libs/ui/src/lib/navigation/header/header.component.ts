@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe } from '@ngx-translate/core';
-import { ThemeToggle } from '../theme-toggle/theme-toggle.component';
+import { ThemeToggle } from '../../forms/theme-toggle/theme-toggle.component';
 import type { SidebarUser } from '../sidebar/sidebar.types';
 
 @Component({
