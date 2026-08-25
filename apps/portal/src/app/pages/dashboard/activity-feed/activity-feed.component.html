@@ -1,0 +1,37 @@
+@if (loading()) {
+  <kwd-ui-skeleton variant="activity" [rows]="5" />
+} @else if (error()) {
+  <h2 class="text-headline-md text-(--color-on-surface)">{{ 'dashboard.activity.title' | translate }}</h2>
+  <p class="mt-4 text-body-sm text-(--color-error)">{{ 'dashboard.activity.loadError' | translate }}</p>
+} @else {
+  <h2 class="text-headline-md text-(--color-on-surface)">{{ 'dashboard.activity.title' | translate }}</h2>
+  <ul class="mt-4 flex flex-col gap-3">
+    @for (entry of entries(); track entry.id) {
+      <li class="border-b border-(--color-outline-variant) pb-3 last:border-0 last:pb-0">
+        <a
+          class="flex items-center justify-between gap-4 text-body-sm text-(--color-on-surface-variant) transition-colors hover:text-(--color-on-surface)"
+          [routerLink]="entry.link">
+          <span class="flex flex-col">
+            <span class="text-body-sm text-(--color-on-surface)">{{ entry.label }}</span>
+            <span class="text-code-sm uppercase text-(--color-on-surface-variant)">
+              @switch (entry.kind) {
+                @case ('project') {
+                  {{ 'dashboard.activity.kind.project' | translate }}
+                }
+                @case ('website') {
+                  {{ 'dashboard.activity.kind.website' | translate }}
+                }
+                @default {
+                  {{ entry.kind }}
+                }
+              }
+            </span>
+          </span>
+          <span class="text-code-sm">{{ entry.updatedAt | date: 'mediumDate' }}</span>
+        </a>
+      </li>
+    } @empty {
+      <li class="text-body-sm text-(--color-on-surface-variant)">{{ 'dashboard.activity.empty' | translate }}</li>
+    }
+  </ul>
+}

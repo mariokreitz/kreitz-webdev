@@ -73,13 +73,18 @@
   },
   "dashboard": {
     "activity": {
-      "empty": "No projects yet",
+      "empty": "No projects or websites yet",
+      "kind": {
+        "project": "Project",
+        "website": "Website"
+      },
       "loadError": "Couldn't load recent activity. Please try refreshing the page.",
       "title": "Recent activity"
     },
     "metrics": {
       "activeDomains": {
-        "hint": "Coming soon",
+        "hint": "Verified / total domains",
+        "hintEmpty": "No domains yet",
         "label": "Active Domains"
       },
       "activeProjects": {
@@ -100,6 +105,10 @@
       "loadError": "Couldn't load",
       "systemAlerts": {
         "hint": "All clear",
+        "items": {
+          "emailNotVerified": "Verify your email address",
+          "githubNotLinked": "Link your GitHub account"
+        },
         "label": "System Alerts"
       }
     },

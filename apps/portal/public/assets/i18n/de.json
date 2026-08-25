@@ -73,13 +73,18 @@
   },
   "dashboard": {
     "activity": {
-      "empty": "Noch keine Projekte",
+      "empty": "Noch keine Projekte oder Websites",
+      "kind": {
+        "project": "Projekt",
+        "website": "Website"
+      },
       "loadError": "Letzte Aktivitäten konnten nicht geladen werden. Bitte lade die Seite neu.",
       "title": "Letzte Aktivitäten"
     },
     "metrics": {
       "activeDomains": {
-        "hint": "Demnächst verfügbar",
+        "hint": "Verifiziert / gesamt",
+        "hintEmpty": "Noch keine Domains",
         "label": "Aktive Domains"
       },
       "activeProjects": {
@@ -100,6 +105,10 @@
       "loadError": "Konnte nicht geladen werden",
       "systemAlerts": {
         "hint": "Alles in Ordnung",
+        "items": {
+          "emailNotVerified": "Bestätige deine E-Mail-Adresse",
+          "githubNotLinked": "Verknüpfe dein GitHub-Konto"
+        },
         "label": "Systemmeldungen"
       }
     },
