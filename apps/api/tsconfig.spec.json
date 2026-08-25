@@ -2,7 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "isolatedModules": false,
-    "types": ["jest", "node"]
+    "types": ["jest", "node", "multer"]
   },
   "include": [
     "jest.config.ts",
