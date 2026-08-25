@@ -1,13 +1,14 @@
 import { ArcjetRateLimitGuard } from '@app/common/guards/arcjet-rate-limit.guard';
 import { WebsiteDomainService } from '@app/modules/website-domain/website-domain.service';
 
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiCookieAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { Session, UserSession } from '@thallesp/nestjs-better-auth';
 
 import { CreateWebsiteDomainDto } from './dto/create-website-domain.dto';
 import { UpdateWebsiteDomainDto } from './dto/update-website-domain.dto';
+import { WebsiteDomainVerificationResponse } from './dto/website-domain-verification.response';
 import { WebsiteDomainDto } from './dto/website-domain.dto';
 
 @ApiTags('Website Domains')
@@ -88,5 +89,18 @@ export class WebsiteDomainController {
     @Session() session: UserSession,
   ): Promise<void> {
     return this.websiteDomainService.delete(websiteId, domainId, session.user.id);
+  }
+
+  @Post(':domainId/verify')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Trigger an ownership verification check for a domain' })
+  @ApiResponse({ status: 200, description: 'Verification check result', type: WebsiteDomainVerificationResponse })
+  @ApiResponse({ status: 404, description: 'Website or website domain not found' })
+  public async verify(
+    @Param('websiteId') websiteId: string,
+    @Param('domainId') domainId: string,
+    @Session() session: UserSession,
+  ): Promise<WebsiteDomainVerificationResponse> {
+    return this.websiteDomainService.verify(websiteId, domainId, session.user.id);
   }
 }

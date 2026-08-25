@@ -26,6 +26,7 @@ function buildWebsiteDomain(overrides: Partial<WebsiteDomainRecord> = {}): Websi
     domain: 'example.com',
     verified: false,
     verifiedAt: null,
+    verificationToken: 'verification-token-1',
     createdAt: new Date('2026-01-01T00:00:00.000Z'),
     updatedAt: new Date('2026-01-01T00:00:00.000Z'),
     ...overrides,
@@ -106,7 +107,7 @@ describe('WebsiteDomainRepository', () => {
       const { prisma, updateMany, findFirst } = buildPrisma();
       const repository = new WebsiteDomainRepository(prisma);
 
-      const result = await repository.update('domain-1', 'website-1', 'new-domain.com');
+      const result = await repository.update('domain-1', 'website-1', 'new-domain.com', false);
 
       const { where, data } = firstCall(updateMany.mock.calls);
 
@@ -116,6 +117,17 @@ describe('WebsiteDomainRepository', () => {
       expect(result).toEqual(buildWebsiteDomain());
     });
 
+    it('resets verified and verifiedAt alongside the domain when resetVerification is true', async () => {
+      const { prisma, updateMany } = buildPrisma();
+      const repository = new WebsiteDomainRepository(prisma);
+
+      await repository.update('domain-1', 'website-1', 'new-domain.com', true);
+
+      const { data } = firstCall(updateMany.mock.calls);
+
+      expect(data).toEqual({ domain: 'new-domain.com', verified: false, verifiedAt: null });
+    });
+
     it('returns null without re-reading the record when no row matches the scoped (id, websiteId) where clause', async () => {
       const { prisma, updateMany, findFirst } = buildPrisma();
 
@@ -123,7 +135,7 @@ describe('WebsiteDomainRepository', () => {
 
       const repository = new WebsiteDomainRepository(prisma);
 
-      const result = await repository.update('domain-1', 'other-website', 'new-domain.com');
+      const result = await repository.update('domain-1', 'other-website', 'new-domain.com', true);
 
       expect(result).toBeNull();
       expect(findFirst).not.toHaveBeenCalled();
@@ -136,8 +148,8 @@ describe('WebsiteDomainRepository', () => {
 
       const repository = new WebsiteDomainRepository(prisma);
 
-      await expect(repository.update('domain-1', 'website-1', 'taken.com')).rejects.toThrow(ConflictException);
-      await expect(repository.update('domain-1', 'website-1', 'taken.com')).rejects.toThrow(
+      await expect(repository.update('domain-1', 'website-1', 'taken.com', true)).rejects.toThrow(ConflictException);
+      await expect(repository.update('domain-1', 'website-1', 'taken.com', true)).rejects.toThrow(
         'This domain is already registered',
       );
     });
@@ -150,7 +162,7 @@ describe('WebsiteDomainRepository', () => {
 
       const repository = new WebsiteDomainRepository(prisma);
 
-      await expect(repository.update('domain-1', 'website-1', 'new-domain.com')).rejects.toBe(unrelatedViolation);
+      await expect(repository.update('domain-1', 'website-1', 'new-domain.com', true)).rejects.toBe(unrelatedViolation);
     });
 
     it('re-throws a non-Prisma error unchanged', async () => {
@@ -161,7 +173,37 @@ describe('WebsiteDomainRepository', () => {
 
       const repository = new WebsiteDomainRepository(prisma);
 
-      await expect(repository.update('domain-1', 'website-1', 'new-domain.com')).rejects.toBe(genericError);
+      await expect(repository.update('domain-1', 'website-1', 'new-domain.com', true)).rejects.toBe(genericError);
+    });
+  });
+
+  describe('markVerified', () => {
+    it('marks the domain verified atomically scoped by (id, websiteId), then re-reads the record to return the full updated shape', async () => {
+      const verifiedAt = new Date('2026-02-01T00:00:00.000Z');
+      const { prisma, updateMany, findFirst } = buildPrisma(buildWebsiteDomain({ verified: true, verifiedAt }));
+      const repository = new WebsiteDomainRepository(prisma);
+
+      const result = await repository.markVerified('domain-1', 'website-1', verifiedAt);
+
+      const { where, data } = firstCall(updateMany.mock.calls);
+
+      expect(where).toEqual({ id: 'domain-1', websiteId: 'website-1' });
+      expect(data).toEqual({ verified: true, verifiedAt });
+      expect(firstCall(findFirst.mock.calls)).toEqual({ where: { id: 'domain-1', websiteId: 'website-1' } });
+      expect(result).toEqual(buildWebsiteDomain({ verified: true, verifiedAt }));
+    });
+
+    it('returns null without re-reading the record when no row matches the scoped (id, websiteId) where clause', async () => {
+      const { prisma, updateMany, findFirst } = buildPrisma();
+
+      updateMany.mockResolvedValue({ count: 0 });
+
+      const repository = new WebsiteDomainRepository(prisma);
+
+      const result = await repository.markVerified('domain-1', 'other-website', new Date('2026-02-01T00:00:00.000Z'));
+
+      expect(result).toBeNull();
+      expect(findFirst).not.toHaveBeenCalled();
     });
   });
 

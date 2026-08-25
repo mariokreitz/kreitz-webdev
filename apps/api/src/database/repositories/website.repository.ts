@@ -71,6 +71,7 @@ export class WebsiteRepository implements IWebsiteRepository {
           domains: {
             create: {
               domain: data.domain,
+              verificationToken: data.verificationToken,
             },
           },
         },

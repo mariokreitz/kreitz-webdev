@@ -2,6 +2,7 @@ import { IWebsiteRepository } from '@app/database/interfaces/website.repository.
 import { UpdateWebsiteData, WebsiteRecord } from '@app/database/types/website.repository.types';
 // Leaf import, not the barrel — website-domain's barrel pulls in WebsiteModule, which would cycle back here.
 import { normalizeDomain } from '@app/modules/website-domain/utils/normalize-domain';
+import { generateVerificationToken } from '@app/modules/website-domain/utils/generate-verification-token';
 import { CreateWebsiteInput } from '@app/modules/website/types/website.types';
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PinoLogger } from 'nestjs-pino';
@@ -63,6 +64,7 @@ export class WebsiteService {
       name: input.name,
       slug,
       domain,
+      verificationToken: generateVerificationToken(),
     });
 
     this.logger.info({ event: 'website.created', websiteId: created.id, userId: input.userId });

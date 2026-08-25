@@ -29,26 +29,51 @@
 } @else {
   <ul class="mt-4 flex flex-col gap-3">
     @for (domain of domainsResource.value(); track domain.id) {
-      <li
-        class="flex flex-wrap items-center justify-between gap-4 border-b border-(--color-outline-variant) pb-3 last:border-0 last:pb-0">
-        <span class="text-body-md text-(--color-on-surface)">{{ domain.domain }}</span>
-        <div class="flex items-center gap-4">
-          <span
-            [class]="
-              `rounded-(--radius-sm) px-2 py-1 text-code-sm uppercase ${domain.verified ? 'text-(--color-secondary)' : 'text-(--color-on-surface-variant)'}`
-            ">
-            {{
-              (domain.verified ? 'websites.domains.status.verified' : 'websites.domains.status.unverified') | translate
-            }}
-          </span>
-          <button
-            class="text-(--color-on-surface-variant) transition-colors hover:text-(--color-error)"
-            type="button"
-            [attr.aria-label]="'websites.actions.delete' | translate"
-            (click)="onDeleteRequested(domain)">
-            <fa-icon [icon]="deleteIcon" />
-          </button>
+      <li class="flex flex-col gap-3 border-b border-(--color-outline-variant) pb-3 last:border-0 last:pb-0">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <span class="text-body-md text-(--color-on-surface)">{{ domain.domain }}</span>
+          <div class="flex items-center gap-4">
+            <span
+              [class]="
+                `rounded-(--radius-sm) px-2 py-1 text-code-sm uppercase ${domain.verified ? 'text-(--color-secondary)' : 'text-(--color-on-surface-variant)'}`
+              ">
+              {{
+                (domain.verified ? 'websites.domains.status.verified' : 'websites.domains.status.unverified')
+                  | translate
+              }}
+            </span>
+            <button
+              class="flex items-center gap-1 text-code-sm uppercase text-(--color-on-surface-variant) transition-colors hover:text-(--color-on-surface)"
+              type="button"
+              (click)="onToggleInstructions(domain)">
+              {{ 'websites.domains.actions.howToVerify' | translate }}
+              <fa-icon
+                [class]="expandedInstructionsId() === domain.id ? 'rotate-180' : ''"
+                [icon]="instructionsToggleIcon" />
+            </button>
+            @if (!domain.verified) {
+              <button
+                class="flex items-center gap-1 text-code-sm uppercase text-(--color-primary) transition-colors hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-60"
+                type="button"
+                [disabled]="verifyingId() === domain.id"
+                (click)="onVerifyRequested(domain)">
+                <fa-icon [icon]="verifyIcon" />
+                {{ 'websites.domains.actions.verify' | translate }}
+              </button>
+            }
+            <button
+              class="text-(--color-on-surface-variant) transition-colors hover:text-(--color-error)"
+              type="button"
+              [attr.aria-label]="'websites.actions.delete' | translate"
+              (click)="onDeleteRequested(domain)">
+              <fa-icon [icon]="deleteIcon" />
+            </button>
+          </div>
         </div>
+
+        @if (expandedInstructionsId() === domain.id) {
+          <kwd-portal-domain-verification-instructions [domain]="domain.domain" [token]="domain.verificationToken" />
+        }
       </li>
     } @empty {
       <li class="text-body-sm text-(--color-on-surface-variant)">{{ 'websites.domains.empty' | translate }}</li>

@@ -9,9 +9,16 @@ export interface IWebsiteDomainRepository {
 
   findVerifiedByDomain: (domain: string) => Promise<WebsiteDomainRecord | null>;
 
-  create: (websiteId: string, domain: string) => Promise<WebsiteDomainRecord>;
+  create: (websiteId: string, domain: string, verificationToken: string) => Promise<WebsiteDomainRecord>;
 
-  update: (id: string, websiteId: string, domain: string) => Promise<WebsiteDomainRecord | null>;
+  update: (
+    id: string,
+    websiteId: string,
+    domain: string,
+    resetVerification: boolean,
+  ) => Promise<WebsiteDomainRecord | null>;
 
   delete: (id: string, websiteId: string) => Promise<WebsiteDomainRecord | null>;
+
+  markVerified: (id: string, websiteId: string, verifiedAt: Date) => Promise<WebsiteDomainRecord | null>;
 }

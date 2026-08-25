@@ -17,6 +17,9 @@ export class WebsiteDomainDto {
   @ApiProperty({ example: '2026-08-20T09:15:00.000Z', nullable: true })
   public verifiedAt!: Date | null;
 
+  @ApiProperty({ example: 'qk3v9z8f1x2c4b6n8m0l7p5q3r1s9t7u5v3w1x9y7z5a3b1c' })
+  public verificationToken!: string;
+
   @ApiProperty({ example: '2026-08-01T10:00:00.000Z' })
   public createdAt!: Date;
 
@@ -31,6 +34,7 @@ export class WebsiteDomainDto {
     dto.domain = record.domain;
     dto.verified = record.verified;
     dto.verifiedAt = record.verifiedAt;
+    dto.verificationToken = record.verificationToken;
     dto.createdAt = record.createdAt;
     dto.updatedAt = record.updatedAt;
 

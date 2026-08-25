@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@shared/environments';
 import { firstValueFrom } from 'rxjs';
-import type { ApiEnvelope, WebsiteDomain } from '../api';
+import type { ApiEnvelope, DomainVerificationResult, WebsiteDomain } from '../api';
 import type { CreateWebsiteDomainPayload, UpdateWebsiteDomainPayload } from './types/website-payload.types';
 
 @Injectable({ providedIn: 'root' })
@@ -35,6 +35,18 @@ export class WebsiteDomainService {
     await firstValueFrom(
       this.http.delete<ApiEnvelope<null>>(`${this.baseUrl(websiteId)}/${domainId}`, { withCredentials: true }),
     );
+  }
+
+  public async verify(websiteId: string, domainId: string): Promise<DomainVerificationResult> {
+    const envelope = await firstValueFrom(
+      this.http.post<ApiEnvelope<DomainVerificationResult>>(
+        `${this.baseUrl(websiteId)}/${domainId}/verify`,
+        {},
+        { withCredentials: true },
+      ),
+    );
+
+    return envelope.data;
   }
 
   private baseUrl(websiteId: string): string {

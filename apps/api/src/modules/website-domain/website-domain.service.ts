@@ -3,7 +3,10 @@ import { WebsiteDomainRecord } from '@app/database/types/website-domain.types';
 import { WebsiteService } from '@app/modules/website';
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PinoLogger } from 'nestjs-pino';
+import { DomainVerificationService } from './domain-verification.service';
+import { WebsiteDomainVerificationResponse } from './dto/website-domain-verification.response';
 import { WEBSITE_DOMAIN_REPOSITORY } from './tokens/website-domain.tokens';
+import { generateVerificationToken } from './utils/generate-verification-token';
 
 @Injectable()
 export class WebsiteDomainService {
@@ -12,6 +15,8 @@ export class WebsiteDomainService {
 
     @Inject(WEBSITE_DOMAIN_REPOSITORY)
     private readonly websiteDomainRepository: IWebsiteDomainRepository,
+
+    private readonly domainVerificationService: DomainVerificationService,
 
     private readonly logger: PinoLogger,
   ) {
@@ -49,7 +54,7 @@ export class WebsiteDomainService {
       throw new ConflictException('This domain is already registered');
     }
 
-    const created = await this.websiteDomainRepository.create(websiteId, domain);
+    const created = await this.websiteDomainRepository.create(websiteId, domain, generateVerificationToken());
 
     this.logger.info({ event: 'website_domain.created', websiteId, domainId: created.id, domain });
 
@@ -84,7 +89,8 @@ export class WebsiteDomainService {
       throw new ConflictException('This domain is already registered');
     }
 
-    const updatedDomain = await this.websiteDomainRepository.update(domainId, websiteId, domain);
+    // WHY: reset is always true here — the guard above already returned early for an unchanged/absent domain, so reaching this line means the hostname actually changed and any prior verification no longer applies to it.
+    const updatedDomain = await this.websiteDomainRepository.update(domainId, websiteId, domain, true);
 
     if (!updatedDomain) {
       this.logger.warn({ event: 'website_domain.rejected', reason: 'not_found', websiteId, domainId });
@@ -109,5 +115,41 @@ export class WebsiteDomainService {
     }
 
     this.logger.info({ event: 'website_domain.deleted', websiteId, domainId });
+  }
+
+  public async verify(websiteId: string, domainId: string, userId: string): Promise<WebsiteDomainVerificationResponse> {
+    await this.websiteService.ensureOwnership(websiteId, userId);
+
+    const existingDomain = await this.websiteDomainRepository.findByIdAndWebsiteId(domainId, websiteId);
+
+    if (!existingDomain) {
+      this.logger.warn({ event: 'website_domain.rejected', reason: 'not_found', websiteId, domainId });
+
+      throw new NotFoundException('Website domain not found');
+    }
+
+    const outcome = await this.domainVerificationService.checkToken(
+      existingDomain.domain,
+      existingDomain.verificationToken,
+    );
+
+    if (!outcome.matched) {
+      this.logger.warn({ event: 'website_domain.verify_failed', websiteId, domainId, reason: outcome.reason });
+
+      return WebsiteDomainVerificationResponse.fromRecordAndOutcome(existingDomain, outcome.reason);
+    }
+
+    const verifiedAt = new Date();
+    const updated = await this.websiteDomainRepository.markVerified(domainId, websiteId, verifiedAt);
+
+    if (!updated) {
+      this.logger.warn({ event: 'website_domain.rejected', reason: 'not_found', websiteId, domainId });
+
+      throw new NotFoundException('Website domain not found');
+    }
+
+    this.logger.info({ event: 'website_domain.verify_succeeded', websiteId, domainId });
+
+    return WebsiteDomainVerificationResponse.fromRecordAndOutcome(updated, null);
   }
 }
