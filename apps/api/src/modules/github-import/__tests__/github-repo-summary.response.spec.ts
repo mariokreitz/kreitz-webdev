@@ -13,6 +13,9 @@ function buildRepo(overrides: Partial<GithubRepoApiResponse> = {}): GithubRepoAp
     topics: ['cli'],
     private: false,
     updated_at: '2026-01-01T00:00:00.000Z',
+    pushed_at: '2025-12-30T00:00:00.000Z',
+    created_at: '2025-01-01T00:00:00.000Z',
+    stargazers_count: 42,
     owner: { id: 999999, login: 'mariokreitz' },
     ...overrides,
   };

@@ -32,6 +32,9 @@ function buildRepo(overrides: Partial<Record<string, unknown>> = {}): Record<str
     topics: [],
     private: false,
     updated_at: '2026-08-20T09:15:00.000Z',
+    pushed_at: '2026-08-19T09:15:00.000Z',
+    created_at: '2025-01-01T00:00:00.000Z',
+    stargazers_count: 42,
     owner: { id: 1, login: 'owner-a' },
     ...overrides,
   };

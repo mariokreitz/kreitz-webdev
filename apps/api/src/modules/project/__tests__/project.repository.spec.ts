@@ -4,7 +4,7 @@ import type { CreateProjectData, UpdateProjectData } from '@app/database/types/p
 import { ProjectRepository } from '@app/database/repositories/project.repository';
 import { ConflictException } from '@nestjs/common';
 
-import { Prisma } from '../../../../generated/prisma/client';
+import { Prisma, ProjectCategory } from '../../../../generated/prisma/client';
 
 interface CreateArgs {
   data: Record<string, unknown>;
@@ -120,6 +120,47 @@ describe('ProjectRepository', () => {
       expect('tags' in data).toBe(false);
     });
 
+    it('writes category and GitHub metadata fields verbatim when they are provided', async () => {
+      const { prisma, create } = buildPrisma();
+      const repository = new ProjectRepository(prisma);
+
+      const githubCreatedAt = new Date('2025-01-01T00:00:00.000Z');
+      const githubUpdatedAt = new Date('2025-12-30T00:00:00.000Z');
+      const lastSyncedAt = new Date('2026-01-01T00:00:00.000Z');
+
+      await repository.create({
+        ...baseCreateData,
+        category: ProjectCategory.OPEN_SOURCE,
+        githubStars: 42,
+        githubCreatedAt,
+        githubUpdatedAt,
+        lastSyncedAt,
+      });
+
+      const { data } = firstCall(create.mock.calls);
+
+      expect(data['category']).toBe(ProjectCategory.OPEN_SOURCE);
+      expect(data['githubStars']).toBe(42);
+      expect(data['githubCreatedAt']).toBe(githubCreatedAt);
+      expect(data['githubUpdatedAt']).toBe(githubUpdatedAt);
+      expect(data['lastSyncedAt']).toBe(lastSyncedAt);
+    });
+
+    it('omits category and GitHub metadata fields from the write when they are not provided', async () => {
+      const { prisma, create } = buildPrisma();
+      const repository = new ProjectRepository(prisma);
+
+      await repository.create(baseCreateData);
+
+      const { data } = firstCall(create.mock.calls);
+
+      expect('category' in data).toBe(false);
+      expect('githubStars' in data).toBe(false);
+      expect('githubCreatedAt' in data).toBe(false);
+      expect('githubUpdatedAt' in data).toBe(false);
+      expect('lastSyncedAt' in data).toBe(false);
+    });
+
     it('translates a P2002 violation on the (userId, githubId) constraint into a ConflictException', async () => {
       const { prisma, create } = buildPrisma();
 
@@ -199,6 +240,46 @@ describe('ProjectRepository', () => {
       expect('repoUrl' in data).toBe(false);
       expect('liveUrl' in data).toBe(false);
       expect('tags' in data).toBe(false);
+    });
+
+    it('writes category and GitHub metadata fields verbatim when they are provided', async () => {
+      const { prisma, updateMany } = buildPrisma();
+      const repository = new ProjectRepository(prisma);
+
+      const githubCreatedAt = new Date('2025-01-01T00:00:00.000Z');
+      const githubUpdatedAt = new Date('2025-12-30T00:00:00.000Z');
+      const lastSyncedAt = new Date('2026-01-01T00:00:00.000Z');
+
+      await repository.update('project-1', 'user-1', {
+        category: ProjectCategory.MVP,
+        githubStars: 7,
+        githubCreatedAt,
+        githubUpdatedAt,
+        lastSyncedAt,
+      });
+
+      const { data } = firstCall(updateMany.mock.calls);
+
+      expect(data['category']).toBe(ProjectCategory.MVP);
+      expect(data['githubStars']).toBe(7);
+      expect(data['githubCreatedAt']).toBe(githubCreatedAt);
+      expect(data['githubUpdatedAt']).toBe(githubUpdatedAt);
+      expect(data['lastSyncedAt']).toBe(lastSyncedAt);
+    });
+
+    it('omits category and GitHub metadata fields from the write when they are not provided', async () => {
+      const { prisma, updateMany } = buildPrisma();
+      const repository = new ProjectRepository(prisma);
+
+      await repository.update('project-1', 'user-1', baseUpdateData);
+
+      const { data } = firstCall(updateMany.mock.calls);
+
+      expect('category' in data).toBe(false);
+      expect('githubStars' in data).toBe(false);
+      expect('githubCreatedAt' in data).toBe(false);
+      expect('githubUpdatedAt' in data).toBe(false);
+      expect('lastSyncedAt' in data).toBe(false);
     });
 
     it('returns null without reading the project when no row matches the scoped (id, userId) where clause', async () => {

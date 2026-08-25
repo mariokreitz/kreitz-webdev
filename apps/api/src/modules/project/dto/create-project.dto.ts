@@ -1,6 +1,7 @@
 import type { CreateProjectData } from '@app/database/types/project.types';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { ArrayMaxSize, IsArray, IsOptional, IsString, IsUrl, MaxLength } from 'class-validator';
+import { ArrayMaxSize, IsArray, IsEnum, IsOptional, IsString, IsUrl, MaxLength } from 'class-validator';
+import { ProjectCategory } from '../../../../generated/prisma/enums';
 
 export class CreateProjectDto {
   @ApiProperty({
@@ -71,6 +72,15 @@ export class CreateProjectDto {
   @IsString()
   public githubRepo?: string;
 
+  @ApiPropertyOptional({
+    enum: ProjectCategory,
+    enumName: 'ProjectCategory',
+    example: ProjectCategory.OPEN_SOURCE,
+  })
+  @IsOptional()
+  @IsEnum(ProjectCategory)
+  public category?: ProjectCategory;
+
   public toCreateProjectData(userId: string): CreateProjectData {
     return {
       userId,
@@ -84,6 +94,7 @@ export class CreateProjectDto {
       ...(this.githubId !== undefined && { githubId: this.githubId }),
       ...(this.githubOwner !== undefined && { githubOwner: this.githubOwner }),
       ...(this.githubRepo !== undefined && { githubRepo: this.githubRepo }),
+      ...(this.category !== undefined && { category: this.category }),
     };
   }
 }

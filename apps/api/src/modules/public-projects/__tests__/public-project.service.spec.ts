@@ -91,6 +91,10 @@ const record: PublicProjectRecord = {
   liveUrl: 'https://myproject.dev',
   tags: ['Angular', 'NestJS'],
   imageUrl: 'https://example.com/project.png',
+  category: 'OPEN_SOURCE',
+  githubStars: 42,
+  githubCreatedAt: new Date('2025-01-01T00:00:00.000Z'),
+  githubUpdatedAt: new Date('2025-12-30T00:00:00.000Z'),
 };
 
 function buildService(records: PublicProjectRecord[] = [record]): {
@@ -114,7 +118,7 @@ function buildService(records: PublicProjectRecord[] = [record]): {
 
 describe('PublicProjectService', () => {
   describe('getPublishedProjects', () => {
-    it('returns the website projects in the documented public shape with exactly id, name, description, repoUrl, liveUrl, tags, and imageUrl', async () => {
+    it('returns the website projects in the documented public shape with exactly id, name, description, repoUrl, liveUrl, tags, imageUrl, category, and GitHub metadata', async () => {
       const { service } = buildService([record]);
 
       const result = await service.getPublishedProjects('website-1');
@@ -128,6 +132,10 @@ describe('PublicProjectService', () => {
           liveUrl: 'https://myproject.dev',
           tags: ['Angular', 'NestJS'],
           imageUrl: 'https://example.com/project.png',
+          category: 'OPEN_SOURCE',
+          githubStars: 42,
+          githubCreatedAt: '2025-01-01T00:00:00.000Z',
+          githubUpdatedAt: '2025-12-30T00:00:00.000Z',
         },
       ]);
       expect(Object.keys(firstOf(result))).toEqual([
@@ -138,6 +146,10 @@ describe('PublicProjectService', () => {
         'liveUrl',
         'tags',
         'imageUrl',
+        'category',
+        'githubStars',
+        'githubCreatedAt',
+        'githubUpdatedAt',
       ]);
     });
 
@@ -176,7 +188,7 @@ describe('PublicProjectService', () => {
       expect(result).toEqual([]);
     });
 
-    it('maps only the 7 allow-listed fields even when the underlying record carries extra internal fields, guarding against a newly-added sensitive field silently leaking', async () => {
+    it('maps only the 11 allow-listed fields even when the underlying record carries extra internal fields, guarding against a newly-added sensitive field silently leaking', async () => {
       const leakyRecord = {
         ...record,
         githubOwner: 'mariokreitz',
@@ -190,7 +202,19 @@ describe('PublicProjectService', () => {
 
       const mapped = firstOf(result);
 
-      expect(Object.keys(mapped)).toEqual(['id', 'name', 'description', 'repoUrl', 'liveUrl', 'tags', 'imageUrl']);
+      expect(Object.keys(mapped)).toEqual([
+        'id',
+        'name',
+        'description',
+        'repoUrl',
+        'liveUrl',
+        'tags',
+        'imageUrl',
+        'category',
+        'githubStars',
+        'githubCreatedAt',
+        'githubUpdatedAt',
+      ]);
       expect(mapped).not.toHaveProperty('githubOwner');
       expect(mapped).not.toHaveProperty('githubRepo');
       expect(mapped).not.toHaveProperty('sortOrder');

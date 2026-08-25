@@ -14,6 +14,7 @@ export class UpdateProjectDto extends PartialType(CreateProjectDto) {
       ...(this.githubId !== undefined && { githubId: this.githubId }),
       ...(this.githubOwner !== undefined && { githubOwner: this.githubOwner }),
       ...(this.githubRepo !== undefined && { githubRepo: this.githubRepo }),
+      ...(this.category !== undefined && { category: this.category }),
     };
   }
 }

@@ -1,5 +1,5 @@
 import type { GithubRepoApiResponse } from '../types/github-api.types';
-import { toCreateProjectData } from '../utils/github-import.utils';
+import { buildGithubReposCacheKey, toCreateProjectData, toGithubMetadataUpdate } from '../utils/github-import.utils';
 
 function buildRepo(overrides: Partial<GithubRepoApiResponse> = {}): GithubRepoApiResponse {
   return {
@@ -13,6 +13,9 @@ function buildRepo(overrides: Partial<GithubRepoApiResponse> = {}): GithubRepoAp
     topics: ['cli'],
     private: false,
     updated_at: '2026-01-01T00:00:00.000Z',
+    pushed_at: '2025-12-30T00:00:00.000Z',
+    created_at: '2025-01-01T00:00:00.000Z',
+    stargazers_count: 42,
     owner: { id: 999999, login: 'mariokreitz' },
     ...overrides,
   };
@@ -72,6 +75,52 @@ describe('github-import.utils', () => {
       const result = toCreateProjectData('user-a', buildRepo({ language: null, topics: [] }));
 
       expect('tags' in result).toBe(false);
+    });
+
+    it('maps stargazers_count and created_at verbatim, and prefers pushed_at over updated_at for githubUpdatedAt', () => {
+      const result = toCreateProjectData(
+        'user-a',
+        buildRepo({
+          stargazers_count: 7,
+          created_at: '2025-01-01T00:00:00.000Z',
+          pushed_at: '2025-06-01T00:00:00.000Z',
+          updated_at: '2025-07-01T00:00:00.000Z',
+        }),
+      );
+
+      expect(result.githubStars).toBe(7);
+      expect(result.githubCreatedAt).toEqual(new Date('2025-01-01T00:00:00.000Z'));
+      expect(result.githubUpdatedAt).toEqual(new Date('2025-06-01T00:00:00.000Z'));
+      expect(result.lastSyncedAt).toBeInstanceOf(Date);
+    });
+
+    it('falls back to updated_at for githubUpdatedAt when pushed_at is null', () => {
+      const result = toCreateProjectData(
+        'user-a',
+        buildRepo({ pushed_at: null, updated_at: '2025-07-01T00:00:00.000Z' }),
+      );
+
+      expect(result.githubUpdatedAt).toEqual(new Date('2025-07-01T00:00:00.000Z'));
+    });
+  });
+
+  describe('toGithubMetadataUpdate', () => {
+    it('maps the same GitHub metadata fields as toCreateProjectData, without the project-creation fields', () => {
+      const result = toGithubMetadataUpdate(buildRepo({ stargazers_count: 99 }));
+
+      expect(result).toEqual({
+        githubStars: 99,
+        githubCreatedAt: new Date('2025-01-01T00:00:00.000Z'),
+        githubUpdatedAt: new Date('2025-12-30T00:00:00.000Z'),
+        lastSyncedAt: expect.any(Date) as Date,
+      });
+    });
+  });
+
+  describe('buildGithubReposCacheKey', () => {
+    it('namespaces the cache key per user', () => {
+      expect(buildGithubReposCacheKey('user-a')).toBe('user:user-a:github-repos');
+      expect(buildGithubReposCacheKey('user-b')).toBe('user:user-b:github-repos');
     });
   });
 });

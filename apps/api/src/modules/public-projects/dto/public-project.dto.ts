@@ -1,6 +1,7 @@
 import type { PublicProjectRecord } from '@app/database/types/public-project.types';
 
 import { ApiProperty } from '@nestjs/swagger';
+import { ProjectCategory } from '../../../../generated/prisma/enums';
 
 export class PublicProjectDto {
   @ApiProperty({
@@ -47,6 +48,35 @@ export class PublicProjectDto {
   })
   public imageUrl!: string | null;
 
+  @ApiProperty({
+    enum: ProjectCategory,
+    enumName: 'ProjectCategory',
+    nullable: true,
+    example: ProjectCategory.OPEN_SOURCE,
+  })
+  public category!: ProjectCategory | null;
+
+  @ApiProperty({
+    type: Number,
+    nullable: true,
+    example: 128,
+  })
+  public githubStars!: number | null;
+
+  @ApiProperty({
+    type: String,
+    nullable: true,
+    example: '2026-01-01T00:00:00.000Z',
+  })
+  public githubCreatedAt!: string | null;
+
+  @ApiProperty({
+    type: String,
+    nullable: true,
+    example: '2026-08-20T09:15:00.000Z',
+  })
+  public githubUpdatedAt!: string | null;
+
   public static fromRecord(record: PublicProjectRecord): PublicProjectDto {
     return {
       id: record.id,
@@ -56,6 +86,10 @@ export class PublicProjectDto {
       liveUrl: record.liveUrl,
       tags: record.tags,
       imageUrl: record.imageUrl,
+      category: record.category,
+      githubStars: record.githubStars,
+      githubCreatedAt: record.githubCreatedAt?.toISOString() ?? null,
+      githubUpdatedAt: record.githubUpdatedAt?.toISOString() ?? null,
     };
   }
 }

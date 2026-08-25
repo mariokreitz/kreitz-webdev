@@ -1,4 +1,4 @@
-import type { CreateProjectData } from '@app/database/types/project.types';
+import type { CreateProjectData, UpdateProjectData } from '@app/database/types/project.types';
 import type { GithubRepoApiResponse } from '@app/modules/github-import/types/github-api.types';
 
 const MAX_TAGS = 20;
@@ -22,6 +22,28 @@ export function toCreateProjectData(userId: string, repo: GithubRepoApiResponse)
     ...(liveUrl !== null && { liveUrl }),
 
     ...(tags.length > 0 && { tags }),
+
+    ...toGithubMetadata(repo),
+  };
+}
+
+export function toGithubMetadataUpdate(repo: GithubRepoApiResponse): UpdateProjectData {
+  return toGithubMetadata(repo);
+}
+
+export function buildGithubReposCacheKey(userId: string): string {
+  return `user:${userId}:github-repos`;
+}
+
+function toGithubMetadata(
+  repo: GithubRepoApiResponse,
+): Pick<CreateProjectData, 'githubStars' | 'githubCreatedAt' | 'githubUpdatedAt' | 'lastSyncedAt'> {
+  return {
+    githubStars: repo.stargazers_count,
+    githubCreatedAt: new Date(repo.created_at),
+    // WHY: pushed_at reflects actual code pushes, updated_at can change from non-code metadata edits; pushed_at is null only for a repo with no commits.
+    githubUpdatedAt: new Date(repo.pushed_at ?? repo.updated_at),
+    lastSyncedAt: new Date(),
   };
 }
 

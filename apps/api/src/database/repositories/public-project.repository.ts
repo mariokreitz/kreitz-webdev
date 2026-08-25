@@ -23,6 +23,10 @@ export class PublicProjectRepository implements IPublicProjectRepository {
             liveUrl: true,
             tags: true,
             imageUrl: true,
+            category: true,
+            githubStars: true,
+            githubCreatedAt: true,
+            githubUpdatedAt: true,
           },
         },
       },
@@ -40,6 +44,10 @@ export class PublicProjectRepository implements IPublicProjectRepository {
         liveUrl: record.project.liveUrl,
         tags: record.project.tags,
         imageUrl: record.project.imageUrl,
+        category: record.project.category,
+        githubStars: record.project.githubStars,
+        githubCreatedAt: record.project.githubCreatedAt,
+        githubUpdatedAt: record.project.githubUpdatedAt,
       }),
     );
   }

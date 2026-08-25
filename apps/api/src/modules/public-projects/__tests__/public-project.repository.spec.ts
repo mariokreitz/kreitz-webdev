@@ -31,6 +31,10 @@ const rawRecord = {
     liveUrl: 'https://myproject.dev',
     tags: ['Angular', 'NestJS'],
     imageUrl: 'https://example.com/project.png',
+    category: 'OPEN_SOURCE',
+    githubStars: 42,
+    githubCreatedAt: new Date('2025-01-01T00:00:00.000Z'),
+    githubUpdatedAt: new Date('2025-12-30T00:00:00.000Z'),
   },
 };
 
@@ -61,7 +65,7 @@ describe('PublicProjectRepository', () => {
       expect(call.where).toMatchObject({ published: true });
     });
 
-    it('selects only id, name, description, repoUrl, liveUrl, tags, and imageUrl from the related project, never githubOwner, githubRepo, or sortOrder', async () => {
+    it('selects only id, name, description, repoUrl, liveUrl, tags, imageUrl, category, and GitHub metadata from the related project, never githubOwner, githubRepo, or sortOrder', async () => {
       const { prisma, findMany } = buildPrisma([]);
       const repository = new PublicProjectRepository(prisma);
 
@@ -79,13 +83,17 @@ describe('PublicProjectRepository', () => {
         'liveUrl',
         'tags',
         'imageUrl',
+        'category',
+        'githubStars',
+        'githubCreatedAt',
+        'githubUpdatedAt',
       ]);
       expect(projectSelect).not.toHaveProperty('githubOwner');
       expect(projectSelect).not.toHaveProperty('githubRepo');
       expect(projectSelect).not.toHaveProperty('sortOrder');
     });
 
-    it('maps the nested project into the documented public shape with exactly the 7 allowed fields', async () => {
+    it('maps the nested project into the documented public shape with exactly the 11 allowed fields', async () => {
       const { prisma } = buildPrisma([rawRecord]);
       const repository = new PublicProjectRepository(prisma);
 
@@ -100,6 +108,10 @@ describe('PublicProjectRepository', () => {
           liveUrl: 'https://myproject.dev',
           tags: ['Angular', 'NestJS'],
           imageUrl: 'https://example.com/project.png',
+          category: 'OPEN_SOURCE',
+          githubStars: 42,
+          githubCreatedAt: new Date('2025-01-01T00:00:00.000Z'),
+          githubUpdatedAt: new Date('2025-12-30T00:00:00.000Z'),
         },
       ]);
       expect(Object.keys(firstOf(result))).toEqual([
@@ -110,6 +122,10 @@ describe('PublicProjectRepository', () => {
         'liveUrl',
         'tags',
         'imageUrl',
+        'category',
+        'githubStars',
+        'githubCreatedAt',
+        'githubUpdatedAt',
       ]);
     });
 
@@ -129,7 +145,19 @@ describe('PublicProjectRepository', () => {
 
       const mapped = firstOf(result);
 
-      expect(Object.keys(mapped)).toEqual(['id', 'name', 'description', 'repoUrl', 'liveUrl', 'tags', 'imageUrl']);
+      expect(Object.keys(mapped)).toEqual([
+        'id',
+        'name',
+        'description',
+        'repoUrl',
+        'liveUrl',
+        'tags',
+        'imageUrl',
+        'category',
+        'githubStars',
+        'githubCreatedAt',
+        'githubUpdatedAt',
+      ]);
       expect(mapped).not.toHaveProperty('githubOwner');
       expect(mapped).not.toHaveProperty('githubRepo');
       expect(mapped).not.toHaveProperty('sortOrder');

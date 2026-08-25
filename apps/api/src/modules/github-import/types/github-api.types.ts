@@ -11,6 +11,9 @@ export const githubRepoApiResponseSchema = z.object({
   topics: z.array(z.string()),
   private: z.boolean(),
   updated_at: z.string(),
+  pushed_at: z.string().nullable(),
+  created_at: z.string(),
+  stargazers_count: z.number(),
   owner: z.object({
     id: z.number(),
     login: z.string(),

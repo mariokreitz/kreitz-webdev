@@ -90,6 +90,26 @@ export class ProjectRepository implements IProjectRepository {
           ...(data.imageUrl !== undefined && {
             imageUrl: data.imageUrl,
           }),
+
+          ...(data.category !== undefined && {
+            category: data.category,
+          }),
+
+          ...(data.githubStars !== undefined && {
+            githubStars: data.githubStars,
+          }),
+
+          ...(data.githubCreatedAt !== undefined && {
+            githubCreatedAt: data.githubCreatedAt,
+          }),
+
+          ...(data.githubUpdatedAt !== undefined && {
+            githubUpdatedAt: data.githubUpdatedAt,
+          }),
+
+          ...(data.lastSyncedAt !== undefined && {
+            lastSyncedAt: data.lastSyncedAt,
+          }),
         },
       });
     } catch (error) {
@@ -143,6 +163,26 @@ export class ProjectRepository implements IProjectRepository {
 
           ...(data.imageUrl !== undefined && {
             imageUrl: data.imageUrl,
+          }),
+
+          ...(data.category !== undefined && {
+            category: data.category,
+          }),
+
+          ...(data.githubStars !== undefined && {
+            githubStars: data.githubStars,
+          }),
+
+          ...(data.githubCreatedAt !== undefined && {
+            githubCreatedAt: data.githubCreatedAt,
+          }),
+
+          ...(data.githubUpdatedAt !== undefined && {
+            githubUpdatedAt: data.githubUpdatedAt,
+          }),
+
+          ...(data.lastSyncedAt !== undefined && {
+            lastSyncedAt: data.lastSyncedAt,
           }),
         },
       });

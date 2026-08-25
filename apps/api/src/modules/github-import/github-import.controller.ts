@@ -3,7 +3,7 @@ import { GithubRepoSummaryResponse } from '@app/modules/github-import/dto/github
 import { ImportGithubRepoDto } from '@app/modules/github-import/dto/import-github-repo.dto';
 import { GithubImportService } from '@app/modules/github-import/github-import.service';
 import { ProjectDto } from '@app/modules/project';
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiCookieAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Session, UserSession } from '@thallesp/nestjs-better-auth';
 
@@ -35,5 +35,17 @@ export class GithubImportController {
     const created = await this.githubImportService.importRepo(session.user.id, dto.githubId, dto.owner, dto.repo);
 
     return ProjectDto.fromRecord(created);
+  }
+
+  @Post(':id/refresh')
+  @ApiOperation({ summary: "Re-fetch a project's linked GitHub repository and refresh its stored metadata" })
+  @ApiResponse({ status: 200, description: 'The updated project', type: ProjectDto })
+  @ApiResponse({ status: 400, description: 'Project is not linked to a GitHub repository, or githubId mismatch' })
+  @ApiResponse({ status: 404, description: 'Project not found, or GitHub repository not found or not accessible' })
+  @ApiResponse({ status: 429, description: 'GitHub API rate limit exceeded' })
+  public async refresh(@Param('id') id: string, @Session() session: UserSession): Promise<ProjectDto> {
+    const updated = await this.githubImportService.refreshRepo(session.user.id, id);
+
+    return ProjectDto.fromRecord(updated);
   }
 }

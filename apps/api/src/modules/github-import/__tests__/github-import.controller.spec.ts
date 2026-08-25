@@ -45,6 +45,11 @@ function buildProjectRecord(overrides: Partial<ProjectRecord> = {}): ProjectReco
     liveUrl: 'https://myproject.dev',
     tags: ['TypeScript', 'cli'],
     imageUrl: null,
+    category: null,
+    githubStars: 42,
+    githubCreatedAt: new Date('2025-01-01T00:00:00.000Z'),
+    githubUpdatedAt: new Date('2025-12-30T00:00:00.000Z'),
+    lastSyncedAt: NOW,
     importedAt: NOW,
     updatedAt: NOW,
     ...overrides,
@@ -63,6 +68,7 @@ function buildImportDto(overrides: Partial<ImportGithubRepoDto> = {}): ImportGit
 interface MockedGithubImportService {
   listRepos: jest.Mock<Promise<GithubRepoSummaryResponse[]>, [string]>;
   importRepo: jest.Mock<Promise<ProjectRecord>, [string, string, string, string]>;
+  refreshRepo: jest.Mock<Promise<ProjectRecord>, [string, string]>;
 }
 
 function buildController(): {
@@ -72,6 +78,7 @@ function buildController(): {
   const githubImportService: MockedGithubImportService = {
     listRepos: jest.fn<Promise<GithubRepoSummaryResponse[]>, [string]>(),
     importRepo: jest.fn<Promise<ProjectRecord>, [string, string, string, string]>(),
+    refreshRepo: jest.fn<Promise<ProjectRecord>, [string, string]>(),
   };
 
   const controller = new GithubImportController(githubImportService as unknown as GithubImportService);
@@ -112,6 +119,26 @@ describe('GithubImportController', () => {
       );
 
       await expect(controller.import(buildImportDto(), buildSession())).rejects.toBeInstanceOf(ConflictException);
+    });
+  });
+
+  describe('refresh', () => {
+    it('delegates to GithubImportService.refreshRepo with the project id and session user id, and maps the result through ProjectDto', async () => {
+      const { controller, githubImportService } = buildController();
+      const record = buildProjectRecord({ githubStars: 100 });
+      githubImportService.refreshRepo.mockResolvedValue(record);
+
+      const result = await controller.refresh('project-a', buildSession());
+
+      expect(githubImportService.refreshRepo).toHaveBeenCalledWith('user-a', 'project-a');
+      expect(result).toEqual(ProjectDto.fromRecord(record));
+    });
+
+    it('propagates errors from GithubImportService.refreshRepo', async () => {
+      const { controller, githubImportService } = buildController();
+      githubImportService.refreshRepo.mockRejectedValue(new ConflictException('Some failure'));
+
+      await expect(controller.refresh('project-a', buildSession())).rejects.toBeInstanceOf(ConflictException);
     });
   });
 });

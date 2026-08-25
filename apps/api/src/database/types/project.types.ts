@@ -1,3 +1,5 @@
+import type { ProjectCategory } from '../../../generated/prisma/enums';
+
 export interface ProjectRecord {
   id: string;
   userId: string;
@@ -12,6 +14,12 @@ export interface ProjectRecord {
   liveUrl: string | null;
   tags: string[];
   imageUrl: string | null;
+  category: ProjectCategory | null;
+
+  githubStars: number | null;
+  githubCreatedAt: Date | null;
+  githubUpdatedAt: Date | null;
+  lastSyncedAt: Date | null;
 
   importedAt: Date;
   updatedAt: Date;
@@ -30,6 +38,12 @@ export interface CreateProjectData {
   liveUrl?: string;
   tags?: string[];
   imageUrl?: string;
+  category?: ProjectCategory;
+
+  githubStars?: number;
+  githubCreatedAt?: Date;
+  githubUpdatedAt?: Date;
+  lastSyncedAt?: Date;
 }
 
 export interface UpdateProjectData {
@@ -43,4 +57,10 @@ export interface UpdateProjectData {
   liveUrl?: string;
   tags?: string[];
   imageUrl?: string;
+  category?: ProjectCategory;
+
+  githubStars?: number;
+  githubCreatedAt?: Date;
+  githubUpdatedAt?: Date;
+  lastSyncedAt?: Date;
 }

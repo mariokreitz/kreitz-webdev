@@ -1,3 +1,4 @@
+import type { CacheService } from '@app/database/cache';
 import type { IGithubAccountRepository } from '@app/database/interfaces/github-account.repository.interface';
 import type { GithubLinkedAccount } from '@app/database/types/github-account.types';
 import type { ProjectRecord } from '@app/database/types/project.types';
@@ -9,6 +10,7 @@ import type { PinoLogger } from 'nestjs-pino';
 import type { GithubApiService } from '../github-api.service';
 import { GithubImportService } from '../github-import.service';
 import type { GithubRepoApiResponse } from '../types/github-api.types';
+import { buildGithubReposCacheKey } from '../utils/github-import.utils';
 
 const NOW = new Date('2026-01-01T00:00:00.000Z');
 
@@ -32,6 +34,9 @@ function buildRepo(overrides: Partial<GithubRepoApiResponse> = {}): GithubRepoAp
     topics: ['cli'],
     private: false,
     updated_at: '2026-01-01T00:00:00.000Z',
+    pushed_at: '2025-12-30T00:00:00.000Z',
+    created_at: '2025-01-01T00:00:00.000Z',
+    stargazers_count: 42,
     owner: { id: 999999, login: 'mariokreitz' },
     ...overrides,
   };
@@ -50,6 +55,11 @@ function buildProjectRecord(overrides: Partial<ProjectRecord> = {}): ProjectReco
     liveUrl: 'https://myproject.dev',
     tags: ['TypeScript', 'cli'],
     imageUrl: null,
+    category: null,
+    githubStars: 42,
+    githubCreatedAt: new Date('2025-01-01T00:00:00.000Z'),
+    githubUpdatedAt: new Date('2025-12-30T00:00:00.000Z'),
+    lastSyncedAt: NOW,
     importedAt: NOW,
     updatedAt: NOW,
     ...overrides,
@@ -71,6 +81,8 @@ interface MockedGithubApiService {
 
 interface MockedProjectService {
   create: jest.Mock<Promise<ProjectRecord>, [unknown]>;
+  getByIdForUser: jest.Mock<Promise<ProjectRecord>, [string, string]>;
+  update: jest.Mock<Promise<ProjectRecord>, [string, string, unknown]>;
 }
 
 interface MockedLogger {
@@ -79,11 +91,46 @@ interface MockedLogger {
   warn: jest.Mock;
 }
 
+interface MockedCacheService {
+  get: jest.Mock;
+  set: jest.Mock;
+  del: jest.Mock;
+  getOrSet: jest.Mock;
+}
+
+// WHY: a real map-backed fake (not a bare jest.fn) is needed to actually exercise "hit skips the loader" behavior, not just that getOrSet was called with the right arguments.
+function buildCacheService(): { cacheService: MockedCacheService; store: Map<string, unknown> } {
+  const store = new Map<string, unknown>();
+
+  const cacheService: MockedCacheService = {
+    get: jest.fn((key: string) => store.get(key)),
+    set: jest.fn((key: string, value: unknown) => {
+      store.set(key, value);
+    }),
+    del: jest.fn((key: string) => {
+      store.delete(key);
+    }),
+    getOrSet: jest.fn(async (key: string, _ttlMs: number | undefined, loader: () => Promise<unknown>) => {
+      if (store.has(key)) {
+        return store.get(key);
+      }
+
+      const value = await loader();
+      store.set(key, value);
+
+      return value;
+    }),
+  };
+
+  return { cacheService, store };
+}
+
 function buildService(): {
   service: GithubImportService;
   githubAccountRepository: jest.Mocked<IGithubAccountRepository>;
   githubApiService: MockedGithubApiService;
   projectService: MockedProjectService;
+  cacheService: MockedCacheService;
   getAccessToken: jest.Mock;
   logger: MockedLogger;
 } {
@@ -98,7 +145,11 @@ function buildService(): {
 
   const projectService: MockedProjectService = {
     create: jest.fn<Promise<ProjectRecord>, [unknown]>(),
+    getByIdForUser: jest.fn<Promise<ProjectRecord>, [string, string]>(),
+    update: jest.fn<Promise<ProjectRecord>, [string, string, unknown]>(),
   };
+
+  const { cacheService } = buildCacheService();
 
   const getAccessToken = jest.fn();
   const authService = { api: { getAccessToken } } as unknown as AuthService;
@@ -109,11 +160,12 @@ function buildService(): {
     githubAccountRepository,
     githubApiService as unknown as GithubApiService,
     projectService as unknown as ProjectService,
+    cacheService as unknown as CacheService,
     authService,
     logger as unknown as PinoLogger,
   );
 
-  return { service, githubAccountRepository, githubApiService, projectService, getAccessToken, logger };
+  return { service, githubAccountRepository, githubApiService, projectService, cacheService, getAccessToken, logger };
 }
 
 describe('GithubImportService', () => {
@@ -153,6 +205,39 @@ describe('GithubImportService', () => {
       await expect(service.listRepos('user-a')).rejects.toBeInstanceOf(BadRequestException);
       expect(githubApiService.listUserRepos).not.toHaveBeenCalled();
     });
+
+    describe('caching', () => {
+      it('caches the result under a per-user key and skips GitHub on a second read', async () => {
+        const { service, githubAccountRepository, githubApiService, getAccessToken, cacheService } = buildService();
+
+        githubAccountRepository.findByUserId.mockResolvedValue(buildAccount());
+        getAccessToken.mockResolvedValue({ accessToken: 'token-a' });
+        githubApiService.listUserRepos.mockResolvedValue([buildRepo()]);
+
+        await service.listRepos('user-a');
+        await service.listRepos('user-a');
+
+        expect(githubApiService.listUserRepos).toHaveBeenCalledTimes(1);
+        expect(cacheService.getOrSet).toHaveBeenCalledWith(
+          buildGithubReposCacheKey('user-a'),
+          expect.any(Number),
+          expect.any(Function),
+        );
+      });
+
+      it('fetches independently for different users', async () => {
+        const { service, githubAccountRepository, githubApiService, getAccessToken } = buildService();
+
+        githubAccountRepository.findByUserId.mockResolvedValue(buildAccount());
+        getAccessToken.mockResolvedValue({ accessToken: 'token-a' });
+        githubApiService.listUserRepos.mockResolvedValue([buildRepo()]);
+
+        await service.listRepos('user-a');
+        await service.listRepos('user-b');
+
+        expect(githubApiService.listUserRepos).toHaveBeenCalledTimes(2);
+      });
+    });
   });
 
   describe('importRepo', () => {
@@ -178,6 +263,10 @@ describe('GithubImportService', () => {
         repoUrl: 'https://github.com/mariokreitz/my-project',
         liveUrl: 'https://myproject.dev',
         tags: ['TypeScript', 'cli'],
+        githubStars: 42,
+        githubCreatedAt: new Date('2025-01-01T00:00:00.000Z'),
+        githubUpdatedAt: new Date('2025-12-30T00:00:00.000Z'),
+        lastSyncedAt: expect.any(Date) as Date,
       });
       expect(result).toEqual(buildProjectRecord());
       expect(logger.info).toHaveBeenCalledWith({
@@ -264,6 +353,76 @@ describe('GithubImportService', () => {
       await expect(service.importRepo('user-a', '123', 'mariokreitz', 'my-project')).rejects.toBeInstanceOf(
         NotFoundException,
       );
+    });
+  });
+
+  describe('refreshRepo', () => {
+    it('re-fetches the linked repo and updates the stored GitHub metadata', async () => {
+      const { service, githubAccountRepository, githubApiService, projectService, getAccessToken, logger } =
+        buildService();
+
+      projectService.getByIdForUser.mockResolvedValue(buildProjectRecord());
+      githubAccountRepository.findByUserId.mockResolvedValue(buildAccount());
+      getAccessToken.mockResolvedValue({ accessToken: 'token-a' });
+      githubApiService.getRepo.mockResolvedValue(buildRepo({ stargazers_count: 100 }));
+      projectService.update.mockResolvedValue(buildProjectRecord({ githubStars: 100 }));
+
+      const result = await service.refreshRepo('user-a', 'project-a');
+
+      expect(projectService.getByIdForUser).toHaveBeenCalledWith('project-a', 'user-a');
+      expect(githubApiService.getRepo).toHaveBeenCalledWith('token-a', 'mariokreitz', 'my-project');
+      expect(projectService.update).toHaveBeenCalledWith('project-a', 'user-a', {
+        githubStars: 100,
+        githubCreatedAt: new Date('2025-01-01T00:00:00.000Z'),
+        githubUpdatedAt: new Date('2025-12-30T00:00:00.000Z'),
+        lastSyncedAt: expect.any(Date) as Date,
+      });
+      expect(result).toEqual(buildProjectRecord({ githubStars: 100 }));
+      expect(logger.info).toHaveBeenCalledWith({
+        event: 'github_import.refreshed',
+        userId: 'user-a',
+        projectId: 'project-a',
+      });
+    });
+
+    it('throws BadRequestException when the project is not linked to a GitHub repository', async () => {
+      const { service, projectService, githubApiService } = buildService();
+
+      projectService.getByIdForUser.mockResolvedValue(
+        buildProjectRecord({ githubId: null, githubOwner: null, githubRepo: null }),
+      );
+
+      await expect(service.refreshRepo('user-a', 'project-a')).rejects.toBeInstanceOf(BadRequestException);
+      expect(githubApiService.getRepo).not.toHaveBeenCalled();
+    });
+
+    it('propagates NotFoundException when the project does not belong to the user', async () => {
+      const { service, projectService } = buildService();
+
+      projectService.getByIdForUser.mockRejectedValue(new NotFoundException('Project not found'));
+
+      await expect(service.refreshRepo('user-a', 'project-a')).rejects.toBeInstanceOf(NotFoundException);
+    });
+
+    it('throws BadRequestException and does not update when the fetched repo id no longer matches the stored githubId', async () => {
+      const { service, githubAccountRepository, githubApiService, projectService, getAccessToken, logger } =
+        buildService();
+
+      projectService.getByIdForUser.mockResolvedValue(buildProjectRecord());
+      githubAccountRepository.findByUserId.mockResolvedValue(buildAccount());
+      getAccessToken.mockResolvedValue({ accessToken: 'token-a' });
+      githubApiService.getRepo.mockResolvedValue(buildRepo({ id: 999 }));
+
+      await expect(service.refreshRepo('user-a', 'project-a')).rejects.toBeInstanceOf(BadRequestException);
+      expect(projectService.update).not.toHaveBeenCalled();
+      expect(logger.warn).toHaveBeenCalledWith({
+        event: 'github_import.rejected',
+        reason: 'github_id_mismatch',
+        userId: 'user-a',
+        projectId: 'project-a',
+        githubId: '123',
+        fetchedGithubId: '999',
+      });
     });
   });
 });

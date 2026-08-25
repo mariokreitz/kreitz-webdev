@@ -1,0 +1,1 @@
+export const GITHUB_REPOS_CACHE_TTL_MS = 90_000;
