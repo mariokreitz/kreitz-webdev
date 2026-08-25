@@ -23,7 +23,7 @@ jobs:
           fetch-depth: 0
 
       - name: Derive SHAs for affected commands
-        uses: nrwl/nx-set-shas@v4
+        uses: nrwl/nx-set-shas@v5
 
       - name: Write throwaway env file
         run: echo 'DATABASE_URL="postgresql://build:build@localhost:5432/build"' > .env.local

@@ -65,7 +65,7 @@ jobs:
           fetch-depth: 0
 
       - name: Derive SHAs for affected commands
-        uses: nrwl/nx-set-shas@v4
+        uses: nrwl/nx-set-shas@v5
 
       - name: Check Node version drift between .nvmrc and Dockerfiles
         run: |
