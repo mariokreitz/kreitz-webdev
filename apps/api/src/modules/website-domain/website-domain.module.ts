@@ -1,6 +1,7 @@
 import { WebsiteDomainRepository } from '@app/database/repositories/website-domain.repository';
 import { WebsiteModule } from '@app/modules/website';
 import { Module } from '@nestjs/common';
+import { DomainVerificationService } from './domain-verification.service';
 import { WEBSITE_DOMAIN_REPOSITORY } from './tokens/website-domain.tokens';
 
 import { WebsiteDomainController } from './website-domain.controller';
@@ -11,6 +12,7 @@ import { WebsiteDomainService } from './website-domain.service';
   controllers: [WebsiteDomainController],
   providers: [
     WebsiteDomainService,
+    DomainVerificationService,
     {
       provide: WEBSITE_DOMAIN_REPOSITORY,
       useClass: WebsiteDomainRepository,

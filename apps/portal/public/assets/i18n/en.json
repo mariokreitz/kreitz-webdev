@@ -332,6 +332,10 @@
       "notFound": "This website could not be found."
     },
     "domains": {
+      "actions": {
+        "howToVerify": "How to verify",
+        "verify": "Verify"
+      },
       "add": "Add Domain",
       "deleteDialog": {
         "message": "This will remove \"{{domain}}\" from this website.",
@@ -346,6 +350,12 @@
         },
         "placeholder": "example.com"
       },
+      "instructions": {
+        "copyToken": "Copy token",
+        "description": "Publish the token below as the exact contents of this file on your domain, then click Verify.",
+        "filePath": "File location",
+        "title": "How to verify"
+      },
       "loadError": "Couldn't load domains. Please try refreshing the page.",
       "status": {
         "unverified": "Unverified",
@@ -354,7 +364,15 @@
       "title": "Domains",
       "toast": {
         "created": "Domain added.",
-        "deleted": "Domain deleted."
+        "deleted": "Domain deleted.",
+        "verifyFailed": {
+          "blocked_target": "This domain points to an address we can't verify.",
+          "file_not_found": "Verification file not found. Make sure it's published at the exact path.",
+          "redirected": "The verification URL redirected. Please serve the file without a redirect.",
+          "token_mismatch": "The verification file didn't contain the expected token.",
+          "unreachable": "We couldn't reach this domain. Please check it's live and try again."
+        },
+        "verifySucceeded": "Domain verified."
       }
     },
     "form": {

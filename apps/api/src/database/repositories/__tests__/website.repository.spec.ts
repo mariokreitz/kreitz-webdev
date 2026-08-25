@@ -131,7 +131,13 @@ describe('WebsiteRepository', () => {
       const repository = new WebsiteRepository(prisma);
 
       await expect(
-        repository.create({ userId: 'user-1', name: 'My Website', slug: 'taken-slug', domain: 'example.com' }),
+        repository.create({
+          userId: 'user-1',
+          name: 'My Website',
+          slug: 'taken-slug',
+          domain: 'example.com',
+          verificationToken: 'verification-token-1',
+        }),
       ).rejects.toThrow(ConflictException);
     });
 
@@ -143,10 +149,22 @@ describe('WebsiteRepository', () => {
       const repository = new WebsiteRepository(prisma);
 
       await expect(
-        repository.create({ userId: 'user-1', name: 'My Website', slug: 'my-website', domain: 'taken.com' }),
+        repository.create({
+          userId: 'user-1',
+          name: 'My Website',
+          slug: 'my-website',
+          domain: 'taken.com',
+          verificationToken: 'verification-token-1',
+        }),
       ).rejects.toThrow(ConflictException);
       await expect(
-        repository.create({ userId: 'user-1', name: 'My Website', slug: 'my-website', domain: 'taken.com' }),
+        repository.create({
+          userId: 'user-1',
+          name: 'My Website',
+          slug: 'my-website',
+          domain: 'taken.com',
+          verificationToken: 'verification-token-1',
+        }),
       ).rejects.toThrow('This domain is already registered');
     });
 
@@ -159,7 +177,13 @@ describe('WebsiteRepository', () => {
       const repository = new WebsiteRepository(prisma);
 
       await expect(
-        repository.create({ userId: 'user-1', name: 'My Website', slug: 'my-website', domain: 'example.com' }),
+        repository.create({
+          userId: 'user-1',
+          name: 'My Website',
+          slug: 'my-website',
+          domain: 'example.com',
+          verificationToken: 'verification-token-1',
+        }),
       ).rejects.toBe(unrelatedViolation);
     });
   });

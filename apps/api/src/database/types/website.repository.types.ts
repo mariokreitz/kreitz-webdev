@@ -13,6 +13,7 @@ export interface CreateWebsiteData {
   name: string;
   slug: string;
   domain: string;
+  verificationToken: string;
 }
 
 export interface UpdateWebsiteData {

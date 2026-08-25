@@ -47,12 +47,13 @@ export class WebsiteDomainRepository implements IWebsiteDomainRepository {
     });
   }
 
-  public async create(websiteId: string, domain: string): Promise<WebsiteDomainRecord> {
+  public async create(websiteId: string, domain: string, verificationToken: string): Promise<WebsiteDomainRecord> {
     try {
       return await this.prisma.websiteDomain.create({
         data: {
           websiteId,
           domain,
+          verificationToken,
         },
       });
     } catch (error) {
@@ -64,16 +65,19 @@ export class WebsiteDomainRepository implements IWebsiteDomainRepository {
     }
   }
 
-  public async update(id: string, websiteId: string, domain: string): Promise<WebsiteDomainRecord | null> {
+  public async update(
+    id: string,
+    websiteId: string,
+    domain: string,
+    resetVerification: boolean,
+  ): Promise<WebsiteDomainRecord | null> {
     try {
       const result = await this.prisma.websiteDomain.updateMany({
         where: {
           id,
           websiteId,
         },
-        data: {
-          domain,
-        },
+        data: resetVerification ? { domain, verified: false, verifiedAt: null } : { domain },
       });
 
       if (result.count === 0) {
@@ -109,5 +113,24 @@ export class WebsiteDomainRepository implements IWebsiteDomainRepository {
     }
 
     return existing;
+  }
+
+  public async markVerified(id: string, websiteId: string, verifiedAt: Date): Promise<WebsiteDomainRecord | null> {
+    const result = await this.prisma.websiteDomain.updateMany({
+      where: {
+        id,
+        websiteId,
+      },
+      data: {
+        verified: true,
+        verifiedAt,
+      },
+    });
+
+    if (result.count === 0) {
+      return null;
+    }
+
+    return await this.findByIdAndWebsiteId(id, websiteId);
   }
 }

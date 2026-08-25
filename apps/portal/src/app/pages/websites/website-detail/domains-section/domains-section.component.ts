@@ -9,7 +9,7 @@ import {
   type WritableSignal,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faPlus, faShieldHalved, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { environment } from '@shared/environments';
 import { ConfirmDialog, Skeleton } from '@shared/ui';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -17,11 +17,19 @@ import type { ApiEnvelope, WebsiteDomain } from '../../../../core/api';
 import { ToastService } from '../../../../core/toast';
 import { WebsiteDomainService } from '../../../../core/websites';
 import { CreateDomainForm, type CreateDomainFormValue } from './create-domain-form/create-domain-form.component';
+import { DomainVerificationInstructions } from './domain-verification-instructions/domain-verification-instructions.component';
 
 @Component({
   selector: 'kwd-portal-domains-section',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Skeleton, FontAwesomeModule, TranslatePipe, ConfirmDialog, CreateDomainForm],
+  imports: [
+    Skeleton,
+    FontAwesomeModule,
+    TranslatePipe,
+    ConfirmDialog,
+    CreateDomainForm,
+    DomainVerificationInstructions,
+  ],
   templateUrl: './domains-section.component.html',
 })
 export class DomainsSection {
@@ -33,6 +41,8 @@ export class DomainsSection {
 
   protected readonly addIcon = faPlus;
   protected readonly deleteIcon = faTrash;
+  protected readonly verifyIcon = faShieldHalved;
+  protected readonly instructionsToggleIcon = faChevronDown;
 
   protected readonly domainsResource = httpResource<readonly WebsiteDomain[]>(
     () => ({ url: `${environment.api.kreitzWebdev}/websites/${this.websiteId()}/domains`, withCredentials: true }),
@@ -42,6 +52,8 @@ export class DomainsSection {
   public readonly isFormOpen: WritableSignal<boolean> = signal(false);
   public readonly creating: WritableSignal<boolean> = signal(false);
   public readonly deleting: WritableSignal<boolean> = signal(false);
+  public readonly verifyingId: WritableSignal<string | null> = signal(null);
+  public readonly expandedInstructionsId: WritableSignal<string | null> = signal(null);
 
   private readonly pendingDeleteSignal: WritableSignal<WebsiteDomain | null> = signal(null);
   public readonly pendingDelete: Signal<WebsiteDomain | null> = this.pendingDeleteSignal.asReadonly();
@@ -102,5 +114,34 @@ export class DomainsSection {
     } finally {
       this.deleting.set(false);
     }
+  }
+
+  public async onVerifyRequested(domain: WebsiteDomain): Promise<void> {
+    this.verifyingId.set(domain.id);
+
+    try {
+      const result = await this.domainService.verify(this.websiteId(), domain.id);
+      this.domainsResource.reload();
+
+      if (result.failureReason === null) {
+        this.toastService.show({
+          severity: 'success',
+          message: this.translate.instant('websites.domains.toast.verifySucceeded'),
+        });
+      } else {
+        this.toastService.show({
+          severity: 'warning',
+          message: this.translate.instant(`websites.domains.toast.verifyFailed.${result.failureReason}`),
+        });
+      }
+    } catch {
+      // real transport/ownership errors only — a failed verification check itself arrives as a normal 200, handled in the branch above, not here
+    } finally {
+      this.verifyingId.set(null);
+    }
+  }
+
+  public onToggleInstructions(domain: WebsiteDomain): void {
+    this.expandedInstructionsId.update((current) => (current === domain.id ? null : domain.id));
   }
 }

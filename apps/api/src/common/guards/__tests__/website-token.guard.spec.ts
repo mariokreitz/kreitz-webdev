@@ -53,6 +53,7 @@ function buildDomain(overrides: Partial<WebsiteDomainRecord> = {}): WebsiteDomai
     domain: 'mario.dev',
     verified: true,
     verifiedAt: NOW,
+    verificationToken: 'verification-token-a',
     createdAt: NOW,
     updatedAt: NOW,
     ...overrides,
@@ -160,6 +161,7 @@ function buildGuard(): {
     create: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
+    markVerified: jest.fn(),
   };
 
   const websiteRepository: jest.Mocked<IWebsiteRepository> = {

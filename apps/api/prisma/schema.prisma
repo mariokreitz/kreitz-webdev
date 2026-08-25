@@ -102,9 +102,10 @@ model WebsiteDomain {
   id        String @id @default(cuid())
   websiteId String
 
-  domain     String
-  verified   Boolean   @default(false)
-  verifiedAt DateTime?
+  domain            String
+  verified          Boolean   @default(false)
+  verifiedAt        DateTime?
+  verificationToken String
 
   website Website @relation(fields: [websiteId], references: [id], onDelete: Cascade)
 
