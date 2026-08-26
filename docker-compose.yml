@@ -35,6 +35,22 @@ services:
     depends_on:
       - api
 
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/kwd.frontend.Dockerfile
+    env_file:
+      - .env.local
+    environment:
+      FRONTEND_PORT: '4000'
+      # Angular SSR's SSRF guard 400s any request whose Host header isn't in this allowlist.
+      NG_ALLOWED_HOSTS: localhost
+    ports:
+      - '${FRONTEND_PORT:-4000}:4000'
+    restart: always
+    depends_on:
+      - api
+
   postgres:
     image: postgres:17-alpine
     environment:

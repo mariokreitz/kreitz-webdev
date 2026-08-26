@@ -72,7 +72,7 @@ jobs:
           set -euo pipefail
           nvmrc_major="$(cut -d. -f1 .nvmrc | tr -d '[:space:]v')"
           status=0
-          for dockerfile in docker/kwd.api.Dockerfile docker/kwd.portal.Dockerfile; do
+          for dockerfile in docker/kwd.api.Dockerfile docker/kwd.portal.Dockerfile docker/kwd.frontend.Dockerfile; do
             docker_major="$(grep -m1 '^ARG NODE_IMAGE=' "$dockerfile" | cut -d: -f2 | cut -d- -f1)"
             if [ "$docker_major" != "$nvmrc_major" ]; then
               echo "::error file=$dockerfile::NODE_IMAGE major version ($docker_major) does not match .nvmrc ($nvmrc_major)"
@@ -102,7 +102,8 @@ jobs:
 
           registry='[
             {"service":"api","dockerfile":"docker/kwd.api.Dockerfile","deploy_webhook_secret":"DOKPLOY_DEPLOY_WEBHOOK_API"},
-            {"service":"portal","dockerfile":"docker/kwd.portal.Dockerfile","deploy_webhook_secret":"DOKPLOY_DEPLOY_WEBHOOK_PORTAL"}
+            {"service":"portal","dockerfile":"docker/kwd.portal.Dockerfile","deploy_webhook_secret":"DOKPLOY_DEPLOY_WEBHOOK_PORTAL"},
+            {"service":"frontend","dockerfile":"docker/kwd.frontend.Dockerfile","deploy_webhook_secret":"DOKPLOY_DEPLOY_WEBHOOK_FRONTEND"}
           ]'
 
           if [ "$FORCE_ALL" = "true" ]; then
