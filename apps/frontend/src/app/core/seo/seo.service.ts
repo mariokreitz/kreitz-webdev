@@ -2,7 +2,7 @@ import { DOCUMENT, inject, Injectable, type DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Meta, Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
-import { SITE_PREVIEW_IMAGE_URL, SITE_URL } from './constants';
+import { AUTHOR_NAME, AUTHOR_SAME_AS, SITE_PREVIEW_IMAGE_URL, SITE_URL } from './constants';
 import type { SeoRouteData } from './types/seo.types';
 
 @Injectable({ providedIn: 'root' })
@@ -21,6 +21,24 @@ export class SeoService {
         const description = translations[route.descriptionKey] ?? route.descriptionKey;
         this.render(title, description, route.path);
       });
+  }
+
+  public applyPersonSchema(destroyRef: DestroyRef): void {
+    this.translate
+      .stream('hero.role')
+      .pipe(takeUntilDestroyed(destroyRef))
+      .subscribe((jobTitle: string) => {
+        this.setJsonLd({
+          '@context': 'https://schema.org',
+          '@type': 'Person',
+          name: AUTHOR_NAME,
+          url: SITE_URL,
+          jobTitle,
+          sameAs: AUTHOR_SAME_AS,
+        });
+      });
+
+    destroyRef.onDestroy(() => this.removeJsonLd());
   }
 
   private render(title: string, description: string, path: string): void {
@@ -48,5 +66,21 @@ export class SeoService {
     }
 
     link.setAttribute('href', url);
+  }
+
+  private setJsonLd(schema: Record<string, unknown>): void {
+    let script = this.document.querySelector<HTMLScriptElement>('script[type="application/ld+json"]');
+
+    if (!script) {
+      script = this.document.createElement('script');
+      script.setAttribute('type', 'application/ld+json');
+      this.document.head.appendChild(script);
+    }
+
+    script.textContent = JSON.stringify(schema);
+  }
+
+  private removeJsonLd(): void {
+    this.document.querySelector<HTMLScriptElement>('script[type="application/ld+json"]')?.remove();
   }
 }
