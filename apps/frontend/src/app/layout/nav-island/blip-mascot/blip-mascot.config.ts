@@ -1,0 +1,14 @@
+export const ATTENTION_RADIUS_PX = 130;
+export const ATTENTION_SPAN_MS = 6000;
+export const MICRO_BREAK_BLINK_MS = 150;
+export const MICRO_BREAK_TOTAL_MS = 1000;
+export const MAX_PUPIL_OFFSET_PX = 2.6;
+export const NAV_HOVER_GLANCE_RATIO = 0.7;
+export const NAV_HOVER_GLANCE_PX = MAX_PUPIL_OFFSET_PX * NAV_HOVER_GLANCE_RATIO;
+export const IDLE_BLINK_MIN_DELAY_MS = 4000;
+export const IDLE_BLINK_DELAY_RANGE_MS = 3000;
+export const IDLE_BLINK_DURATION_MS = 130;
+export const SCROLL_DUCK_DECAY_MS = 420;
+export const NAV_BOUNCE_MS = 500;
+export const THEME_SQUINT_MS = 250;
+export const THEME_SLEEPY_MS = 700;

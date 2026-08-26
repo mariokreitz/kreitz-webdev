@@ -134,9 +134,12 @@
   --spacing-safe-bottom: env(safe-area-inset-bottom, 0px);
 
   --shadow-menu: 4px 0 0 rgba(0, 0, 0, 0.18);
+
+  --ease-spring: cubic-bezier(0.34, 1.76, 0.64, 1);
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-panel-expand: 450ms;
 }
 
-/* Values duplicated between this media query and the [data-theme='light'] block below: the media query auto-detects the OS preference, the attribute selector lets a stored user choice win regardless of OS preference. */
 @media (prefers-color-scheme: light) {
   :root:not([data-theme='dark']) {
     color-scheme: light;
@@ -270,9 +273,107 @@
   }
 }
 
+@keyframes nav-island-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-0.75rem) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes nav-island-spring {
+  0% {
+    scale: 1;
+  }
+
+  30% {
+    scale: 1.045;
+  }
+
+  50% {
+    scale: 0.985;
+  }
+
+  72% {
+    scale: 1.015;
+  }
+
+  100% {
+    scale: 1;
+  }
+}
+
+@keyframes settings-fab-spring {
+  0% {
+    scale: 1;
+  }
+
+  30% {
+    scale: 1.08;
+  }
+
+  55% {
+    scale: 0.96;
+  }
+
+  78% {
+    scale: 1.03;
+  }
+
+  100% {
+    scale: 1;
+  }
+}
+
+@keyframes blip-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.028);
+  }
+}
+
+@keyframes blip-bounce {
+  0% {
+    transform: scale(1, 1);
+  }
+
+  30% {
+    transform: scale(0.9, 1.14) translateY(-1.5px);
+  }
+
+  55% {
+    transform: scale(1.08, 0.92);
+  }
+
+  100% {
+    transform: scale(1, 1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .toast-progress-bar {
     opacity: 0;
+  }
+
+  .blip-mascot .blip-body,
+  .blip-mascot .blip-face,
+  .blip-mascot .blip-eyes,
+  .blip-mascot .blip-mouth,
+  .blip-mascot .blip-spark {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .blip-mascot .blip-eyes {
+    transform: translate(0, 0) !important;
   }
 }
 
@@ -342,5 +443,72 @@
 
   .login-card-locked {
     animation: login-pulse 1.2s ease-in-out infinite;
+  }
+
+  .blip-mascot {
+    --pupil-x: 0px;
+    --pupil-y: 0px;
+    filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--color-on-surface) 35%, transparent));
+  }
+
+  .blip-mascot .blip-body,
+  .blip-mascot .blip-face,
+  .blip-mascot .blip-eyes,
+  .blip-mascot .blip-mouth,
+  .blip-mascot .blip-spark {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .blip-mascot .blip-body {
+    animation: blip-breathe 4.2s ease-in-out infinite;
+    transition: transform 0.15s ease;
+  }
+
+  .blip-mascot .blip-face {
+    transition: transform 0.2s ease;
+  }
+
+  .blip-mascot.is-ducking .blip-face {
+    transform: translateY(1.6px) scaleY(0.94);
+  }
+
+  .blip-mascot.is-bouncing .blip-face {
+    animation: blip-bounce 0.5s var(--ease-spring);
+  }
+
+  .blip-mascot.is-bouncing .blip-spark {
+    transform: scale(1.7);
+    opacity: 1;
+  }
+
+  .blip-mascot .blip-eyes {
+    transform: translate(var(--pupil-x), var(--pupil-y));
+    transition: transform 0.06s linear;
+  }
+
+  .blip-mascot .blip-eyes.is-blinking,
+  .blip-mascot .blip-eyes.is-squinting {
+    transform: translate(var(--pupil-x), var(--pupil-y)) scaleY(0.12);
+    transition: transform 0.09s ease;
+  }
+
+  .blip-mascot .blip-eyes.is-sleepy {
+    transform: translate(var(--pupil-x), var(--pupil-y)) scaleY(0.55);
+    transition: transform 0.22s ease;
+  }
+
+  .blip-mascot .blip-mouth {
+    transition: d 0.2s ease;
+  }
+
+  .blip-mascot .blip-spark {
+    transition:
+      transform 0.25s var(--ease-spring),
+      opacity 0.25s ease;
+  }
+
+  .blip-mascot .blip-spark.is-twinkling {
+    transform: scale(1.5);
   }
 }

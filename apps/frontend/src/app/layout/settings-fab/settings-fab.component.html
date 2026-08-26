@@ -1,0 +1,23 @@
+<div
+  class="fixed right-4 bottom-[calc(1rem+var(--spacing-safe-bottom))] z-40 flex flex-col items-center gap-2"
+  (pointerenter)="onPointerEnter()"
+  (pointerleave)="onPointerLeave()">
+  <div
+    id="settings-fab-panel"
+    [attr.inert]="expanded() ? null : ''"
+    [class]="
+      `flex flex-col items-center gap-2 overflow-hidden transition-[max-height,opacity,translate] duration-(--duration-panel-expand) ease-(--ease-spring) motion-reduce:transition-none ${expanded() ? 'max-h-14 translate-y-0 opacity-100 motion-safe:animate-[settings-fab-spring_0.6s_var(--ease-out-expo)_1]' : 'pointer-events-none max-h-0 translate-y-1 opacity-0'}`
+    ">
+    <kwd-ui-theme-toggle [theme]="theme()" (toggleTheme)="toggleTheme()" />
+  </div>
+
+  <button
+    type="button"
+    class="flex h-11 w-11 shrink-0 items-center justify-center rounded-(--radius-full) border border-(--color-outline-variant) bg-(--color-surface-container)/80 text-(--color-on-surface-variant) shadow-lg backdrop-blur-xl backdrop-saturate-150 transition-[background-color,scale] duration-200 motion-reduce:transition-none hover:bg-(--color-surface-container-highest) active:scale-95 motion-reduce:active:scale-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)] pointer-coarse:shadow-xl"
+    aria-controls="settings-fab-panel"
+    [attr.aria-label]="'common.settings' | translate"
+    [attr.aria-expanded]="expanded()"
+    (click)="toggleExpanded()">
+    <fa-icon class="text-base" [icon]="gearIcon" />
+  </button>
+</div>
