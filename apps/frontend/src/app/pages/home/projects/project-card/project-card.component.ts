@@ -1,186 +1,84 @@
 import { NgOptimizedImage } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-  signal,
-  type OnDestroy,
-  type Signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, type Signal } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faDesktop, faStar } from '@fortawesome/free-solid-svg-icons';
+import { faArrowUpRightFromSquare, faCode } from '@fortawesome/free-solid-svg-icons';
+import { TranslatePipe } from '@ngx-translate/core';
+import { BrandIcon } from '@shared/ui';
 
-import type { ProjectCategory, PublicProject } from '../../public-project.model';
-import { SafeResourceUrlPipe } from './safe-resource-url.pipe';
+import type { PublicProject } from '../../public-project.model';
+import type { ProjectCardVariant, TagChip } from './project-card.types';
+import { resolveTagIcon } from './tag-icon.config';
 
-type PreviewStatus = 'idle' | 'loading' | 'loaded' | 'failed';
+const ARTICLE_FEATURE_CLASSES =
+  'grid gap-4 overflow-hidden rounded-(--radius-lg) border border-(--color-outline-variant) bg-(--color-surface-container-low) p-4 sm:grid-cols-2 sm:items-center sm:p-5';
+const ARTICLE_COMPACT_CLASSES =
+  'flex gap-4 overflow-hidden rounded-(--radius-lg) border border-(--color-outline-variant) bg-(--color-surface-container-low) p-4';
 
-const PREVIEW_LOAD_TIMEOUT_MS = 4000;
+const IMAGE_WRAPPER_FEATURE_CLASSES =
+  'relative aspect-video shrink-0 overflow-hidden rounded-(--radius-md) bg-(--color-surface-container-high)';
+const IMAGE_WRAPPER_COMPACT_CLASSES =
+  'relative h-20 w-20 shrink-0 overflow-hidden rounded-(--radius-md) bg-(--color-surface-container-high)';
 
-// WHY: fixed locale (matching this card's hardcoded English labels) rather than `undefined` —
-// the latter resolves to Node's ICU default on the server and the visitor's OS/browser locale on
-// the client, producing a hydration text mismatch whenever those two differ.
-const DATE_FORMAT_LOCALE = 'en-US';
+const PLACEHOLDER_ICON_FEATURE_CLASSES = 'text-4xl text-(--color-on-surface-variant)/25';
+const PLACEHOLDER_ICON_COMPACT_CLASSES = 'text-xl text-(--color-on-surface-variant)/25';
 
-const CATEGORY_LABELS: Record<ProjectCategory, string> = {
-  DEMO: 'Demo',
-  OPEN_SOURCE: 'Open Source',
-  POC: 'Proof of Concept',
-  MVP: 'MVP',
-  PLATFORM: 'Platform',
-};
+const BODY_FEATURE_CLASSES = 'flex flex-col gap-2';
+const BODY_COMPACT_CLASSES = 'flex min-w-0 flex-1 flex-col gap-1.5';
 
-// WHY: reuses the same 5 category-accent tokens established for the skills section (home.component.ts's
-// CATEGORY_ACCENTS) — a different taxonomy, so the mapping doesn't need to line up 1:1 with skills' own.
-const CATEGORY_CLASSES: Record<ProjectCategory, string> = {
-  DEMO: 'border-(--color-info)/50 bg-(--color-info)/10 text-(--color-info)',
-  OPEN_SOURCE: 'border-(--color-secondary)/50 bg-(--color-secondary)/10 text-(--color-secondary)',
-  POC: 'border-(--color-warning)/50 bg-(--color-warning)/10 text-(--color-warning)',
-  MVP: 'border-(--color-primary)/50 bg-(--color-primary)/10 text-(--color-primary)',
-  PLATFORM: 'border-(--color-tertiary)/50 bg-(--color-tertiary)/10 text-(--color-tertiary)',
-};
+const DESCRIPTION_FEATURE_CLASSES = 'max-w-prose text-body-sm text-(--color-on-surface-variant)';
+const DESCRIPTION_COMPACT_CLASSES = 'text-body-sm text-(--color-on-surface-variant)';
+
+const LINKS_FEATURE_CLASSES = 'mt-1 flex flex-wrap items-center gap-3';
+const LINKS_COMPACT_CLASSES = 'mt-auto flex flex-wrap gap-3 pt-1 text-body-sm';
 
 @Component({
   selector: 'kwd-frontend-project-card',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgOptimizedImage, FontAwesomeModule, SafeResourceUrlPipe],
+  imports: [NgOptimizedImage, FontAwesomeModule, BrandIcon, TranslatePipe],
   templateUrl: './project-card.component.html',
 })
-export class ProjectCard implements OnDestroy {
+export class ProjectCard {
   public readonly project = input.required<PublicProject>();
+  public readonly variant = input<ProjectCardVariant>('feature');
 
-  public readonly starIcon = faStar;
-  public readonly previewToggleIcon = faDesktop;
+  protected readonly placeholderIcon = faCode;
+  protected readonly liveLinkIcon = faArrowUpRightFromSquare;
 
-  public readonly categoryLabel: Signal<string | null> = computed(() => {
-    const category = this.project().category;
+  protected readonly isFeature: Signal<boolean> = computed(() => this.variant() === 'feature');
 
-    return category ? CATEGORY_LABELS[category] : null;
-  });
-
-  public readonly categoryClasses: Signal<string | null> = computed(() => {
-    const category = this.project().category;
-
-    return category ? CATEGORY_CLASSES[category] : null;
-  });
-
-  public readonly createdLabel: Signal<string | null> = computed(() => this.formatDate(this.project().githubCreatedAt));
-
-  public readonly updatedLabel: Signal<string | null> = computed(() => this.formatDate(this.project().githubUpdatedAt));
-
-  public readonly starCount: Signal<number | null> = computed(() => this.project().githubStars ?? null);
-
-  public readonly hasMetadata: Signal<boolean> = computed(
-    () => this.createdLabel() !== null || this.updatedLabel() !== null || this.starCount() !== null,
+  protected readonly tagChips: Signal<readonly TagChip[]> = computed(() =>
+    this.project().tags.map((tag) => ({ name: tag, icon: resolveTagIcon(tag) })),
   );
 
-  public readonly previewEligible: Signal<boolean> = computed(() => Boolean(this.project().liveUrl));
+  protected readonly imageSizes: Signal<string> = computed(() =>
+    this.isFeature() ? '(min-width: 640px) 50vw, 100vw' : '80px',
+  );
 
-  public readonly previewUrl: Signal<string> = computed(() => this.project().liveUrl ?? '');
+  protected readonly articleClasses: Signal<string> = computed(() =>
+    this.isFeature() ? ARTICLE_FEATURE_CLASSES : ARTICLE_COMPACT_CLASSES,
+  );
 
-  public readonly previewHostname: Signal<string> = computed(() => {
-    const liveUrl = this.project().liveUrl;
+  protected readonly imageWrapperClasses: Signal<string> = computed(() =>
+    this.isFeature() ? IMAGE_WRAPPER_FEATURE_CLASSES : IMAGE_WRAPPER_COMPACT_CLASSES,
+  );
 
-    if (!liveUrl) {
-      return '';
-    }
+  protected readonly placeholderIconClasses: Signal<string> = computed(() =>
+    this.isFeature() ? PLACEHOLDER_ICON_FEATURE_CLASSES : PLACEHOLDER_ICON_COMPACT_CLASSES,
+  );
 
-    try {
-      return new URL(liveUrl).hostname;
-    } catch {
-      return liveUrl;
-    }
-  });
+  protected readonly bodyClasses: Signal<string> = computed(() =>
+    this.isFeature() ? BODY_FEATURE_CLASSES : BODY_COMPACT_CLASSES,
+  );
 
-  public readonly previewVisible = signal(false);
-  public readonly previewStatus = signal<PreviewStatus>('idle');
+  protected readonly descriptionClasses: Signal<string> = computed(() =>
+    this.isFeature() ? DESCRIPTION_FEATURE_CLASSES : DESCRIPTION_COMPACT_CLASSES,
+  );
 
-  private timeoutHandle: ReturnType<typeof setTimeout> | null = null;
+  protected readonly linksClasses: Signal<string> = computed(() =>
+    this.isFeature() ? LINKS_FEATURE_CLASSES : LINKS_COMPACT_CLASSES,
+  );
 
-  public ngOnDestroy(): void {
-    this.clearPreviewTimeout();
-  }
-
-  public onPointerEnter(): void {
-    this.showPreview();
-  }
-
-  public onPointerLeave(): void {
-    this.previewVisible.set(false);
-  }
-
-  public onFocusIn(): void {
-    this.showPreview();
-  }
-
-  public onFocusOut(event: FocusEvent): void {
-    const related = event.relatedTarget as Node | null;
-    const current = event.currentTarget as Node;
-
-    if (!related || !current.contains(related)) {
-      this.previewVisible.set(false);
-    }
-  }
-
-  public onPreviewToggleClick(): void {
-    if (!this.previewEligible()) {
-      return;
-    }
-
-    this.previewVisible.update((visible) => !visible);
-
-    if (this.previewVisible()) {
-      this.startPreviewLoad();
-    }
-  }
-
-  public onPreviewLoad(): void {
-    this.clearPreviewTimeout();
-    this.previewStatus.set('loaded');
-  }
-
-  public onPreviewError(): void {
-    this.clearPreviewTimeout();
-    this.previewStatus.set('failed');
-  }
-
-  private showPreview(): void {
-    if (!this.previewEligible()) {
-      return;
-    }
-
-    this.previewVisible.set(true);
-    this.startPreviewLoad();
-  }
-
-  private startPreviewLoad(): void {
-    if (this.previewStatus() !== 'idle') {
-      return;
-    }
-
-    this.previewStatus.set('loading');
-
-    // WHY: an X-Frame-Options/CSP frame-ancestors block rarely fires the iframe's own (error) event, so a load timeout is the only reliable failure detector.
-    this.timeoutHandle = setTimeout(() => {
-      if (this.previewStatus() === 'loading') {
-        this.previewStatus.set('failed');
-      }
-    }, PREVIEW_LOAD_TIMEOUT_MS);
-  }
-
-  private clearPreviewTimeout(): void {
-    if (this.timeoutHandle !== null) {
-      clearTimeout(this.timeoutHandle);
-      this.timeoutHandle = null;
-    }
-  }
-
-  private formatDate(value: string | null | undefined): string | null {
-    if (!value) {
-      return null;
-    }
-
-    return new Date(value).toLocaleDateString(DATE_FORMAT_LOCALE, { year: 'numeric', month: 'short', day: 'numeric' });
-  }
+  protected readonly repoLinkLabelKey: Signal<string> = computed(() =>
+    this.isFeature() ? 'projects.card.viewSource' : 'projects.card.source',
+  );
 }
