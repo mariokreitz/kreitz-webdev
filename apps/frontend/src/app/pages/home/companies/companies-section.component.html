@@ -1,0 +1,13 @@
+@if (companies().length) {
+  <section
+    id="companies"
+    class="mx-auto max-w-(--spacing-max-width) border-t border-(--color-outline-variant) px-(--spacing-margin-mobile) py-16 sm:px-(--spacing-margin-desktop) 2xl:py-24">
+    <h2 class="text-headline-md text-(--color-on-surface)">Companies I've worked with</h2>
+
+    <ul class="mt-6 flex flex-col divide-y divide-(--color-outline-variant)">
+      @for (company of companies(); track company.id) {
+        <kwd-frontend-company-row [company]="company" />
+      }
+    </ul>
+  </section>
+}

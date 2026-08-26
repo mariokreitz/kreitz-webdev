@@ -2,10 +2,34 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>frontend</title>
+    <title>Mario Kreitz | Full-Stack Developer</title>
+    <meta
+      content="Portfolio of Mario Kreitz, a Full-Stack Developer building full-stack products, from Postgres schemas and NestJS APIs to accessible, signal-driven Angular UIs."
+      name="description"
+    />
     <base href="/" />
-    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport" />
     <link href="favicon.ico" rel="icon" type="image/x-icon" />
+    <script>
+      // Storage key duplicated from PAGE_PREFERENCES_STORAGE_KEY in src/app/core/preferences/constants/index.ts —
+      // this script runs before any JS bundle loads, so it can't import the constant; keep both in sync.
+      (function () {
+        try {
+          var stored = JSON.parse(localStorage.getItem('kwd-frontend-page-preferences'));
+          var theme = stored && stored.theme;
+          if (theme === 'light' || theme === 'dark') {
+            document.documentElement.setAttribute('data-theme', theme);
+          } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <script
+      defer
+      src="https://umami.kreitz-webdev.de/script.js"
+      data-website-id="84878dc5-283b-4094-beee-4ec60adc7983"
+    ></script>
   </head>
   <body>
     <kwd-frontend-root></kwd-frontend-root>

@@ -1,3 +1,4 @@
 @import '../../../libs/styles/src/theme.css';
 
 @source './';
+@source '../../../libs/ui/src';

@@ -1,0 +1,30 @@
+<nav
+  id="site-nav"
+  class="fixed top-4 left-1/2 z-50 flex w-fit max-w-[calc(100%-2rem)] -translate-x-1/2 items-center gap-4 rounded-(--radius-xl) border border-(--color-outline-variant) bg-(--color-surface-container)/80 px-5 py-2.5 shadow-lg backdrop-blur-md sm:gap-6">
+  <a
+    routerLink="/"
+    class="text-body-sm font-medium whitespace-nowrap text-(--color-on-surface) transition-opacity hover:opacity-80">
+    Mario Kreitz
+  </a>
+
+  <div class="flex items-center gap-6">
+    <a
+      routerLink="/"
+      fragment="projects"
+      class="text-body-sm font-medium whitespace-nowrap text-(--color-on-surface) transition-opacity hover:opacity-80">
+      Projects
+    </a>
+
+    <a
+      routerLink="/"
+      fragment="contact"
+      class="text-body-sm font-medium whitespace-nowrap text-(--color-on-surface) transition-opacity hover:opacity-80">
+      Contact
+    </a>
+  </div>
+
+  <kwd-ui-switch
+    [checked]="theme() === 'dark'"
+    [ariaLabel]="'common.themeToggle' | translate"
+    (checkedChange)="toggleTheme()" />
+</nav>

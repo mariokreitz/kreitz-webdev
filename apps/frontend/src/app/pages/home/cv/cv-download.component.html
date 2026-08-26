@@ -1,0 +1,10 @@
+@if (available()) {
+  <section class="flex justify-center py-8">
+    <a
+      class="flex items-center gap-2 rounded-(--radius) bg-(--color-primary) px-6 py-3 font-mono text-code-md text-(--color-on-primary) transition-opacity hover:opacity-90"
+      href="/api/cv/download">
+      <fa-icon [icon]="downloadIcon" />
+      {{ 'cv.download' | translate }}
+    </a>
+  </section>
+}

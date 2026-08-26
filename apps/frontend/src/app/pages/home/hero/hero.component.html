@@ -1,0 +1,43 @@
+<section #heroSection class="relative flex min-h-[70vh] w-full flex-col justify-center overflow-hidden">
+  <kwd-frontend-constellation-background class="z-0" [config]="effectiveConfig()" />
+
+  <div
+    class="relative z-10 mx-auto flex w-full max-w-(--spacing-max-width) flex-col gap-6 px-(--spacing-margin-mobile) pt-48 pb-40 sm:px-(--spacing-margin-desktop) sm:pt-32 sm:pb-24 2xl:pt-40 2xl:pb-32">
+    <div #heroText class="relative z-10 flex flex-col gap-6">
+      <p class="text-label-caps text-(--color-primary)">{{ 'hero.role' | translate }}</p>
+
+      <h1 class="text-headline-lg text-(--color-on-surface) sm:text-6xl 2xl:text-7xl">Mario Kreitz</h1>
+
+      <p class="max-w-2xl text-body-md text-(--color-on-surface-variant)">
+        {{ 'hero.tagline' | translate }}
+      </p>
+
+      <div class="flex flex-wrap gap-4 pt-2">
+        <a
+          class="rounded-(--radius-lg) bg-(--color-primary) px-5 py-2.5 text-body-sm font-medium text-(--color-on-primary) transition-opacity hover:opacity-90"
+          href="https://github.com/mariokreitz"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-umami-event="github-link">
+          GitHub
+        </a>
+
+        <a
+          class="rounded-(--radius-lg) border border-(--color-outline-variant) px-5 py-2.5 text-body-sm font-medium text-(--color-on-surface) transition-colors hover:bg-(--color-surface-container)"
+          href="https://www.linkedin.com/in/mario-kreitz/"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-umami-event="linkedin-link">
+          LinkedIn
+        </a>
+
+        <a
+          class="rounded-(--radius-lg) border border-(--color-outline-variant) px-5 py-2.5 text-body-sm font-medium text-(--color-on-surface) transition-colors hover:bg-(--color-surface-container)"
+          href="mailto:mario.kreitz@web.de"
+          data-umami-event="email-link">
+          mario.kreitz&#64;web.de
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

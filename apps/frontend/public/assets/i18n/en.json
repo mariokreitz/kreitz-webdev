@@ -1,0 +1,168 @@
+{
+  "common": {
+    "themeToggle": "Toggle dark mode"
+  },
+  "seo": {
+    "home": {
+      "title": "Mario Kreitz | Full-Stack Developer",
+      "description": "Portfolio of Mario Kreitz, a Full-Stack Developer building full-stack products, from Postgres schemas and NestJS APIs to accessible, signal-driven Angular UIs."
+    },
+    "imprint": {
+      "title": "Imprint | Mario Kreitz",
+      "description": "Legal information (Impressum) for Mario Kreitz according to the German Digital Services Act (DDG)."
+    },
+    "privacyPolicy": {
+      "title": "Privacy Policy | Mario Kreitz",
+      "description": "Privacy policy for kreitz-webdev.de covering hosting, Umami web analytics, and your rights as a data subject under the GDPR."
+    }
+  },
+  "hero": {
+    "role": "Full-Stack Developer",
+    "tagline": "I build full-stack products, from Postgres schemas and NestJS APIs to accessible, signal-driven Angular UIs."
+  },
+  "cv": {
+    "download": "Download CV"
+  },
+  "contact": {
+    "links": {
+      "imprint": "Imprint",
+      "privacyPolicy": "Privacy Policy"
+    }
+  },
+  "contactForm": {
+    "heading": "Get in touch",
+    "subheading": "Have a project in mind or just want to say hello? Send a message and I'll get back to you.",
+    "fields": {
+      "name": "Name",
+      "namePlaceholder": "Your name",
+      "email": "Email",
+      "emailPlaceholder": "you@example.com",
+      "message": "Message",
+      "messagePlaceholder": "Tell me about your project…"
+    },
+    "errors": {
+      "nameRequired": "Please enter your name.",
+      "nameTooLong": "Name is too long.",
+      "emailInvalid": "Please enter a valid email address.",
+      "messageRequired": "Please enter a message.",
+      "messageTooLong": "Message is too long."
+    },
+    "submit": "Send message",
+    "submitting": "Sending…",
+    "success": "Thanks! Your message has been sent — I'll get back to you soon.",
+    "error": "Something went wrong sending your message. Please try again, or email me directly.",
+    "errorRateLimited": "Too many messages sent recently. Please try again in a little while."
+  },
+  "imprint": {
+    "title": "Imprint",
+    "backToHome": "Back to home",
+    "info": {
+      "heading": "Information according to §§ 5, 7-10 DDG (German Digital Services Act)",
+      "name": "Mario Kreitz",
+      "addressLine1": "Mönchfeldstraße 7",
+      "addressLine2": "70378 Stuttgart",
+      "country": "Germany"
+    },
+    "contact": {
+      "heading": "Contact",
+      "emailLabel": "Email"
+    },
+    "responsible": {
+      "heading": "Responsible for content according to § 18 (2) MStV (German Interstate Media Treaty)",
+      "body": "Mario Kreitz, Mönchfeldstraße 7, 70378 Stuttgart, Germany"
+    },
+    "liabilityContent": {
+      "heading": "Liability for content",
+      "body": "As a service provider, we are responsible for our own content on these pages in accordance with general law pursuant to Section 7 (1) DDG. However, pursuant to Sections 8 to 10 DDG, we are not obligated as a service provider to monitor transmitted or stored third-party information, or to investigate circumstances that indicate illegal activity. Obligations to remove or block the use of information under general law remain unaffected. However, liability in this regard is only possible from the point in time at which knowledge of a specific legal infringement becomes known. Upon becoming aware of any such infringements, we will remove the relevant content immediately."
+    },
+    "liabilityLinks": {
+      "heading": "Liability for links",
+      "body": "Our website contains links to external third-party websites, over whose content we have no control. Therefore, we cannot accept any liability for this external content. The respective provider or operator of the linked pages is always responsible for their content. The linked pages were checked for possible legal violations at the time of linking. No illegal content was identifiable at the time of linking. However, permanent monitoring of the content of linked pages is not reasonable without concrete evidence of a legal violation. Upon becoming aware of any legal violations, we will remove such links immediately."
+    },
+    "copyright": {
+      "heading": "Copyright",
+      "body": "The content and works created by the site operator on these pages are subject to German copyright law. Reproduction, editing, distribution, and any form of exploitation beyond the scope of copyright law require the written consent of the respective author or creator."
+    },
+    "disputeResolution": {
+      "heading": "EU dispute resolution",
+      "body": "The European Commission provides a platform for online dispute resolution (ODR):",
+      "linkLabel": "ec.europa.eu/consumers/odr",
+      "note": "We are not willing or obligated to participate in dispute resolution proceedings before a consumer arbitration board."
+    }
+  },
+  "privacyPolicy": {
+    "title": "Privacy Policy",
+    "controller": {
+      "heading": "Controller",
+      "intro": "The controller within the meaning of the General Data Protection Regulation (GDPR) is:",
+      "name": "Mario Kreitz",
+      "addressLine1": "Mönchfeldstraße 7",
+      "addressLine2": "70378 Stuttgart",
+      "country": "Germany",
+      "emailLabel": "Email"
+    },
+    "hosting": {
+      "heading": "Hosting",
+      "intro": "This website is operated on a virtual private server (VPS) provided by the hosting provider Contabo and deployed via Dokploy.",
+      "logs": "When you visit this website, the hosting provider automatically collects so-called server log files that your browser transmits. These include the IP address, the browser used (user agent), the time of access, and the URL requested. This data is technically necessary to operate the website securely and reliably, and is not combined with other data sources. The legal basis for this processing is Art. 6(1)(f) GDPR (legitimate interest in the secure and stable provision of this website).",
+      "processors": "Where hosting providers process personal data on our behalf, they are engaged as processors within the meaning of Art. 28 GDPR in accordance with applicable legal requirements."
+    },
+    "cookies": {
+      "heading": "Cookies",
+      "body": "This website does not use any cookies. No cookies are stored on your device for analytics, marketing, or any other purpose."
+    },
+    "analytics": {
+      "heading": "Web analytics with Umami",
+      "intro": "To anonymously analyze the use of this website, we use the self-hosted, open-source analytics tool Umami (operated at umami.kreitz-webdev.de).",
+      "noCookies": "Umami does not use cookies and does not store any persistent identifiers on your device.",
+      "hashing": "To recognize a visit, a hash value is generated server-side from the IP address, browser identifier (user agent), and a website ID. This hash value is not stored in your browser (neither as a cookie nor in local storage). Your IP address is only used transiently for approximate geolocation (country, region, city) and to compute the hash value described above; it is not stored or logged by Umami.",
+      "dataCollected": {
+        "heading": "Data collected",
+        "intro": "As part of this analysis, the following data is collected:",
+        "items": {
+          "pageViews": "Pages viewed",
+          "referrer": "Referring URL (referrer)",
+          "browser": "Browser",
+          "os": "Operating system",
+          "device": "Device type",
+          "screenSize": "Screen size",
+          "language": "Browser language",
+          "location": "Country/region/city (approximate, without storing the IP address)",
+          "duration": "Visit duration",
+          "events": "Named click events (e.g. clicks on specific links), as described in this policy"
+        },
+        "outro": "No personally identifiable information is stored in plain text, and no cross-site tracking is performed."
+      },
+      "legalBasis": {
+        "heading": "Legal basis",
+        "body": "This processing is based on our legitimate interest (Art. 6(1)(f) GDPR) in the anonymized analysis of website usage to improve our offering. We base this assessment on the fact that, to our knowledge, Umami does not use cookies, does not set persistent identifiers on devices, and processes data in an anonymized manner."
+      },
+      "retention": {
+        "heading": "Retention period",
+        "body": "As no automatic deletion routine is currently configured for our Umami installation, the collected data is stored in our own database until we delete it manually."
+      },
+      "objection": {
+        "heading": "Right to object",
+        "body": "You have the right to object at any time to the processing of your data as part of this web analytics, in accordance with Art. 21 GDPR. As Umami does not set cookies, there is no technical opt-out mechanism; please contact us by email at mario.kreitz@web.de to exercise this right."
+      }
+    },
+    "rights": {
+      "heading": "Your rights as a data subject",
+      "intro": "Subject to applicable legal requirements, you have the following rights:",
+      "items": {
+        "access": "Access to the personal data we hold about you (Art. 15 GDPR)",
+        "rectification": "Rectification of inaccurate or completion of incomplete data (Art. 16 GDPR)",
+        "erasure": "Erasure of your data stored with us (Art. 17 GDPR)",
+        "restriction": "Restriction of the processing of your data (Art. 18 GDPR)",
+        "portability": "Receipt of your data in a common, machine-readable format (Art. 20 GDPR)",
+        "objection": "Objection to the processing of your data (Art. 21 GDPR)",
+        "complaint": "Lodging a complaint with a data protection supervisory authority (Art. 77 GDPR)"
+      },
+      "outro": "To exercise these rights, you may contact us at any time using the email address given above."
+    },
+    "changes": {
+      "heading": "Changes to this privacy policy",
+      "body": "We reserve the right to amend this privacy policy to reflect changes in legal requirements or changes to our offering and data processing practices. The version of this privacy policy in effect at the time of your visit shall apply."
+    }
+  }
+}

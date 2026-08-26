@@ -1,0 +1,135 @@
+<article
+  class="group relative flex h-full flex-col overflow-visible rounded-(--radius-lg) border border-(--color-outline-variant) bg-(--color-surface-container-low)"
+  (mouseenter)="onPointerEnter()"
+  (mouseleave)="onPointerLeave()"
+  (focusin)="onFocusIn()"
+  (focusout)="onFocusOut($event)">
+  @if (project().imageUrl) {
+    <div class="relative h-40 w-full overflow-hidden rounded-t-(--radius-lg)">
+      <img
+        class="object-cover"
+        fill
+        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+        [ngSrc]="project().imageUrl ?? ''"
+        [alt]="project().name" />
+    </div>
+  }
+
+  <div class="flex flex-1 flex-col gap-3 p-5">
+    <div class="flex items-start justify-between gap-3">
+      <h3 class="text-headline-md text-(--color-on-surface)">{{ project().name }}</h3>
+      <div class="flex shrink-0 items-center gap-2">
+        @if (categoryLabel(); as label) {
+          <span [class]="`rounded-full border px-2.5 py-0.5 text-code-sm ${categoryClasses()}`">{{ label }}</span>
+        }
+        @if (previewEligible()) {
+          <button
+            class="flex h-6 w-6 items-center justify-center rounded-full text-(--color-on-surface-variant) transition-colors hover:text-(--color-primary) focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary)"
+            type="button"
+            aria-label="Toggle live preview"
+            [attr.aria-pressed]="previewVisible()"
+            (click)="onPreviewToggleClick()">
+            <fa-icon [icon]="previewToggleIcon" />
+          </button>
+        }
+      </div>
+    </div>
+
+    @if (project().description) {
+      <p class="flex-1 text-body-sm text-(--color-on-surface-variant)">{{ project().description }}</p>
+    }
+
+    @if (project().tags.length) {
+      <ul class="flex flex-wrap gap-1.5">
+        @for (tag of project().tags; track tag) {
+          <li
+            class="rounded-(--radius-sm) bg-(--color-surface-container-high) px-2 py-0.5 text-code-sm text-(--color-on-surface-variant)">
+            {{ tag }}
+          </li>
+        }
+      </ul>
+    }
+
+    @if (hasMetadata()) {
+      <div class="flex flex-wrap items-center gap-3 text-code-sm text-(--color-on-surface-variant)">
+        @if (createdLabel(); as created) {
+          <span>Created {{ created }}</span>
+        }
+        @if (updatedLabel(); as updated) {
+          <span>Updated {{ updated }}</span>
+        }
+        @if (starCount(); as stars) {
+          <span class="flex items-center gap-1">
+            <fa-icon class="text-(--color-warning)" [icon]="starIcon" />
+            {{ stars }}
+          </span>
+        }
+      </div>
+    }
+
+    @if (project().liveUrl || project().repoUrl) {
+      <div class="relative z-10 mt-1 flex gap-4 border-t border-(--color-outline-variant) pt-3 text-body-sm">
+        @if (project().liveUrl) {
+          <a
+            class="text-(--color-primary) hover:underline"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-umami-event="project-live-link"
+            [href]="project().liveUrl">
+            Live site
+          </a>
+        }
+
+        @if (project().repoUrl) {
+          <a
+            class="text-(--color-primary) hover:underline"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-umami-event="project-repo-link"
+            [href]="project().repoUrl">
+            Source
+          </a>
+        }
+      </div>
+    }
+  </div>
+
+  @if (previewEligible() && previewVisible()) {
+    <div
+      class="pointer-events-none absolute inset-x-4 bottom-full z-20 mb-2 overflow-hidden rounded-(--radius-lg) border border-(--color-outline-variant) bg-(--color-surface-container-highest) shadow-lg"
+      role="presentation">
+      <div
+        class="flex items-center gap-1.5 border-b border-(--color-outline-variant) bg-(--color-surface-container-high) px-3 py-2">
+        <span class="h-2.5 w-2.5 rounded-full bg-(--color-error)/70"></span>
+        <span class="h-2.5 w-2.5 rounded-full bg-(--color-warning)/70"></span>
+        <span class="h-2.5 w-2.5 rounded-full bg-(--color-tertiary)/70"></span>
+        <span class="ml-2 truncate text-code-sm text-(--color-on-surface-variant)">{{ previewHostname() }}</span>
+      </div>
+      <div class="relative h-40 w-full bg-(--color-surface-container-lowest)">
+        @if (previewStatus() === 'failed') {
+          <div
+            class="flex h-full items-center justify-center px-4 text-center text-body-sm text-(--color-on-surface-variant)">
+            Preview unavailable
+          </div>
+        } @else {
+          <iframe
+            class="h-full w-full border-0"
+            title="Live preview"
+            sandbox="allow-scripts allow-same-origin"
+            referrerpolicy="no-referrer"
+            loading="lazy"
+            tabindex="-1"
+            [src]="previewUrl() | safeResourceUrl"
+            (load)="onPreviewLoad()"
+            (error)="onPreviewError()"></iframe>
+          @if (previewStatus() === 'loading') {
+            <div
+              class="absolute inset-0 flex items-center justify-center bg-(--color-surface-container-lowest) text-body-sm text-(--color-on-surface-variant)">
+              Loading preview…
+            </div>
+          }
+        }
+      </div>
+    </div>
+  }
+</article>

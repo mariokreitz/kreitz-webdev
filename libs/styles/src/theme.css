@@ -241,6 +241,12 @@
   }
 }
 
+@media (min-width: 2000px) {
+  :root {
+    --spacing-max-width: 120rem;
+  }
+}
+
 @keyframes login-pulse {
   0%,
   100% {
@@ -280,6 +286,12 @@
   html {
     background-color: var(--color-background);
     color: var(--color-on-background);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
 
   body {

@@ -1,34 +1,64 @@
-<section>
-  <h1>Imprint</h1>
+<main
+  class="mx-auto flex min-h-screen max-w-(--spacing-max-width) flex-col gap-10 px-(--spacing-margin-mobile) pt-32 pb-24 sm:px-(--spacing-margin-desktop) 2xl:pt-40 2xl:pb-32">
+  <a
+    class="-m-2.5 inline-flex w-fit items-center gap-2 p-2.5 text-body-sm text-(--color-primary) hover:underline"
+    routerLink="/">
+    <fa-icon [icon]="faArrowLeft" />
+    {{ 'imprint.backToHome' | translate }}
+  </a>
 
-  <section>
-    <h2>Company</h2>
-    <p>TODO: company/legal entity name</p>
+  <h1 class="text-headline-lg text-(--color-on-surface)">{{ 'imprint.title' | translate }}</h1>
+
+  <section class="flex flex-col gap-2">
+    <h2 class="text-headline-md text-(--color-on-surface)">{{ 'imprint.info.heading' | translate }}</h2>
+    <p class="text-body-md text-(--color-on-surface-variant)">
+      {{ 'imprint.info.name' | translate }}<br />
+      {{ 'imprint.info.addressLine1' | translate }}<br />
+      {{ 'imprint.info.addressLine2' | translate }}<br />
+      {{ 'imprint.info.country' | translate }}
+    </p>
   </section>
 
-  <section>
-    <h2>Address</h2>
-    <p>TODO: address (street, postal code, city, country)</p>
+  <section class="flex flex-col gap-2">
+    <h2 class="text-headline-md text-(--color-on-surface)">{{ 'imprint.contact.heading' | translate }}</h2>
+    <p class="text-body-md text-(--color-on-surface-variant)">
+      {{ 'imprint.contact.emailLabel' | translate }}:
+      <a class="text-(--color-primary) hover:underline" href="mailto:mario.kreitz@web.de">mario.kreitz&#64;web.de</a>
+    </p>
   </section>
 
-  <section>
-    <h2>Register information</h2>
-    <p>TODO: register court and registration number</p>
+  <section class="flex flex-col gap-2">
+    <h2 class="text-headline-md text-(--color-on-surface)">{{ 'imprint.responsible.heading' | translate }}</h2>
+    <p class="text-body-md text-(--color-on-surface-variant)">{{ 'imprint.responsible.body' | translate }}</p>
   </section>
 
-  <section>
-    <h2>VAT ID</h2>
-    <p>TODO: VAT identification number</p>
+  <section class="flex flex-col gap-2">
+    <h2 class="text-headline-md text-(--color-on-surface)">{{ 'imprint.liabilityContent.heading' | translate }}</h2>
+    <p class="text-body-md text-(--color-on-surface-variant)">{{ 'imprint.liabilityContent.body' | translate }}</p>
   </section>
 
-  <section>
-    <h2>Contact</h2>
-    <p>TODO: contact email address</p>
-    <p>TODO: contact phone number</p>
+  <section class="flex flex-col gap-2">
+    <h2 class="text-headline-md text-(--color-on-surface)">{{ 'imprint.liabilityLinks.heading' | translate }}</h2>
+    <p class="text-body-md text-(--color-on-surface-variant)">{{ 'imprint.liabilityLinks.body' | translate }}</p>
   </section>
 
-  <section>
-    <h2>Responsible for content</h2>
-    <p>TODO: name of the person responsible for content per applicable law</p>
+  <section class="flex flex-col gap-2">
+    <h2 class="text-headline-md text-(--color-on-surface)">{{ 'imprint.copyright.heading' | translate }}</h2>
+    <p class="text-body-md text-(--color-on-surface-variant)">{{ 'imprint.copyright.body' | translate }}</p>
   </section>
-</section>
+
+  <section class="flex flex-col gap-2">
+    <h2 class="text-headline-md text-(--color-on-surface)">{{ 'imprint.disputeResolution.heading' | translate }}</h2>
+    <p class="text-body-md text-(--color-on-surface-variant)">
+      {{ 'imprint.disputeResolution.body' | translate }}
+      <a
+        class="text-(--color-primary) hover:underline"
+        href="https://ec.europa.eu/consumers/odr/"
+        target="_blank"
+        rel="noopener noreferrer">
+        {{ 'imprint.disputeResolution.linkLabel' | translate }}
+      </a>
+    </p>
+    <p class="text-body-md text-(--color-on-surface-variant)">{{ 'imprint.disputeResolution.note' | translate }}</p>
+  </section>
+</main>

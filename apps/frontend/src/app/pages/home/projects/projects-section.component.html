@@ -1,0 +1,15 @@
+<section
+  id="projects"
+  class="mx-auto max-w-(--spacing-max-width) border-t border-(--color-outline-variant) px-(--spacing-margin-mobile) py-16 sm:px-(--spacing-margin-desktop) 2xl:py-24">
+  <h2 class="text-headline-md text-(--color-on-surface)">Projects</h2>
+
+  @if (projects().length) {
+    <div class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      @for (project of projects(); track project.id) {
+        <kwd-frontend-project-card [project]="project" />
+      }
+    </div>
+  } @else {
+    <p class="mt-6 text-body-md text-(--color-on-surface-variant)">More projects coming soon.</p>
+  }
+</section>
