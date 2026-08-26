@@ -4,6 +4,7 @@ export interface WebsiteRecord {
   name: string;
   slug: string;
   enabled: boolean;
+  contactEmail: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -20,4 +21,5 @@ export interface UpdateWebsiteData {
   name?: string;
   slug?: string;
   enabled?: boolean;
+  contactEmail?: string | null;
 }

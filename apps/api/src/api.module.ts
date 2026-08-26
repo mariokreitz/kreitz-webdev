@@ -1,7 +1,12 @@
 import { CoreModule } from '@app/core/core.module';
+import { CompanyModule } from '@app/modules/company';
+import { CvDocumentModule } from '@app/modules/cv-document';
 import { DashboardModule } from '@app/modules/dashboard';
 import { GithubImportModule } from '@app/modules/github-import';
 import { ProjectModule } from '@app/modules/project';
+import { PublicCompanyModule } from '@app/modules/public-companies';
+import { PublicContactModule } from '@app/modules/public-contact';
+import { PublicCvModule } from '@app/modules/public-cv';
 import { PublicProjectModule } from '@app/modules/public-projects';
 import { WebsiteModule } from '@app/modules/website';
 import { WebsiteDomainModule } from '@app/modules/website-domain';
@@ -18,6 +23,11 @@ import { Module } from '@nestjs/common';
     WebsiteTokenModule,
     WebsiteProjectModule,
     PublicProjectModule,
+    PublicContactModule,
+    CompanyModule,
+    PublicCompanyModule,
+    CvDocumentModule,
+    PublicCvModule,
     GithubImportModule,
     DashboardModule,
   ],

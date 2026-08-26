@@ -14,6 +14,13 @@ export class WebsiteDto {
   @ApiProperty({ example: true })
   public enabled!: boolean;
 
+  @ApiProperty({
+    example: 'owner@example.com',
+    nullable: true,
+    description: 'Contact form recipient address. Falls back to the account email when unset.',
+  })
+  public contactEmail!: string | null;
+
   @ApiProperty({ example: '2026-08-01T10:00:00.000Z' })
   public createdAt!: Date;
 
@@ -27,6 +34,7 @@ export class WebsiteDto {
     dto.name = record.name;
     dto.slug = record.slug;
     dto.enabled = record.enabled;
+    dto.contactEmail = record.contactEmail;
     dto.createdAt = record.createdAt;
     dto.updatedAt = record.updatedAt;
 

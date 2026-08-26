@@ -32,6 +32,7 @@ function buildWebsite(overrides: Partial<WebsiteRecord> = {}): WebsiteRecord {
     name: 'Website A',
     slug: 'website-a',
     enabled: true,
+    contactEmail: null,
     createdAt: NOW,
     updatedAt: NOW,
     ...overrides,

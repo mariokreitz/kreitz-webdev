@@ -1,6 +1,6 @@
 import { CreateWebsiteDto } from '@app/modules/website/dto/create-website.dto';
 import { ApiPropertyOptional, PartialType } from '@nestjs/swagger';
-import { IsBoolean, IsOptional } from 'class-validator';
+import { IsBoolean, IsEmail, IsOptional } from 'class-validator';
 
 export class UpdateWebsiteDto extends PartialType(CreateWebsiteDto) {
   @ApiPropertyOptional({
@@ -10,4 +10,14 @@ export class UpdateWebsiteDto extends PartialType(CreateWebsiteDto) {
   @IsOptional()
   @IsBoolean()
   public enabled?: boolean;
+
+  @ApiPropertyOptional({
+    example: 'owner@example.com',
+    nullable: true,
+    description:
+      'Contact form recipient address. Falls back to the account email when left unset or explicitly cleared with null.',
+  })
+  @IsOptional()
+  @IsEmail()
+  public contactEmail?: string | null;
 }
