@@ -2,7 +2,7 @@ import { DOCUMENT, inject, Injectable, type DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Meta, Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
-import { SITE_URL } from './constants';
+import { SITE_PREVIEW_IMAGE_URL, SITE_URL } from './constants';
 import type { SeoRouteData } from './types/seo.types';
 
 @Injectable({ providedIn: 'root' })
@@ -32,7 +32,9 @@ export class SeoService {
     this.meta.updateTag({ property: 'og:description', content: description });
     this.meta.updateTag({ property: 'og:type', content: 'website' });
     this.meta.updateTag({ property: 'og:url', content: url });
-    this.meta.updateTag({ name: 'twitter:card', content: 'summary' });
+    this.meta.updateTag({ property: 'og:image', content: SITE_PREVIEW_IMAGE_URL });
+    this.meta.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
+    this.meta.updateTag({ name: 'twitter:image', content: SITE_PREVIEW_IMAGE_URL });
     this.setCanonical(url);
   }
 
