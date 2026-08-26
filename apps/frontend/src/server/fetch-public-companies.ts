@@ -1,55 +1,33 @@
 import { isPublicCompany, type PublicCompany } from '../app/pages/home/public-company.model';
-
-interface PublicCompaniesEnvelope {
-  readonly statusCode: number;
-  readonly message: string;
-  readonly data: readonly PublicCompany[];
-}
-
-function isPublicCompaniesEnvelope(value: unknown): value is Pick<PublicCompaniesEnvelope, 'data'> {
-  if (value === null || typeof value !== 'object') {
-    return false;
-  }
-
-  const { data } = value as Record<string, unknown>;
-
-  return Array.isArray(data) && data.every(isPublicCompany);
-}
-
-const WEBSITE_TOKEN_ENV_VAR = 'KREITZ_WEBDEV_WEBSITE_TOKEN';
-// WHY: this fetch blocks the home page's render, and already degrades to an empty list on failure;
-// a short ceiling gets the visitor to that same fallback quickly instead of stalling TTFB for 10s.
-const REQUEST_TIMEOUT_MS = 3_000;
+import { RENDER_BLOCKING_TIMEOUT_MS, WEBSITE_TOKEN_ENV_VAR } from './config';
+import { authenticatedFetch, isEnvelopeOf } from './http-client';
 
 export async function fetchPublicCompanies(apiBaseUrl: string): Promise<readonly PublicCompany[]> {
-  const token = process.env[WEBSITE_TOKEN_ENV_VAR];
+  const result = await authenticatedFetch(`${apiBaseUrl}/public/companies`, RENDER_BLOCKING_TIMEOUT_MS);
 
-  if (!token) {
+  if (result.outcome === 'missing-token') {
     console.error(`[frontend] ${WEBSITE_TOKEN_ENV_VAR} is not set, rendering the home page without live companies.`);
     return [];
   }
 
-  try {
-    const response = await fetch(`${apiBaseUrl}/public/companies`, {
-      headers: { Authorization: `Bearer ${token}` },
-      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
-    });
-
-    if (!response.ok) {
-      console.error(`[frontend] Public companies request failed with status ${response.status}.`);
-      return [];
-    }
-
-    const payload: unknown = await response.json();
-
-    if (!isPublicCompaniesEnvelope(payload)) {
-      console.error('[frontend] Public companies response has an unexpected shape.');
-      return [];
-    }
-
-    return payload.data;
-  } catch (error) {
-    console.error('[frontend] Failed to fetch public companies.', error);
+  if (result.outcome === 'fetch-error') {
+    console.error('[frontend] Failed to fetch public companies.', result.error);
     return [];
   }
+
+  const { response } = result;
+
+  if (!response.ok) {
+    console.error(`[frontend] Public companies request failed with status ${response.status}.`);
+    return [];
+  }
+
+  const payload: unknown = await response.json();
+
+  if (!isEnvelopeOf(payload, isPublicCompany)) {
+    console.error('[frontend] Public companies response has an unexpected shape.');
+    return [];
+  }
+
+  return payload.data;
 }
