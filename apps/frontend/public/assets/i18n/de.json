@@ -1,6 +1,11 @@
 {
   "common": {
-    "themeToggle": "Dunkelmodus umschalten"
+    "backToHome": "Zurück zur Startseite",
+    "settings": "Einstellungen",
+    "themeToggle": {
+      "toDark": "Zum dunklen Design wechseln",
+      "toLight": "Zum hellen Design wechseln"
+    }
   },
   "seo": {
     "home": {
@@ -20,8 +25,29 @@
     "role": "Full-Stack-Entwickler",
     "tagline": "Ich baue Full-Stack-Produkte, von Postgres-Schemas und NestJS-APIs bis zu barrierefreien, signalbasierten Angular-Oberflächen."
   },
+  "companies": {
+    "heading": "Unternehmen, mit denen ich zusammengearbeitet habe",
+    "description": "Eine Zeitleiste der Teams, mit denen ich Produkte ausgeliefert habe.",
+    "present": "Aktuell"
+  },
   "cv": {
     "download": "Lebenslauf herunterladen"
+  },
+  "projects": {
+    "heading": "Projekte",
+    "description": "Was ich tatsächlich veröffentlicht habe — Live-Produkte, die du dir direkt ansehen kannst, sowie ein paar kleinere Dinge, die nebenbei entstanden sind.",
+    "alsoBuilt": {
+      "heading": "Außerdem gebaut",
+      "description": "Kleinere Demos und Experimente — gebaut, um etwas zu lernen oder eine Idee auszuprobieren, nicht als laufende Produkte."
+    },
+    "comingSoon": "Weitere Projekte folgen in Kürze.",
+    "card": {
+      "builtWith": "Entwickelt mit",
+      "viewLiveSite": "Live-Website ansehen",
+      "tryIt": "Ausprobieren",
+      "viewSource": "Quellcode ansehen",
+      "source": "Quellcode"
+    }
   },
   "contact": {
     "links": {
@@ -55,7 +81,6 @@
   },
   "imprint": {
     "title": "Impressum",
-    "backToHome": "Zurück zur Startseite",
     "info": {
       "heading": "Angaben gemäß §§ 5, 7-10 DDG",
       "name": "Mario Kreitz",

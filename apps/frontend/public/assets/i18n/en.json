@@ -1,6 +1,11 @@
 {
   "common": {
-    "themeToggle": "Toggle dark mode"
+    "backToHome": "Back to home",
+    "settings": "Settings",
+    "themeToggle": {
+      "toDark": "Switch to dark theme",
+      "toLight": "Switch to light theme"
+    }
   },
   "seo": {
     "home": {
@@ -20,8 +25,29 @@
     "role": "Full-Stack Developer",
     "tagline": "I build full-stack products, from Postgres schemas and NestJS APIs to accessible, signal-driven Angular UIs."
   },
+  "companies": {
+    "heading": "Companies I've worked with",
+    "description": "A timeline of the teams I've shipped with.",
+    "present": "Present"
+  },
   "cv": {
     "download": "Download CV"
+  },
+  "projects": {
+    "heading": "Projects",
+    "description": "What I've actually shipped — live products you can click through right now, plus a few smaller things built along the way.",
+    "alsoBuilt": {
+      "heading": "Also built",
+      "description": "Smaller demos and experiments — built to learn something or try an idea, not running as products."
+    },
+    "comingSoon": "More projects coming soon.",
+    "card": {
+      "builtWith": "Built with",
+      "viewLiveSite": "View live site",
+      "tryIt": "Try it",
+      "viewSource": "View source",
+      "source": "Source"
+    }
   },
   "contact": {
     "links": {
@@ -55,7 +81,6 @@
   },
   "imprint": {
     "title": "Imprint",
-    "backToHome": "Back to home",
     "info": {
       "heading": "Information according to §§ 5, 7-10 DDG (German Digital Services Act)",
       "name": "Mario Kreitz",
