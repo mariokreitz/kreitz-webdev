@@ -63,6 +63,18 @@
     </kwd-ui-card>
 
     <kwd-ui-card>
+      <div #companiesViewportAnchor>
+        @defer (on viewport(companiesViewportAnchor)) {
+          <kwd-portal-companies-section [websiteId]="id()" />
+        } @placeholder {
+          <kwd-ui-skeleton variant="activity" [rows]="3" />
+        } @loading (minimum 200ms) {
+          <kwd-ui-skeleton variant="activity" [rows]="3" />
+        }
+      </div>
+    </kwd-ui-card>
+
+    <kwd-ui-card>
       <h2 class="text-headline-md text-(--color-error)">{{ 'websites.detail.dangerZone.title' | translate }}</h2>
       <p class="mt-2 text-body-sm text-(--color-on-surface-variant)">
         {{ 'websites.detail.dangerZone.description' | translate }}

@@ -201,6 +201,28 @@
     "message": "Diese Seite existiert nicht."
   },
   "profile": {
+    "cv": {
+      "empty": "Du hast noch keinen Lebenslauf hochgeladen.",
+      "errors": {
+        "invalidType": "Bitte wähle eine PDF-Datei aus.",
+        "tooLarge": "Die Datei überschreitet die maximale Größe von 10 MB."
+      },
+      "loadError": "Dein Lebenslauf konnte nicht geladen werden. Bitte lade die Seite neu.",
+      "remove": "Entfernen",
+      "removeDialog": {
+        "message": "Dadurch wird dein hochgeladener Lebenslauf endgültig entfernt. Dies kann nicht rückgängig gemacht werden.",
+        "title": "Lebenslauf entfernen?"
+      },
+      "replace": "Ersetzen",
+      "subtitle": "Lade eine PDF-Datei hoch, um sie auf deiner öffentlichen Seite zum Download bereitzustellen.",
+      "title": "Lebenslauf",
+      "toast": {
+        "removed": "Dein Lebenslauf wurde entfernt.",
+        "uploaded": "Dein Lebenslauf wurde hochgeladen."
+      },
+      "upload": "Lebenslauf hochladen",
+      "uploadedAt": "Hochgeladen am"
+    },
     "dangerZone": {
       "deleteAccount": "Konto löschen",
       "description": "Das Löschen deines Kontos ist endgültig und kann nicht rückgängig gemacht werden. Diese Funktion ist noch nicht verfügbar — melde dich bei uns, wenn du dein Konto entfernen lassen möchtest.",
@@ -258,12 +280,23 @@
     "detail": {
       "deleteHint": "Das Löschen eines Projekts ist endgültig und kann nicht rückgängig gemacht werden.",
       "importedFrom": "Importiert von {{repo}}",
+      "lastSynced": "Zuletzt synchronisiert am {{date}}",
       "loadError": "Dieses Projekt konnte nicht geladen werden. Bitte lade die Seite neu.",
+      "refresh": "Von GitHub aktualisieren",
+      "refreshing": "Wird aktualisiert…",
       "title": "Projekt bearbeiten",
       "viewOnGithub": "Auf GitHub ansehen"
     },
     "empty": "Du hast noch keine Projekte. Erstelle eines oder importiere ein Repository von GitHub.",
     "form": {
+      "categories": {
+        "demo": "Demo",
+        "mvp": "MVP",
+        "none": "Keine Kategorie",
+        "openSource": "Open Source",
+        "platform": "Plattform",
+        "poc": "Proof of Concept"
+      },
       "create": {
         "submit": "Projekt erstellen",
         "submitting": "Wird erstellt…"
@@ -281,6 +314,7 @@
         "urlInvalid": "Bitte gib eine gültige URL ein."
       },
       "fields": {
+        "category": "Kategorie",
         "description": "Beschreibung",
         "imageUrl": "Bild-URL",
         "liveUrl": "Live-URL",
@@ -310,6 +344,8 @@
     "toast": {
       "created": "\"{{name}}\" wurde erstellt.",
       "deleted": "\"{{name}}\" wurde gelöscht.",
+      "refreshFailed": "Die GitHub-Daten konnten nicht aktualisiert werden. Bitte versuche es erneut.",
+      "refreshed": "GitHub-Daten für „{{name}}“ wurden aktualisiert.",
       "updated": "\"{{name}}\" wurde aktualisiert."
     }
   },
@@ -320,6 +356,49 @@
       "copy": "Kopieren",
       "create": "Website erstellen",
       "delete": "Löschen"
+    },
+    "companies": {
+      "actions": {
+        "edit": "Bearbeiten"
+      },
+      "add": "Unternehmen hinzufügen",
+      "deleteDialog": {
+        "message": "\"{{name}}\" wird von dieser Website entfernt.",
+        "title": "Unternehmen löschen?"
+      },
+      "empty": "Noch keine Unternehmen hinzugefügt.",
+      "form": {
+        "create": {
+          "submit": "Unternehmen hinzufügen",
+          "submitting": "Wird hinzugefügt…"
+        },
+        "edit": {
+          "submit": "Speichern",
+          "submitting": "Wird gespeichert…"
+        },
+        "errors": {
+          "logoUrlInvalid": "Bitte gib eine gültige URL ein, inklusive https://.",
+          "nameRequired": "Bitte gib einen Unternehmensnamen ein.",
+          "nameTooLong": "Der Name ist zu lang.",
+          "roleTooLong": "Die Rolle ist zu lang.",
+          "sortOrderInvalid": "Bitte gib eine Position von 0 oder höher ein."
+        },
+        "fields": {
+          "endDate": "Enddatum",
+          "logoUrl": "Logo-URL",
+          "name": "Unternehmensname",
+          "role": "Rolle",
+          "sortOrder": "Position",
+          "startDate": "Startdatum"
+        }
+      },
+      "loadError": "Unternehmen konnten nicht geladen werden. Bitte lade die Seite neu.",
+      "title": "Unternehmen",
+      "toast": {
+        "created": "Unternehmen hinzugefügt.",
+        "deleted": "Unternehmen gelöscht.",
+        "updated": "Unternehmen aktualisiert."
+      }
     },
     "deleteDialog": {
       "message": "Dadurch werden \"{{name}}\" und alle zugehörigen Domains, Tokens und Projektverknüpfungen dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden.",
@@ -333,6 +412,8 @@
         "title": "Gefahrenzone"
       },
       "editForm": {
+        "contactEmail": "Kontakt-E-Mail",
+        "contactEmailPlaceholder": "Fällt auf deine Account-E-Mail zurück, wenn leer gelassen",
         "enabled": "Website aktiviert",
         "name": "Name",
         "saving": "Wird gespeichert…"
@@ -387,6 +468,7 @@
     "form": {
       "creating": "Wird erstellt…",
       "errors": {
+        "contactEmailInvalid": "Bitte gib eine gültige E-Mail-Adresse ein.",
         "nameRequired": "Bitte gib einen Website-Namen ein.",
         "nameTooLong": "Der Name ist zu lang.",
         "urlInvalid": "Bitte gib eine gültige URL ein, einschließlich https://."

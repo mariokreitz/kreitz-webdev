@@ -4,7 +4,7 @@ import { faCheck, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Button } from '@shared/ui';
 import { TranslatePipe } from '@ngx-translate/core';
 import * as z from 'zod';
-import { EMPTY_PROJECT_FORM_VALUE, type ProjectFormValue } from './types/project-form.types';
+import { EMPTY_PROJECT_FORM_VALUE, PROJECT_CATEGORY_OPTIONS, type ProjectFormValue } from './types/project-form.types';
 
 const optionalUrlSchema = z.union([z.literal(''), z.url('projects.form.errors.urlInvalid')]);
 
@@ -15,6 +15,14 @@ const projectFormSchema = z.object({
   liveUrl: optionalUrlSchema,
   imageUrl: optionalUrlSchema,
   tags: z.string().max(500, 'projects.form.errors.tagsTooLong'),
+  category: z.union([
+    z.literal(''),
+    z.literal('DEMO'),
+    z.literal('OPEN_SOURCE'),
+    z.literal('POC'),
+    z.literal('MVP'),
+    z.literal('PLATFORM'),
+  ]),
 });
 
 @Component({
@@ -24,6 +32,8 @@ const projectFormSchema = z.object({
   templateUrl: './project-form.component.html',
 })
 export class ProjectForm {
+  public readonly categoryOptions = PROJECT_CATEGORY_OPTIONS;
+
   public readonly mode = input.required<'create' | 'edit'>();
   public readonly initialValue = input<ProjectFormValue>(EMPTY_PROJECT_FORM_VALUE);
   public readonly loading = input(false);

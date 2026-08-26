@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, input, output, type Signa
 import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
-import { faArrowUpRightFromSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faArrowUpRightFromSquare, faStar, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe } from '@ngx-translate/core';
 import type { Project } from '../../../core/api';
 
@@ -20,6 +20,7 @@ export class ProjectCard {
   public readonly githubIcon = faGithub;
   public readonly liveIcon = faArrowUpRightFromSquare;
   public readonly deleteIcon = faTrash;
+  public readonly starIcon = faStar;
 
   public readonly isGithubImported: Signal<boolean> = computed(() => this.project().githubId !== null);
 

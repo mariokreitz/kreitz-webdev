@@ -4,6 +4,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../core/auth';
 import { ToastService } from '../../core/toast';
 import { CurrentUserStore } from '../../core/user';
+import { CvCard } from './cv-card/cv-card.component';
 import { DangerZoneCard } from './danger-zone-card/danger-zone-card.component';
 import type { DiagnosticField } from './diagnostics-card/diagnostics-card.component';
 import { DiagnosticsCard } from './diagnostics-card/diagnostics-card.component';
@@ -13,7 +14,7 @@ import { IdentityCard } from './identity-card/identity-card.component';
 @Component({
   selector: 'kwd-portal-profile',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Card, IdentityCard, EditNameForm, DiagnosticsCard, DangerZoneCard, TranslatePipe],
+  imports: [Card, IdentityCard, EditNameForm, DiagnosticsCard, CvCard, DangerZoneCard, TranslatePipe],
   templateUrl: './profile.component.html',
 })
 export default class Profile {

@@ -1,0 +1,72 @@
+<div class="flex flex-col gap-4">
+  <div>
+    <h2 class="text-headline-md text-(--color-on-surface)">{{ 'profile.cv.title' | translate }}</h2>
+    <p class="mt-1 text-body-sm text-(--color-on-surface-variant)">{{ 'profile.cv.subtitle' | translate }}</p>
+  </div>
+
+  @if (cvResource.isLoading()) {
+    <kwd-ui-skeleton variant="activity" [rows]="1" />
+  } @else if (cvResource.error()) {
+    <p class="text-body-sm text-(--color-error)">{{ 'profile.cv.loadError' | translate }}</p>
+  } @else {
+    @if (cvResource.value(); as cv) {
+      <div class="flex flex-col gap-1 border-b border-(--color-outline-variant) pb-4">
+        <span class="text-body-md text-(--color-on-surface)">{{ cv.fileName }}</span>
+        <span class="text-code-sm text-(--color-on-surface-variant)">
+          {{ formatSize(cv.sizeBytes) }} · {{ 'profile.cv.uploadedAt' | translate }}
+          {{ cv.uploadedAt | date: 'medium' }}
+        </span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button
+          class="flex items-center gap-2 rounded-(--radius) border border-(--color-outline-variant) px-4 py-2.5 text-label-caps uppercase text-(--color-on-surface) transition-colors hover:border-(--color-primary) disabled:cursor-not-allowed disabled:opacity-60"
+          type="button"
+          [disabled]="uploading() || removing()"
+          (click)="onSelectFileRequested()">
+          @if (uploading()) {
+            <kwd-ui-spinner size="sm" />
+          } @else {
+            <fa-icon [icon]="uploadIcon" />
+          }
+          {{ 'profile.cv.replace' | translate }}
+        </button>
+
+        <button
+          class="text-(--color-on-surface-variant) transition-colors hover:text-(--color-error) disabled:cursor-not-allowed disabled:opacity-60"
+          type="button"
+          [attr.aria-label]="'profile.cv.remove' | translate"
+          [disabled]="uploading() || removing()"
+          (click)="onRemoveRequested()">
+          <fa-icon [icon]="removeIcon" />
+        </button>
+      </div>
+    } @else {
+      <p class="text-body-sm text-(--color-on-surface-variant)">{{ 'profile.cv.empty' | translate }}</p>
+
+      <button
+        class="flex w-fit items-center gap-2 rounded-(--radius) bg-secondary-500 px-4 py-2.5 text-label-caps uppercase text-on-secondary-container transition-colors hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60"
+        type="button"
+        [disabled]="uploading()"
+        (click)="onSelectFileRequested()">
+        @if (uploading()) {
+          <kwd-ui-spinner size="sm" />
+        } @else {
+          <fa-icon [icon]="uploadIcon" />
+        }
+        {{ 'profile.cv.upload' | translate }}
+      </button>
+    }
+  }
+
+  <input #fileInput class="hidden" type="file" accept="application/pdf" (change)="onFileChosen($event)" />
+</div>
+
+<kwd-ui-confirm-dialog
+  [open]="pendingRemove()"
+  [title]="'profile.cv.removeDialog.title' | translate"
+  [message]="'profile.cv.removeDialog.message' | translate"
+  [confirmLabel]="'profile.cv.remove' | translate"
+  [busy]="removing()"
+  (confirmed)="onRemoveConfirmed()"
+  (cancelled)="onRemoveCancelled()" />

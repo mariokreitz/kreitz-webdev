@@ -20,4 +20,12 @@ export class GithubImportService {
 
     return envelope.data;
   }
+
+  public async refresh(projectId: string): Promise<Project> {
+    const envelope = await firstValueFrom(
+      this.http.post<ApiEnvelope<Project>>(`${this.baseUrl}/${projectId}/refresh`, null, { withCredentials: true }),
+    );
+
+    return envelope.data;
+  }
 }

@@ -15,5 +15,7 @@ export function toProjectPayload(value: ProjectFormValue): CreateProjectPayload 
     ...(value.repoUrl.trim() && { repoUrl: value.repoUrl.trim() }),
     ...(value.liveUrl.trim() && { liveUrl: value.liveUrl.trim() }),
     ...(value.imageUrl.trim() && { imageUrl: value.imageUrl.trim() }),
+    // category uses @IsEnum() server-side (rejects an empty string), so "no category selected" must be omitted rather than sent.
+    ...(value.category && { category: value.category }),
   };
 }

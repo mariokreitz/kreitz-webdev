@@ -9,6 +9,7 @@ import * as z from 'zod';
 const websiteEditSchema = z.object({
   name: z.string().min(1, 'websites.form.errors.nameRequired').max(100, 'websites.form.errors.nameTooLong'),
   enabled: z.boolean(),
+  contactEmail: z.union([z.literal(''), z.email('websites.form.errors.contactEmailInvalid')]),
 });
 
 export type WebsiteEditFormValue = z.infer<typeof websiteEditSchema>;
@@ -27,7 +28,7 @@ export class WebsiteEditForm {
 
   protected readonly saveIcon = faCheck;
 
-  protected readonly model = signal<WebsiteEditFormValue>({ name: '', enabled: true });
+  protected readonly model = signal<WebsiteEditFormValue>({ name: '', enabled: true, contactEmail: '' });
   protected readonly editForm = form(this.model, (path) => {
     validateStandardSchema(path, websiteEditSchema);
   });

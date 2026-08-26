@@ -3,6 +3,7 @@ export interface Website {
   readonly name: string;
   readonly slug: string;
   readonly enabled: boolean;
+  readonly contactEmail: string | null;
   readonly createdAt: string;
   readonly updatedAt: string;
 }

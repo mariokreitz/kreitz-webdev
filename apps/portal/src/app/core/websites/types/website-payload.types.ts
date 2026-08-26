@@ -7,6 +7,7 @@ export interface UpdateWebsitePayload {
   readonly name?: string;
   readonly url?: string;
   readonly enabled?: boolean;
+  readonly contactEmail?: string | null;
 }
 
 export interface CreateWebsiteDomainPayload {
@@ -30,5 +31,23 @@ export interface CreateWebsiteProjectLinkPayload {
 
 export interface UpdateWebsiteProjectLinkPayload {
   readonly published?: boolean;
+  readonly sortOrder?: number;
+}
+
+export interface CreateCompanyPayload {
+  readonly name: string;
+  readonly role?: string;
+  readonly logoUrl?: string;
+  readonly startDate?: string;
+  readonly endDate?: string;
+  readonly sortOrder?: number;
+}
+
+export interface UpdateCompanyPayload {
+  readonly name?: string;
+  readonly role?: string;
+  readonly logoUrl?: string;
+  readonly startDate?: string;
+  readonly endDate?: string;
   readonly sortOrder?: number;
 }

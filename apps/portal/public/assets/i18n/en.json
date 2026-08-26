@@ -201,6 +201,28 @@
     "message": "This page doesn't exist."
   },
   "profile": {
+    "cv": {
+      "empty": "You haven't uploaded a CV yet.",
+      "errors": {
+        "invalidType": "Please select a PDF file.",
+        "tooLarge": "File exceeds the maximum size of 10 MB."
+      },
+      "loadError": "Couldn't load your CV. Please try refreshing the page.",
+      "remove": "Remove",
+      "removeDialog": {
+        "message": "This will permanently remove your uploaded CV. This cannot be undone.",
+        "title": "Remove your CV?"
+      },
+      "replace": "Replace",
+      "subtitle": "Upload a PDF to make it available for download on your public site.",
+      "title": "CV",
+      "toast": {
+        "removed": "Your CV was removed.",
+        "uploaded": "Your CV was uploaded."
+      },
+      "upload": "Upload CV",
+      "uploadedAt": "Uploaded"
+    },
     "dangerZone": {
       "deleteAccount": "Delete Account",
       "description": "Deleting your account is permanent and cannot be undone. This feature isn't available yet — reach out to us if you need your account removed.",
@@ -258,12 +280,23 @@
     "detail": {
       "deleteHint": "Deleting a project is permanent and cannot be undone.",
       "importedFrom": "Imported from {{repo}}",
+      "lastSynced": "Last synced {{date}}",
       "loadError": "Couldn't load this project. Please try refreshing the page.",
+      "refresh": "Refresh from GitHub",
+      "refreshing": "Refreshing…",
       "title": "Edit Project",
       "viewOnGithub": "View on GitHub"
     },
     "empty": "You don't have any projects yet. Create one or import a repository from GitHub.",
     "form": {
+      "categories": {
+        "demo": "Demo",
+        "mvp": "MVP",
+        "none": "No category",
+        "openSource": "Open Source",
+        "platform": "Platform",
+        "poc": "Proof of Concept"
+      },
       "create": {
         "submit": "Create Project",
         "submitting": "Creating…"
@@ -281,6 +314,7 @@
         "urlInvalid": "Please enter a valid URL."
       },
       "fields": {
+        "category": "Category",
         "description": "Description",
         "imageUrl": "Image URL",
         "liveUrl": "Live URL",
@@ -310,6 +344,8 @@
     "toast": {
       "created": "\"{{name}}\" was created.",
       "deleted": "\"{{name}}\" was deleted.",
+      "refreshFailed": "Could not refresh GitHub data. Please try again.",
+      "refreshed": "Refreshed GitHub data for \"{{name}}\".",
       "updated": "\"{{name}}\" was updated."
     }
   },
@@ -320,6 +356,49 @@
       "copy": "Copy",
       "create": "Create Website",
       "delete": "Delete"
+    },
+    "companies": {
+      "actions": {
+        "edit": "Edit"
+      },
+      "add": "Add Company",
+      "deleteDialog": {
+        "message": "This will remove \"{{name}}\" from this website.",
+        "title": "Delete company?"
+      },
+      "empty": "No companies added yet.",
+      "form": {
+        "create": {
+          "submit": "Add Company",
+          "submitting": "Adding…"
+        },
+        "edit": {
+          "submit": "Save",
+          "submitting": "Saving…"
+        },
+        "errors": {
+          "logoUrlInvalid": "Please enter a valid URL, including https://.",
+          "nameRequired": "Please enter a company name.",
+          "nameTooLong": "Name is too long.",
+          "roleTooLong": "Role is too long.",
+          "sortOrderInvalid": "Please enter a position of 0 or higher."
+        },
+        "fields": {
+          "endDate": "End date",
+          "logoUrl": "Logo URL",
+          "name": "Company name",
+          "role": "Role",
+          "sortOrder": "Position",
+          "startDate": "Start date"
+        }
+      },
+      "loadError": "Couldn't load companies. Please try refreshing the page.",
+      "title": "Companies",
+      "toast": {
+        "created": "Company added.",
+        "deleted": "Company deleted.",
+        "updated": "Company updated."
+      }
     },
     "deleteDialog": {
       "message": "This will permanently delete \"{{name}}\" and all of its domains, tokens, and project links. This cannot be undone.",
@@ -333,6 +412,8 @@
         "title": "Danger Zone"
       },
       "editForm": {
+        "contactEmail": "Contact email",
+        "contactEmailPlaceholder": "Falls back to your account email when left blank",
         "enabled": "Website enabled",
         "name": "Name",
         "saving": "Saving…"
@@ -387,6 +468,7 @@
     "form": {
       "creating": "Creating…",
       "errors": {
+        "contactEmailInvalid": "Please enter a valid email address.",
         "nameRequired": "Please enter a website name.",
         "nameTooLong": "Name is too long.",
         "urlInvalid": "Please enter a valid URL, including https://."

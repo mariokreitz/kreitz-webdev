@@ -1,3 +1,5 @@
+import type { ProjectCategory } from '../../api';
+
 export interface CreateProjectPayload {
   readonly name: string;
   readonly description?: string;
@@ -5,6 +7,7 @@ export interface CreateProjectPayload {
   readonly liveUrl?: string;
   readonly tags?: readonly string[];
   readonly imageUrl?: string;
+  readonly category?: ProjectCategory;
 }
 
 export interface UpdateProjectPayload {
@@ -14,4 +17,5 @@ export interface UpdateProjectPayload {
   readonly liveUrl?: string;
   readonly tags?: readonly string[];
   readonly imageUrl?: string;
+  readonly category?: ProjectCategory;
 }

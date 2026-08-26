@@ -32,6 +32,12 @@
       @if (isGithubImported()) {
         <fa-icon [icon]="githubIcon" />
         <span>{{ project().githubOwner }}/{{ project().githubRepo }}</span>
+        @if (project().githubStars !== null) {
+          <span class="flex items-center gap-1">
+            <fa-icon class="text-(--color-warning)" [icon]="starIcon" />
+            {{ project().githubStars }}
+          </span>
+        }
       } @else {
         <span>{{ 'projects.card.manual' | translate }}</span>
       }

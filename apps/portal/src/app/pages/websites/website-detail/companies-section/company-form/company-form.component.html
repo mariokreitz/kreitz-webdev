@@ -1,0 +1,123 @@
+<form class="flex flex-col gap-4" (submit)="onSubmit($event)">
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div class="flex flex-col gap-2">
+      <label class="font-mono text-label-caps uppercase text-(--color-on-surface-variant)" for="company-name">{{
+        'websites.companies.form.fields.name' | translate
+      }}</label>
+      <input
+        autocomplete="off"
+        class="rounded-(--radius) border border-(--color-outline-variant) bg-(--color-surface-container-lowest) px-3 py-2.5 font-mono text-code-md text-(--color-on-surface) outline-none transition-colors focus:border-(--color-primary)"
+        id="company-name"
+        type="text"
+        [formField]="companyForm.name" />
+      @if (companyForm.name().touched() && companyForm.name().errors().length) {
+        <p class="min-h-[1.25rem] text-body-sm text-(--color-error)">
+          {{ companyForm.name().errors()[0]?.message | translate }}
+        </p>
+      } @else {
+        <p class="min-h-[1.25rem]"></p>
+      }
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label class="font-mono text-label-caps uppercase text-(--color-on-surface-variant)" for="company-role">{{
+        'websites.companies.form.fields.role' | translate
+      }}</label>
+      <input
+        autocomplete="off"
+        class="rounded-(--radius) border border-(--color-outline-variant) bg-(--color-surface-container-lowest) px-3 py-2.5 font-mono text-code-md text-(--color-on-surface) outline-none transition-colors focus:border-(--color-primary)"
+        id="company-role"
+        type="text"
+        [formField]="companyForm.role" />
+      @if (companyForm.role().touched() && companyForm.role().errors().length) {
+        <p class="min-h-[1.25rem] text-body-sm text-(--color-error)">
+          {{ companyForm.role().errors()[0]?.message | translate }}
+        </p>
+      } @else {
+        <p class="min-h-[1.25rem]"></p>
+      }
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label class="font-mono text-label-caps uppercase text-(--color-on-surface-variant)" for="company-logo-url">{{
+      'websites.companies.form.fields.logoUrl' | translate
+    }}</label>
+    <input
+      autocomplete="off"
+      class="rounded-(--radius) border border-(--color-outline-variant) bg-(--color-surface-container-lowest) px-3 py-2.5 font-mono text-code-md text-(--color-on-surface) outline-none transition-colors placeholder:text-(--color-on-surface-variant) focus:border-(--color-primary)"
+      id="company-logo-url"
+      type="url"
+      placeholder="https://…"
+      [formField]="companyForm.logoUrl" />
+    @if (companyForm.logoUrl().touched() && companyForm.logoUrl().errors().length) {
+      <p class="min-h-[1.25rem] text-body-sm text-(--color-error)">
+        {{ companyForm.logoUrl().errors()[0]?.message | translate }}
+      </p>
+    } @else {
+      <p class="min-h-[1.25rem]"></p>
+    }
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+    <div class="flex flex-col gap-2">
+      <label class="font-mono text-label-caps uppercase text-(--color-on-surface-variant)" for="company-start-date">{{
+        'websites.companies.form.fields.startDate' | translate
+      }}</label>
+      <input
+        class="rounded-(--radius) border border-(--color-outline-variant) bg-(--color-surface-container-lowest) px-3 py-2.5 font-mono text-code-md text-(--color-on-surface) outline-none transition-colors focus:border-(--color-primary)"
+        id="company-start-date"
+        type="date"
+        [formField]="companyForm.startDate" />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label class="font-mono text-label-caps uppercase text-(--color-on-surface-variant)" for="company-end-date">{{
+        'websites.companies.form.fields.endDate' | translate
+      }}</label>
+      <input
+        class="rounded-(--radius) border border-(--color-outline-variant) bg-(--color-surface-container-lowest) px-3 py-2.5 font-mono text-code-md text-(--color-on-surface) outline-none transition-colors focus:border-(--color-primary)"
+        id="company-end-date"
+        type="date"
+        [formField]="companyForm.endDate" />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label class="font-mono text-label-caps uppercase text-(--color-on-surface-variant)" for="company-sort-order">{{
+        'websites.companies.form.fields.sortOrder' | translate
+      }}</label>
+      <input
+        class="rounded-(--radius) border border-(--color-outline-variant) bg-(--color-surface-container-lowest) px-3 py-2.5 font-mono text-code-md text-(--color-on-surface) outline-none transition-colors focus:border-(--color-primary)"
+        id="company-sort-order"
+        type="number"
+        [formField]="companyForm.sortOrder" />
+      @if (companyForm.sortOrder().touched() && companyForm.sortOrder().errors().length) {
+        <p class="min-h-[1.25rem] text-body-sm text-(--color-error)">
+          {{ companyForm.sortOrder().errors()[0]?.message | translate }}
+        </p>
+      } @else {
+        <p class="min-h-[1.25rem]"></p>
+      }
+    </div>
+  </div>
+
+  <div class="flex items-center gap-3">
+    <kwd-ui-button
+      [label]="(isEdit() ? 'websites.companies.form.edit.submit' : 'websites.companies.form.create.submit') | translate"
+      [loadingLabel]="
+        (isEdit() ? 'websites.companies.form.edit.submitting' : 'websites.companies.form.create.submitting') | translate
+      "
+      [disabled]="companyForm().invalid() || loading()"
+      [icon]="submitIcon()"
+      [loading]="loading()" />
+
+    <button
+      class="rounded-(--radius-sm) px-4 py-2.5 text-label-caps uppercase text-(--color-on-surface-variant) transition-colors hover:text-(--color-on-surface) disabled:cursor-not-allowed disabled:opacity-60"
+      type="button"
+      [disabled]="loading()"
+      (click)="onCancel()">
+      <fa-icon [icon]="cancelIcon" />
+      {{ 'common.cancel' | translate }}
+    </button>
+  </div>
+</form>

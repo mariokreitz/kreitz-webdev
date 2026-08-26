@@ -18,6 +18,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import type { ApiEnvelope, Website } from '../../../core/api';
 import { ToastService } from '../../../core/toast';
 import { WebsiteService } from '../../../core/websites';
+import { CompaniesSection } from './companies-section/companies-section.component';
 import { DomainsSection } from './domains-section/domains-section.component';
 import { ProjectsSection } from './projects-section/projects-section.component';
 import { TokensSection } from './tokens-section/tokens-section.component';
@@ -37,6 +38,7 @@ import { WebsiteEditForm, type WebsiteEditFormValue } from './website-edit-form/
     DomainsSection,
     TokensSection,
     ProjectsSection,
+    CompaniesSection,
   ],
   templateUrl: './website-detail.component.html',
 })
@@ -61,6 +63,7 @@ export default class WebsiteDetail {
     return {
       name: website?.name ?? '',
       enabled: website?.enabled ?? true,
+      contactEmail: website?.contactEmail ?? '',
     };
   });
 
@@ -72,7 +75,13 @@ export default class WebsiteDetail {
     this.saving.set(true);
 
     try {
-      await this.websiteService.update(this.id(), value);
+      const trimmedContactEmail = value.contactEmail.trim();
+
+      await this.websiteService.update(this.id(), {
+        name: value.name,
+        enabled: value.enabled,
+        contactEmail: trimmedContactEmail === '' ? null : trimmedContactEmail,
+      });
       this.websiteResource.reload();
       this.toastService.show({ severity: 'success', message: this.translate.instant('websites.toast.updated') });
     } catch {

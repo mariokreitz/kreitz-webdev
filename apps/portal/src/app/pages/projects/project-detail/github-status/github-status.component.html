@@ -1,0 +1,46 @@
+<div
+  class="flex flex-col gap-3 rounded-(--radius) border border-(--color-outline-variant) bg-(--color-surface-container-low) px-4 py-3 text-body-sm text-(--color-on-surface-variant)">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <span class="flex items-center gap-2">
+      <fa-icon [icon]="githubIcon" />
+      {{ 'projects.detail.importedFrom' | translate: { repo: `${project().githubOwner}/${project().githubRepo}` } }}
+    </span>
+    @if (project().repoUrl) {
+      <a
+        class="flex items-center gap-1.5 text-(--color-primary) hover:underline"
+        target="_blank"
+        rel="noopener"
+        [href]="project().repoUrl">
+        {{ 'projects.detail.viewOnGithub' | translate }}
+        <fa-icon [icon]="liveIcon" />
+      </a>
+    }
+  </div>
+
+  <div class="flex flex-wrap items-center justify-between gap-3 border-t border-(--color-outline-variant) pt-3">
+    <div class="flex flex-wrap items-center gap-4">
+      @if (project().githubStars !== null) {
+        <span class="flex items-center gap-1.5">
+          <fa-icon class="text-(--color-warning)" [icon]="starIcon" />
+          {{ project().githubStars }}
+        </span>
+      }
+      @if (lastSyncedLabel(); as lastSynced) {
+        <span>{{ 'projects.detail.lastSynced' | translate: { date: lastSynced } }}</span>
+      }
+    </div>
+
+    <button
+      class="flex items-center gap-2 rounded-(--radius-sm) border border-(--color-outline-variant) px-3 py-1.5 text-label-caps uppercase text-(--color-on-surface) transition-colors hover:bg-(--color-surface-container-high) disabled:cursor-not-allowed disabled:opacity-60"
+      type="button"
+      [disabled]="refreshing()"
+      (click)="onRefreshClick()">
+      @if (refreshing()) {
+        <kwd-ui-spinner size="sm" />
+      } @else {
+        <fa-icon [icon]="refreshIcon" />
+      }
+      {{ (refreshing() ? 'projects.detail.refreshing' : 'projects.detail.refresh') | translate }}
+    </button>
+  </div>
+</div>
