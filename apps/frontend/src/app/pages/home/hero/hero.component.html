@@ -1,5 +1,5 @@
 <section #heroSection class="relative flex min-h-[70vh] w-full flex-col justify-center overflow-hidden">
-  <kwd-frontend-constellation-background class="z-0" [config]="effectiveConfig()" />
+  <kwd-frontend-constellation-background class="z-0" [config]="effectiveConfig()" [theme]="theme()" />
 
   <div
     class="relative z-10 mx-auto flex w-full max-w-(--spacing-max-width) flex-col gap-6 px-(--spacing-margin-mobile) pt-48 pb-40 sm:px-(--spacing-margin-desktop) sm:pt-32 sm:pb-24 2xl:pt-40 2xl:pb-32">
@@ -15,27 +15,27 @@
       <div class="flex flex-wrap gap-4 pt-2">
         <a
           class="rounded-(--radius-lg) bg-(--color-primary) px-5 py-2.5 text-body-sm font-medium text-(--color-on-primary) transition-opacity hover:opacity-90"
-          href="https://github.com/mariokreitz"
           target="_blank"
           rel="noopener noreferrer"
-          data-umami-event="github-link">
+          data-umami-event="github-link"
+          [href]="githubUrl">
           GitHub
         </a>
 
         <a
           class="rounded-(--radius-lg) border border-(--color-outline-variant) px-5 py-2.5 text-body-sm font-medium text-(--color-on-surface) transition-colors hover:bg-(--color-surface-container)"
-          href="https://www.linkedin.com/in/mario-kreitz/"
           target="_blank"
           rel="noopener noreferrer"
-          data-umami-event="linkedin-link">
+          data-umami-event="linkedin-link"
+          [href]="linkedinUrl">
           LinkedIn
         </a>
 
         <a
           class="rounded-(--radius-lg) border border-(--color-outline-variant) px-5 py-2.5 text-body-sm font-medium text-(--color-on-surface) transition-colors hover:bg-(--color-surface-container)"
-          href="mailto:mario.kreitz@web.de"
-          data-umami-event="email-link">
-          mario.kreitz&#64;web.de
+          data-umami-event="email-link"
+          [href]="`mailto:${contactEmail}`">
+          {{ contactEmail }}
         </a>
       </div>
     </div>

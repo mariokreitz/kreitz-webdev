@@ -12,22 +12,12 @@ import {
 } from '@angular/core';
 import { form, FormField, submit, validateStandardSchema } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
-import * as z from 'zod';
-
-const contactFormSchema = z.object({
-  name: z.string().min(1, 'contactForm.errors.nameRequired').max(100, 'contactForm.errors.nameTooLong'),
-  email: z.email('contactForm.errors.emailInvalid'),
-  message: z.string().min(1, 'contactForm.errors.messageRequired').max(5000, 'contactForm.errors.messageTooLong'),
-});
-
-export type ContactFormValue = z.infer<typeof contactFormSchema>;
-
-export type ContactFormStatus = 'idle' | 'submitting' | 'success' | 'error' | 'rate-limited';
-
-export interface ContactFormSubmission extends ContactFormValue {
-  readonly honeypot: string;
-  readonly renderedAtMs: number;
-}
+import {
+  contactFormSchema,
+  type ContactFormStatus,
+  type ContactFormSubmission,
+  type ContactFormValue,
+} from './contact-form.model';
 
 const BLANK_VALUE: ContactFormValue = { name: '', email: '', message: '' };
 

@@ -27,34 +27,17 @@ import {
   WebGLRenderer,
 } from 'three';
 
-import { ThemeService } from '../../../../core/theme/theme.service';
-import type { ConstellationConfig, ExclusionZone, Skill } from './constellation-background.types';
-
-interface ParticleField {
-  readonly positions: Float32Array;
-  readonly ambientVelocities: Float32Array;
-  readonly pushVelocities: Float32Array;
-  readonly count: number;
-}
+import type { Theme } from '../../../../core/theme';
+import type { ConstellationConfig, Skill } from './constellation-background.types';
+import { ParticleFieldSimulation, at } from './particle-field-simulation';
 
 interface LineMaterialWithWidth {
   linewidth: number;
 }
 
 const DEFAULT_PARTICLE_RADIUS_PX = 24;
-const SEPARATION_PADDING_PX = 8;
-const SEPARATION_STRENGTH = 0.5;
 const SETTLE_ITERATIONS = 900;
-const AMBIENT_JITTER_PER_FRAME = 0.03;
-const AMBIENT_SPEED_FLOOR_RATIO = 0.4;
-const AMBIENT_SPEED_CEILING_RATIO = 1.6;
-const EDGE_REPULSION_MARGIN_PX = 64;
-const EDGE_REPULSION_FORCE = 0.25;
 const LINE_ALPHA_FADE_EXPONENT = 0.6;
-
-function at(array: Float32Array, index: number): number {
-  return array[index] ?? 0;
-}
 
 const LINE_VERTEX_SHADER = `
   attribute vec3 aColor;
@@ -87,13 +70,13 @@ const LINE_FRAGMENT_SHADER = `
 })
 export class ConstellationBackground {
   public readonly config = input.required<ConstellationConfig>();
+  public readonly theme = input.required<Theme>();
 
   protected readonly ready = signal(false);
 
   private readonly hostElementRef: ElementRef<HTMLElement> = inject(ElementRef<HTMLElement>);
   private readonly canvasRef = viewChild.required<ElementRef<HTMLCanvasElement>>('canvas');
   private readonly skillButtonRefs = viewChildren<ElementRef<HTMLButtonElement>>('skillButton');
-  private readonly themeService: ThemeService = inject(ThemeService);
   private readonly ngZone: NgZone = inject(NgZone);
   private readonly isBrowser: boolean = isPlatformBrowser(inject(PLATFORM_ID));
 
@@ -103,7 +86,7 @@ export class ConstellationBackground {
   private lineSegments: LineSegments | null = null;
   private lineMaterial: ShaderMaterial | null = null;
 
-  private field: ParticleField | null = null;
+  private simulation: ParticleFieldSimulation | null = null;
   private resolvedColors: readonly Color[] = [];
   private cachedButtons: readonly HTMLButtonElement[] = [];
   private particleRadius = DEFAULT_PARTICLE_RADIUS_PX;
@@ -132,7 +115,7 @@ export class ConstellationBackground {
     });
 
     effect(() => {
-      this.themeService.theme();
+      this.theme();
       this.handleThemeChange();
     });
 
@@ -206,8 +189,15 @@ export class ConstellationBackground {
     this.camera.bottom = height;
     this.camera.updateProjectionMatrix();
 
-    if (!this.field) {
-      this.field = this.buildParticleField(width, height);
+    if (!this.simulation) {
+      const cfg = this.config();
+      this.simulation = new ParticleFieldSimulation(
+        cfg.skills.length,
+        width,
+        height,
+        this.particleRadius,
+        cfg.baseSpeed,
+      );
       this.buildLines();
       this.resolveAndCacheColors();
       this.settleInitialLayout();
@@ -223,7 +213,7 @@ export class ConstellationBackground {
       return;
     }
 
-    this.rescaleParticlesToBounds(previousWidth, previousHeight, width, height);
+    this.simulation.rescaleToBounds(previousWidth, previousHeight, width, height, this.particleRadius);
 
     if (this.reducedMotion) {
       this.settleInitialLayout();
@@ -242,37 +232,24 @@ export class ConstellationBackground {
     const iterations = this.reducedMotion ? SETTLE_ITERATIONS : 1;
 
     for (let i = 0; i < iterations; i++) {
-      this.integrate();
+      this.stepSimulation();
     }
   }
 
-  private buildParticleField(width: number, height: number): ParticleField {
-    const cfg = this.config();
-    const count = cfg.skills.length;
-    const positions = new Float32Array(count * 3);
-    const ambientVelocities = new Float32Array(count * 2);
-    const pushVelocities = new Float32Array(count * 2);
-    const radius = this.particleRadius;
-
-    for (let i = 0; i < count; i++) {
-      const ix = i * 3;
-      const iv = i * 2;
-
-      positions[ix] = radius + Math.random() * Math.max(0, width - radius * 2);
-      positions[ix + 1] = radius + Math.random() * Math.max(0, height - radius * 2);
-      positions[ix + 2] = 0;
-
-      const angle = Math.random() * Math.PI * 2;
-      const speed = cfg.baseSpeed * (0.5 + Math.random() * 0.5);
-      ambientVelocities[iv] = Math.cos(angle) * speed;
-      ambientVelocities[iv + 1] = Math.sin(angle) * speed;
-    }
-
-    return { positions, ambientVelocities, pushVelocities, count };
+  private stepSimulation(): void {
+    this.simulation?.step({
+      config: this.config(),
+      width: this.width,
+      height: this.height,
+      particleRadius: this.particleRadius,
+      pointerX: this.pointerX,
+      pointerY: this.pointerY,
+      isFrozen: (index) => this.isFrozen(index),
+    });
   }
 
   private buildLines(): void {
-    const field = this.field;
+    const field = this.simulation?.field;
     if (!field) return;
 
     const count = field.count;
@@ -290,8 +267,6 @@ export class ConstellationBackground {
       depthWrite: false,
     });
 
-    // WebGL clamps gl.lineWidth to 1px on virtually every modern browser/GPU combination;
-    // this still wires config().lineWidth through so the knob isn't silently dead where it is honored.
     (material as unknown as LineMaterialWithWidth).linewidth = this.config().lineWidth;
 
     this.lineMaterial = material;
@@ -319,250 +294,15 @@ export class ConstellationBackground {
   }
 
   private handleThemeChange(): void {
-    if (!this.field) return;
+    if (!this.simulation) return;
 
     this.resolveAndCacheColors();
     this.rebuildLineSegments();
     this.renderFrameOnce();
   }
 
-  private rescaleParticlesToBounds(previousWidth: number, previousHeight: number, width: number, height: number): void {
-    const field = this.field;
-    if (!field) return;
-
-    const scaleX = previousWidth > 0 ? width / previousWidth : 1;
-    const scaleY = previousHeight > 0 ? height / previousHeight : 1;
-    const { positions, count } = field;
-    const radius = this.particleRadius;
-
-    for (let i = 0; i < count; i++) {
-      const ix = i * 3;
-      const x = at(positions, ix) * scaleX;
-      const y = at(positions, ix + 1) * scaleY;
-      positions[ix] = Math.min(Math.max(x, radius), Math.max(radius, width - radius));
-      positions[ix + 1] = Math.min(Math.max(y, radius), Math.max(radius, height - radius));
-    }
-  }
-
-  private applySeparation(field: ParticleField): void {
-    const { positions, pushVelocities, count } = field;
-    const minDistance = this.particleRadius * 2 + SEPARATION_PADDING_PX;
-
-    for (let i = 0; i < count; i++) {
-      const ix = i * 3;
-      const iv = i * 2;
-      const frozenI = this.isFrozen(i);
-
-      for (let j = i + 1; j < count; j++) {
-        const jx = j * 3;
-        const jv = j * 2;
-        const dx = at(positions, ix) - at(positions, jx);
-        const dy = at(positions, ix + 1) - at(positions, jx + 1);
-        const distance = Math.hypot(dx, dy);
-
-        if (distance <= 0 || distance >= minDistance) continue;
-
-        const strength = ((minDistance - distance) / minDistance) * SEPARATION_STRENGTH;
-        const ux = dx / distance;
-        const uy = dy / distance;
-
-        if (!frozenI) {
-          pushVelocities[iv] = at(pushVelocities, iv) + ux * strength;
-          pushVelocities[iv + 1] = at(pushVelocities, iv + 1) + uy * strength;
-        }
-        if (!this.isFrozen(j)) {
-          pushVelocities[jv] = at(pushVelocities, jv) - ux * strength;
-          pushVelocities[jv + 1] = at(pushVelocities, jv + 1) - uy * strength;
-        }
-      }
-    }
-  }
-
-  private applyExclusionZone(field: ParticleField, zone: ExclusionZone | null): void {
-    if (!zone || zone.width <= 0 || zone.height <= 0 || zone.margin <= 0) return;
-
-    const { positions, pushVelocities, count } = field;
-
-    for (let i = 0; i < count; i++) {
-      if (this.isFrozen(i)) continue;
-
-      const ix = i * 3;
-      const iv = i * 2;
-      const x = at(positions, ix);
-      const y = at(positions, ix + 1);
-
-      const nearestX = Math.min(Math.max(x, zone.x), zone.x + zone.width);
-      const nearestY = Math.min(Math.max(y, zone.y), zone.y + zone.height);
-      let dx = x - nearestX;
-      let dy = y - nearestY;
-      const distance = Math.hypot(dx, dy);
-
-      if (distance >= zone.margin) continue;
-
-      if (distance === 0) {
-        const centerX = zone.x + zone.width / 2;
-        const centerY = zone.y + zone.height / 2;
-        dx = x - centerX || 1;
-        dy = y - centerY;
-      }
-
-      const length = Math.hypot(dx, dy) || 1;
-      const strength = (1 - distance / zone.margin) * zone.force;
-
-      pushVelocities[iv] = at(pushVelocities, iv) + (dx / length) * strength;
-      pushVelocities[iv + 1] = at(pushVelocities, iv + 1) + (dy / length) * strength;
-    }
-  }
-
-  private applyEdgeRepulsion(field: ParticleField): void {
-    const { positions, pushVelocities, count } = field;
-    const radius = this.particleRadius;
-    const width = this.width;
-    const height = this.height;
-
-    for (let i = 0; i < count; i++) {
-      if (this.isFrozen(i)) continue;
-
-      const ix = i * 3;
-      const iv = i * 2;
-      const x = at(positions, ix);
-      const y = at(positions, ix + 1);
-
-      const distLeft = x - radius;
-      const distRight = width - radius - x;
-      const distTop = y - radius;
-      const distBottom = height - radius - y;
-
-      if (distLeft < EDGE_REPULSION_MARGIN_PX) {
-        pushVelocities[iv] =
-          at(pushVelocities, iv) +
-          ((EDGE_REPULSION_MARGIN_PX - distLeft) / EDGE_REPULSION_MARGIN_PX) * EDGE_REPULSION_FORCE;
-      }
-      if (distRight < EDGE_REPULSION_MARGIN_PX) {
-        pushVelocities[iv] =
-          at(pushVelocities, iv) -
-          ((EDGE_REPULSION_MARGIN_PX - distRight) / EDGE_REPULSION_MARGIN_PX) * EDGE_REPULSION_FORCE;
-      }
-      if (distTop < EDGE_REPULSION_MARGIN_PX) {
-        pushVelocities[iv + 1] =
-          at(pushVelocities, iv + 1) +
-          ((EDGE_REPULSION_MARGIN_PX - distTop) / EDGE_REPULSION_MARGIN_PX) * EDGE_REPULSION_FORCE;
-      }
-      if (distBottom < EDGE_REPULSION_MARGIN_PX) {
-        pushVelocities[iv + 1] =
-          at(pushVelocities, iv + 1) -
-          ((EDGE_REPULSION_MARGIN_PX - distBottom) / EDGE_REPULSION_MARGIN_PX) * EDGE_REPULSION_FORCE;
-      }
-    }
-  }
-
-  private applyAmbientJitter(field: ParticleField, baseSpeed: number): void {
-    const { ambientVelocities, count } = field;
-    const floor = baseSpeed * AMBIENT_SPEED_FLOOR_RATIO;
-    const ceiling = baseSpeed * AMBIENT_SPEED_CEILING_RATIO;
-
-    for (let i = 0; i < count; i++) {
-      if (this.isFrozen(i)) continue;
-
-      const iv = i * 2;
-
-      const jitteredX = at(ambientVelocities, iv) + (Math.random() - 0.5) * AMBIENT_JITTER_PER_FRAME;
-      const jitteredY = at(ambientVelocities, iv + 1) + (Math.random() - 0.5) * AMBIENT_JITTER_PER_FRAME;
-      const speed = Math.hypot(jitteredX, jitteredY);
-
-      if (speed <= 0) continue;
-
-      const clampedSpeed = Math.min(Math.max(speed, floor), ceiling);
-      const scale = clampedSpeed / speed;
-      ambientVelocities[iv] = jitteredX * scale;
-      ambientVelocities[iv + 1] = jitteredY * scale;
-    }
-  }
-
-  private integrate(): void {
-    const field = this.field;
-    if (!field) return;
-
-    const cfg = this.config();
-    this.applyAmbientJitter(field, cfg.baseSpeed);
-    this.applySeparation(field);
-    this.applyExclusionZone(field, cfg.textExclusionZone);
-    this.applyExclusionZone(field, cfg.navExclusionZone);
-    this.applyEdgeRepulsion(field);
-
-    const { positions, ambientVelocities, pushVelocities, count } = field;
-    const width = this.width;
-    const height = this.height;
-    const radius = this.particleRadius;
-    const mouseActive = cfg.mouse.enabled && this.pointerX !== null && this.pointerY !== null;
-
-    for (let i = 0; i < count; i++) {
-      const ix = i * 3;
-      const iv = i * 2;
-
-      const dampedPushX = at(pushVelocities, iv) * cfg.damping;
-      const dampedPushY = at(pushVelocities, iv + 1) * cfg.damping;
-      pushVelocities[iv] = dampedPushX;
-      pushVelocities[iv + 1] = dampedPushY;
-
-      if (this.isFrozen(i)) continue;
-
-      if (mouseActive) {
-        const dx = at(positions, ix) - (this.pointerX as number);
-        const dy = at(positions, ix + 1) - (this.pointerY as number);
-        const distance = Math.hypot(dx, dy);
-
-        if (distance > radius && distance < cfg.mouse.radius) {
-          const strength = (1 - distance / cfg.mouse.radius) * cfg.mouse.force;
-          pushVelocities[iv] = at(pushVelocities, iv) + (dx / distance) * strength;
-          pushVelocities[iv + 1] = at(pushVelocities, iv + 1) + (dy / distance) * strength;
-        }
-      }
-
-      const ambientVX = at(ambientVelocities, iv);
-      const ambientVY = at(ambientVelocities, iv + 1);
-      let vx = ambientVX + at(pushVelocities, iv);
-      let vy = ambientVY + at(pushVelocities, iv + 1);
-      const speed = Math.hypot(vx, vy);
-
-      if (speed > cfg.maxSpeed) {
-        const scale = cfg.maxSpeed / speed;
-        vx *= scale;
-        vy *= scale;
-        pushVelocities[iv] = vx - ambientVX;
-        pushVelocities[iv + 1] = vy - ambientVY;
-      }
-
-      let x = at(positions, ix) + vx;
-      let y = at(positions, ix + 1) + vy;
-
-      if (x < radius) {
-        x = radius;
-        ambientVelocities[iv] = Math.abs(ambientVX);
-        pushVelocities[iv] = Math.abs(at(pushVelocities, iv));
-      } else if (x > width - radius) {
-        x = width - radius;
-        ambientVelocities[iv] = -Math.abs(ambientVX);
-        pushVelocities[iv] = -Math.abs(at(pushVelocities, iv));
-      }
-
-      if (y < radius) {
-        y = radius;
-        ambientVelocities[iv + 1] = Math.abs(ambientVY);
-        pushVelocities[iv + 1] = Math.abs(at(pushVelocities, iv + 1));
-      } else if (y > height - radius) {
-        y = height - radius;
-        ambientVelocities[iv + 1] = -Math.abs(ambientVY);
-        pushVelocities[iv + 1] = -Math.abs(at(pushVelocities, iv + 1));
-      }
-
-      positions[ix] = x;
-      positions[ix + 1] = y;
-    }
-  }
-
   private rebuildLineSegments(): void {
-    const field = this.field;
+    const field = this.simulation?.field;
     if (!field || !this.lineSegments) return;
 
     const cfg = this.config();
@@ -630,7 +370,7 @@ export class ConstellationBackground {
   }
 
   private applyDomPositions(): void {
-    const field = this.field;
+    const field = this.simulation?.field;
     if (!field) return;
 
     const half = this.particleRadius;
@@ -653,7 +393,7 @@ export class ConstellationBackground {
 
     this.ngZone.runOutsideAngular(() => {
       const step = (): void => {
-        this.integrate();
+        this.stepSimulation();
         this.rebuildLineSegments();
         this.applyDomPositions();
         this.renderFrameOnce();
@@ -717,6 +457,6 @@ export class ConstellationBackground {
     this.renderer = null;
     this.scene = null;
     this.camera = null;
-    this.field = null;
+    this.simulation = null;
   }
 }

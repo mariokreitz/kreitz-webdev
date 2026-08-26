@@ -1,8 +1,7 @@
 <main class="flex flex-col">
-  <kwd-frontend-hero [constellationConfig]="heroConstellationConfig" />
-  <kwd-frontend-cv-download [available]="cvAvailable()" />
-  <kwd-frontend-projects-section [projects]="projects()" />
-  <kwd-frontend-companies-section [companies]="companies()" />
+  <kwd-frontend-hero [constellationConfig]="heroConstellationConfig" [theme]="theme()" />
+  <kwd-frontend-companies-section [companies]="companies" />
+  <kwd-frontend-projects-section [projects]="projects" />
   <kwd-frontend-contact-section />
-  <kwd-frontend-contact />
+  <kwd-frontend-site-footer />
 </main>

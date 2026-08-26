@@ -2,12 +2,11 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, inject, signal, type WritableSignal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
-import { ContactForm, type ContactFormStatus, type ContactFormSubmission } from './contact-form/contact-form.component';
+import { ContactForm } from './contact-form/contact-form.component';
+import type { ContactFormStatus, ContactFormSubmission } from './contact-form/contact-form.model';
 
-interface ContactFormApiResponse {
-  readonly ok: boolean;
-  readonly error?: string;
-}
+const CONTACT_ENDPOINT = '/api/contact';
+const HTTP_STATUS_TOO_MANY_REQUESTS = 429;
 
 @Component({
   selector: 'kwd-frontend-contact-section',
@@ -24,11 +23,12 @@ export class ContactSection {
     this.status.set('submitting');
 
     try {
-      await firstValueFrom(this.http.post<ContactFormApiResponse>('/api/contact', value));
+      await firstValueFrom(this.http.post(CONTACT_ENDPOINT, value));
 
       this.status.set('success');
     } catch (error) {
-      this.status.set(error instanceof HttpErrorResponse && error.status === 429 ? 'rate-limited' : 'error');
+      const isRateLimited = error instanceof HttpErrorResponse && error.status === HTTP_STATUS_TOO_MANY_REQUESTS;
+      this.status.set(isRateLimited ? 'rate-limited' : 'error');
     }
   }
 }

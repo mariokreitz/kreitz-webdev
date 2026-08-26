@@ -16,6 +16,8 @@ import {
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { CONTACT_EMAIL, GITHUB_URL, LINKEDIN_URL } from '../../../core/contact';
+import type { Theme } from '../../../core/theme';
 import { ConstellationBackground } from './constellation-background/constellation-background.component';
 import type { ConstellationConfig, ExclusionZone } from './constellation-background/constellation-background.types';
 
@@ -31,6 +33,11 @@ const NAV_SELECTOR = '#site-nav';
 })
 export class Hero {
   public readonly constellationConfig = input.required<ConstellationConfig>();
+  public readonly theme = input.required<Theme>();
+
+  protected readonly contactEmail: string = CONTACT_EMAIL;
+  protected readonly githubUrl: string = GITHUB_URL;
+  protected readonly linkedinUrl: string = LINKEDIN_URL;
 
   private readonly sectionRef = viewChild.required<ElementRef<HTMLElement>>('heroSection');
   private readonly textRef = viewChild.required<ElementRef<HTMLElement>>('heroText');
