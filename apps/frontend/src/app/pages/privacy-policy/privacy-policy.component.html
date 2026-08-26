@@ -1,12 +1,4 @@
-<main
-  class="mx-auto flex min-h-screen max-w-(--spacing-max-width) flex-col gap-10 px-(--spacing-margin-mobile) pt-32 pb-24 sm:px-(--spacing-margin-desktop) 2xl:pt-40 2xl:pb-32">
-  <a
-    class="-m-2.5 inline-flex w-fit items-center gap-2 p-2.5 text-body-sm text-(--color-primary) hover:underline"
-    routerLink="/">
-    <fa-icon [icon]="faArrowLeft" />
-    {{ 'imprint.backToHome' | translate }}
-  </a>
-
+<kwd-frontend-legal-page-shell>
   <h1 class="text-headline-lg text-(--color-on-surface)">{{ 'privacyPolicy.title' | translate }}</h1>
 
   <section class="flex flex-col gap-2">
@@ -103,4 +95,4 @@
     <h2 class="text-headline-md text-(--color-on-surface)">{{ 'privacyPolicy.changes.heading' | translate }}</h2>
     <p class="text-body-md text-(--color-on-surface-variant)">{{ 'privacyPolicy.changes.body' | translate }}</p>
   </section>
-</main>
+</kwd-frontend-legal-page-shell>
