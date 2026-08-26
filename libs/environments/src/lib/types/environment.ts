@@ -1,7 +1,7 @@
 export interface Environment {
-  production: boolean;
-  api: {
-    authBaseUrl: string;
-    kreitzWebdev: string;
+  readonly production: boolean;
+  readonly api: {
+    readonly authBaseUrl: string;
+    readonly kreitzWebdev: string;
   };
 }
