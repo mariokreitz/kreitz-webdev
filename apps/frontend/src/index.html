@@ -11,8 +11,6 @@
     <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport" />
     <link href="favicon.ico" rel="icon" type="image/x-icon" />
     <script>
-      // Storage key duplicated from PAGE_PREFERENCES_STORAGE_KEY in src/app/core/preferences/constants/index.ts —
-      // this script runs before any JS bundle loads, so it can't import the constant; keep both in sync.
       (function () {
         try {
           var stored = JSON.parse(localStorage.getItem('kwd-frontend-page-preferences'));

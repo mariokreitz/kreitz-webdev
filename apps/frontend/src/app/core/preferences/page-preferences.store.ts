@@ -24,8 +24,8 @@ export class PagePreferencesStore {
 
     try {
       localStorage.setItem(PAGE_PREFERENCES_STORAGE_KEY, JSON.stringify(next));
-    } catch {
-      // Storage can be unavailable (quota exceeded, private browsing) — losing a preference write is not worth surfacing.
+    } catch (error) {
+      void error;
     }
   }
 
