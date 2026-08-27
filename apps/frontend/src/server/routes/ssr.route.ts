@@ -1,10 +1,19 @@
 import { writeResponseToNodeResponse, type AngularNodeAppEngine } from '@angular/ssr/node';
 import type { Express, NextFunction, Request, Response } from 'express';
 
+import { APP_ROUTE_PATHS } from '../../app/core/routing';
 import type { HomeRequestContext } from '../../app/core/ssr';
 import { fetchCvAvailable } from '../fetch-cv-status';
 import { fetchPublicCompanies } from '../fetch-public-companies';
 import { fetchPublicProjects } from '../fetch-public-projects';
+
+interface AppRequestContext extends Partial<HomeRequestContext> {
+  readonly cvAvailable: boolean;
+}
+
+const KNOWN_APP_PATHS: ReadonlySet<string> = new Set(
+  Object.values(APP_ROUTE_PATHS).map((path) => (path ? `/${path}` : '/')),
+);
 
 export function registerSsrRoute(app: Express, angularApp: AngularNodeAppEngine, apiBaseUrl: string): void {
   app.use((req: Request, res: Response, next: NextFunction) => {
@@ -13,13 +22,9 @@ export function registerSsrRoute(app: Express, angularApp: AngularNodeAppEngine,
 }
 
 async function buildHomeRequestContext(apiBaseUrl: string): Promise<HomeRequestContext> {
-  const [projects, companies, cvAvailable] = await Promise.all([
-    fetchPublicProjects(apiBaseUrl),
-    fetchPublicCompanies(apiBaseUrl),
-    fetchCvAvailable(apiBaseUrl),
-  ]);
+  const [projects, companies] = await Promise.all([fetchPublicProjects(apiBaseUrl), fetchPublicCompanies(apiBaseUrl)]);
 
-  return { projects, companies, cvAvailable };
+  return { projects, companies };
 }
 
 async function handleRequest(
@@ -30,8 +35,15 @@ async function handleRequest(
   next: NextFunction,
 ): Promise<void> {
   try {
-    const requestContext: HomeRequestContext | undefined =
-      req.path === '/' ? await buildHomeRequestContext(apiBaseUrl) : undefined;
+    const normalizedPath = req.path.length > 1 ? req.path.replace(/\/+$/, '') : req.path;
+    const isKnownAppPath = KNOWN_APP_PATHS.has(normalizedPath);
+
+    const [cvAvailable, homeContext] = await Promise.all([
+      isKnownAppPath ? fetchCvAvailable(apiBaseUrl) : Promise.resolve(false),
+      normalizedPath === '/' ? buildHomeRequestContext(apiBaseUrl) : Promise.resolve(undefined),
+    ]);
+
+    const requestContext: AppRequestContext = { cvAvailable, ...homeContext };
 
     const response = await angularApp.handle(req, requestContext);
 

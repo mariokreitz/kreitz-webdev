@@ -10,7 +10,7 @@ import {
   type Signal,
   type StateKey,
 } from '@angular/core';
-import { asHomeRequestContext } from '../ssr';
+import { asCvRequestContext } from '../ssr';
 
 const CV_AVAILABLE_STATE_KEY: StateKey<boolean> = makeStateKey<boolean>('cv-available');
 
@@ -18,7 +18,7 @@ const CV_AVAILABLE_STATE_KEY: StateKey<boolean> = makeStateKey<boolean>('cv-avai
 export class CvAvailabilityService {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly transferState: TransferState = inject(TransferState);
-  private readonly requestContext = asHomeRequestContext(inject(REQUEST_CONTEXT, { optional: true }));
+  private readonly requestContext = asCvRequestContext(inject(REQUEST_CONTEXT, { optional: true }));
 
   public readonly available: Signal<boolean> = signal(this.resolveAvailable());
 
