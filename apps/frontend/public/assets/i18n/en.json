@@ -28,7 +28,7 @@
   "companies": {
     "heading": "Companies I've worked with",
     "description": "Teams and companies I've shipped with.",
-    "present": "Present"
+    "comingSoon": "More companies coming soon."
   },
   "cv": {
     "download": "Download CV"

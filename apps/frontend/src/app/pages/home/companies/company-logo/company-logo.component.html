@@ -1,0 +1,16 @@
+@if (company().logoUrl) {
+  <div class="relative h-12 w-[150px]">
+    <img
+      class="object-contain opacity-65 grayscale transition-[filter,opacity] duration-300 hover:opacity-100 hover:grayscale-0"
+      fill
+      [ngSrc]="company().logoUrl ?? ''"
+      [alt]="company().name" />
+  </div>
+} @else {
+  <div
+    class="flex h-12 w-[150px] items-center justify-center text-headline-md font-semibold text-(--color-on-surface-variant) opacity-65 transition-opacity duration-300 hover:opacity-100"
+    role="img"
+    [attr.aria-label]="company().name">
+    <span aria-hidden="true">{{ initials() }}</span>
+  </div>
+}

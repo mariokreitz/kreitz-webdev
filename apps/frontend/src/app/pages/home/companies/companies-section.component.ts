@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import type { PublicCompany } from '../public-company.model';
-import { CompanyCard } from './company-card/company-card.component';
+import { CompanyLogo } from './company-logo/company-logo.component';
 
 @Component({
   selector: 'kwd-frontend-companies-section',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CompanyCard, TranslatePipe],
+  imports: [CompanyLogo, TranslatePipe],
   templateUrl: './companies-section.component.html',
 })
 export class CompaniesSection {
