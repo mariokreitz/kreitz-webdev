@@ -7,6 +7,11 @@
       "toLight": "Zum hellen Design wechseln"
     }
   },
+  "nav": {
+    "primaryLabel": "Hauptnavigation",
+    "home": "Start",
+    "contact": "Kontakt"
+  },
   "seo": {
     "home": {
       "title": "Mario Kreitz | Full-Stack-Entwickler",
@@ -18,7 +23,7 @@
     },
     "privacyPolicy": {
       "title": "Datenschutzerklärung | Mario Kreitz",
-      "description": "Datenschutzerklärung für kreitz-webdev.de zu Hosting, Webanalyse mit Umami und Ihren Rechten als betroffene Person nach der DSGVO."
+      "description": "Datenschutzerklärung für kreitz-webdev.de zu Hosting, Webanalyse mit Umami und deinen Rechten als betroffene Person nach der DSGVO."
     }
   },
   "hero": {
@@ -35,10 +40,10 @@
   },
   "projects": {
     "heading": "Projekte",
-    "description": "Was ich tatsächlich veröffentlicht habe — Live-Produkte, die du dir direkt ansehen kannst, sowie ein paar kleinere Dinge, die nebenbei entstanden sind.",
+    "description": "Was ich tatsächlich veröffentlicht habe: Live-Produkte, die du dir direkt ansehen kannst, sowie ein paar kleinere Dinge, die nebenbei entstanden sind.",
     "alsoBuilt": {
       "heading": "Außerdem gebaut",
-      "description": "Kleinere Demos und Experimente — gebaut, um etwas zu lernen oder eine Idee auszuprobieren, nicht als laufende Produkte."
+      "description": "Kleinere Demos und Experimente: gebaut, um etwas zu lernen oder eine Idee auszuprobieren, nicht als laufende Produkte."
     },
     "comingSoon": "Weitere Projekte folgen in Kürze.",
     "card": {
@@ -75,7 +80,7 @@
     },
     "submit": "Nachricht senden",
     "submitting": "Wird gesendet…",
-    "success": "Danke! Deine Nachricht wurde gesendet — ich melde mich bald bei dir.",
+    "success": "Danke! Deine Nachricht wurde gesendet. Ich melde mich bald bei dir.",
     "error": "Beim Senden deiner Nachricht ist etwas schiefgelaufen. Bitte versuche es erneut oder schreib mir direkt eine E-Mail.",
     "errorRateLimited": "Zuletzt wurden zu viele Nachrichten gesendet. Bitte versuche es in Kürze erneut."
   },
@@ -129,18 +134,18 @@
     "hosting": {
       "heading": "Hosting",
       "intro": "Diese Website wird auf einem virtuellen Server (VPS) des Hosting-Anbieters Contabo betrieben und über Dokploy bereitgestellt.",
-      "logs": "Beim Aufruf dieser Website werden durch den Hosting-Anbieter automatisch sogenannte Server-Logfiles erhoben, die Ihr Browser automatisch übermittelt. Dazu gehören die IP-Adresse, der verwendete Browser (User-Agent), der Zeitpunkt des Zugriffs sowie die aufgerufene URL. Diese Daten sind technisch erforderlich, um die Website sicher und stabil bereitzustellen, und werden nicht mit anderen Datenquellen zusammengeführt. Rechtsgrundlage für die Verarbeitung ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer sicheren und stabilen Bereitstellung des Angebots).",
+      "logs": "Beim Aufruf dieser Website werden durch den Hosting-Anbieter automatisch sogenannte Server-Logfiles erhoben, die dein Browser automatisch übermittelt. Dazu gehören die IP-Adresse, der verwendete Browser (User-Agent), der Zeitpunkt des Zugriffs sowie die aufgerufene URL. Diese Daten sind technisch erforderlich, um die Website sicher und stabil bereitzustellen, und werden nicht mit anderen Datenquellen zusammengeführt. Rechtsgrundlage für die Verarbeitung ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer sicheren und stabilen Bereitstellung des Angebots).",
       "processors": "Soweit Hosting-Anbieter personenbezogene Daten in unserem Auftrag verarbeiten, werden diese im Rahmen der gesetzlichen Anforderungen als Auftragsverarbeiter im Sinne von Art. 28 DSGVO eingebunden."
     },
     "cookies": {
       "heading": "Cookies",
-      "body": "Diese Website verwendet keine Cookies. Es werden keinerlei Cookies zu Analyse-, Marketing- oder sonstigen Zwecken auf Ihrem Endgerät gespeichert."
+      "body": "Diese Website verwendet keine Cookies. Es werden keinerlei Cookies zu Analyse-, Marketing- oder sonstigen Zwecken auf deinem Endgerät gespeichert."
     },
     "analytics": {
       "heading": "Webanalyse mit Umami",
       "intro": "Zur anonymen Analyse der Websitenutzung setzen wir das selbst gehostete, quelloffene Analysetool Umami ein (betrieben unter umami.kreitz-webdev.de).",
-      "noCookies": "Umami verwendet keine Cookies und speichert keine dauerhaften Kennungen auf Ihrem Endgerät.",
-      "hashing": "Zur Wiedererkennung eines Besuchs wird serverseitig ein Hash-Wert aus IP-Adresse, Browserkennung (User-Agent) und einer Website-ID gebildet. Dieser Hash-Wert wird nicht in Ihrem Browser gespeichert (weder als Cookie noch im lokalen Speicher). Ihre IP-Adresse wird lediglich vorübergehend zur groben Standortbestimmung (Land, Region, Stadt) und zur Bildung des genannten Hash-Werts verwendet; sie wird von Umami nicht gespeichert oder protokolliert.",
+      "noCookies": "Umami verwendet keine Cookies und speichert keine dauerhaften Kennungen auf deinem Endgerät.",
+      "hashing": "Zur Wiedererkennung eines Besuchs wird serverseitig ein Hash-Wert aus IP-Adresse, Browserkennung (User-Agent) und einer Website-ID gebildet. Dieser Hash-Wert wird nicht in deinem Browser gespeichert (weder als Cookie noch im lokalen Speicher). Deine IP-Adresse wird lediglich vorübergehend zur groben Standortbestimmung (Land, Region, Stadt) und zur Bildung des genannten Hash-Werts verwendet; sie wird von Umami nicht gespeichert oder protokolliert.",
       "dataCollected": {
         "heading": "Erfasste Daten",
         "intro": "Im Rahmen der Analyse werden folgende Daten erfasst:",
@@ -168,26 +173,26 @@
       },
       "objection": {
         "heading": "Widerspruchsrecht",
-        "body": "Sie haben das Recht, der Verarbeitung Ihrer Daten im Rahmen dieser Webanalyse jederzeit gemäß Art. 21 DSGVO zu widersprechen. Da Umami keine Cookies setzt und daher kein technischer Opt-out-Mechanismus besteht, wenden Sie sich hierfür bitte per E-Mail an mario.kreitz@web.de."
+        "body": "Du hast das Recht, der Verarbeitung deiner Daten im Rahmen dieser Webanalyse jederzeit gemäß Art. 21 DSGVO zu widersprechen. Da Umami keine Cookies setzt und daher kein technischer Opt-out-Mechanismus besteht, wende dich hierfür bitte per E-Mail an mario.kreitz@web.de."
       }
     },
     "rights": {
-      "heading": "Ihre Rechte als betroffene Person",
-      "intro": "Ihnen stehen im Rahmen der geltenden gesetzlichen Bestimmungen folgende Rechte zu:",
+      "heading": "Deine Rechte als betroffene Person",
+      "intro": "Dir stehen im Rahmen der geltenden gesetzlichen Bestimmungen folgende Rechte zu:",
       "items": {
-        "access": "Auskunft über Ihre bei uns gespeicherten personenbezogenen Daten (Art. 15 DSGVO)",
+        "access": "Auskunft über deine bei uns gespeicherten personenbezogenen Daten (Art. 15 DSGVO)",
         "rectification": "Berichtigung unrichtiger oder Vervollständigung unvollständiger Daten (Art. 16 DSGVO)",
-        "erasure": "Löschung Ihrer bei uns gespeicherten Daten (Art. 17 DSGVO)",
-        "restriction": "Einschränkung der Verarbeitung Ihrer Daten (Art. 18 DSGVO)",
-        "portability": "Herausgabe Ihrer Daten in einem gängigen, maschinenlesbaren Format (Art. 20 DSGVO)",
-        "objection": "Widerspruch gegen die Verarbeitung Ihrer Daten (Art. 21 DSGVO)",
+        "erasure": "Löschung deiner bei uns gespeicherten Daten (Art. 17 DSGVO)",
+        "restriction": "Einschränkung der Verarbeitung deiner Daten (Art. 18 DSGVO)",
+        "portability": "Herausgabe deiner Daten in einem gängigen, maschinenlesbaren Format (Art. 20 DSGVO)",
+        "objection": "Widerspruch gegen die Verarbeitung deiner Daten (Art. 21 DSGVO)",
         "complaint": "Beschwerde bei einer Datenschutz-Aufsichtsbehörde (Art. 77 DSGVO)"
       },
-      "outro": "Zur Ausübung dieser Rechte können Sie sich jederzeit an die oben genannte E-Mail-Adresse wenden."
+      "outro": "Zur Ausübung dieser Rechte kannst du dich jederzeit an die oben genannte E-Mail-Adresse wenden."
     },
     "changes": {
       "heading": "Änderungen dieser Datenschutzerklärung",
-      "body": "Wir behalten uns vor, diese Datenschutzerklärung anzupassen, um sie an geänderte rechtliche Rahmenbedingungen oder Änderungen unseres Angebots und der Datenverarbeitung anzupassen. Für Ihren erneuten Besuch gilt die jeweils aktuelle Fassung dieser Datenschutzerklärung."
+      "body": "Wir behalten uns vor, diese Datenschutzerklärung anzupassen, um sie an geänderte rechtliche Rahmenbedingungen oder Änderungen unseres Angebots und der Datenverarbeitung anzupassen. Für deinen erneuten Besuch gilt die jeweils aktuelle Fassung dieser Datenschutzerklärung."
     }
   }
 }

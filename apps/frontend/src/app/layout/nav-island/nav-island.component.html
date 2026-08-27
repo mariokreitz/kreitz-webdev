@@ -1,6 +1,6 @@
 <nav
   id="site-nav"
-  aria-label="Primary"
+  [attr.aria-label]="'nav.primaryLabel' | translate"
   [class]="
     `group fixed top-4 left-1/2 z-50 flex w-fit max-w-[calc(100%-2rem)] -translate-x-1/2 items-center gap-0 overflow-hidden rounded-(--radius-full) border border-(--color-outline-variant) bg-(--color-surface-container)/80 px-2 py-2 backdrop-blur-xl backdrop-saturate-150 transition-[gap,box-shadow,scale,background-color,border-color] duration-500 ease-(--ease-spring) motion-reduce:transition-none animate-[nav-island-enter_0.6s_cubic-bezier(0.16,1,0.3,1)_both] motion-reduce:animate-none motion-safe:hover:animate-[nav-island-spring_0.7s_var(--ease-out-expo)_1] motion-safe:focus-within:animate-[nav-island-spring_0.7s_var(--ease-out-expo)_1] active:scale-[0.99] focus-within:shadow-xl motion-reduce:shadow-xl pointer-coarse:shadow-xl sm:px-2.5 hover:gap-3 sm:hover:gap-4 focus-within:gap-3 sm:focus-within:gap-4 motion-reduce:gap-3 sm:motion-reduce:gap-4 pointer-coarse:gap-3 sm:pointer-coarse:gap-4 ${scrolled() ? 'shadow-xl gap-3 sm:gap-4' : 'shadow-lg'}`
   ">
@@ -16,7 +16,7 @@
       [class]="
         `overflow-hidden text-body-sm font-medium whitespace-nowrap text-(--color-on-surface) transition-[max-width,opacity] duration-(--duration-panel-expand) ease-(--ease-spring) motion-reduce:transition-none group-hover:max-w-16 group-hover:opacity-100 group-focus-within:max-w-16 group-focus-within:opacity-100 motion-reduce:max-w-16 motion-reduce:opacity-100 pointer-coarse:max-w-16 pointer-coarse:opacity-100 ${scrolled() ? 'max-w-16 opacity-100' : 'max-w-0 opacity-0'}`
       ">
-      Home
+      {{ 'nav.home' | translate }}
     </span>
   </a>
 
@@ -33,7 +33,7 @@
       (mouseenter)="onNavLinkPointerEnter($event)"
       (mouseleave)="onNavLinkPointerLeave()"
       (click)="onNavLinkClick()">
-      Projects
+      {{ 'projects.heading' | translate }}
       <span
         class="pointer-events-none absolute inset-x-0 -bottom-0.5 h-0.5 origin-center scale-x-0 rounded-full bg-(--color-primary) transition-transform duration-300 motion-reduce:transition-none"
         [class.scale-x-100]="isSectionActive('projects')"></span>
@@ -48,7 +48,7 @@
       (mouseenter)="onNavLinkPointerEnter($event)"
       (mouseleave)="onNavLinkPointerLeave()"
       (click)="onNavLinkClick()">
-      Contact
+      {{ 'nav.contact' | translate }}
       <span
         class="pointer-events-none absolute inset-x-0 -bottom-0.5 h-0.5 origin-center scale-x-0 rounded-full bg-(--color-primary) transition-transform duration-300 motion-reduce:transition-none"
         [class.scale-x-100]="isSectionActive('contact')"></span>

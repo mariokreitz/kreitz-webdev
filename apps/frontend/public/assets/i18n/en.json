@@ -7,6 +7,11 @@
       "toLight": "Switch to light theme"
     }
   },
+  "nav": {
+    "primaryLabel": "Primary navigation",
+    "home": "Home",
+    "contact": "Contact"
+  },
   "seo": {
     "home": {
       "title": "Mario Kreitz | Full-Stack Developer",
@@ -35,10 +40,10 @@
   },
   "projects": {
     "heading": "Projects",
-    "description": "What I've actually shipped — live products you can click through right now, plus a few smaller things built along the way.",
+    "description": "What I've actually shipped: live products you can click through right now, plus a few smaller things built along the way.",
     "alsoBuilt": {
       "heading": "Also built",
-      "description": "Smaller demos and experiments — built to learn something or try an idea, not running as products."
+      "description": "Smaller demos and experiments: built to learn something or try an idea, not running as products."
     },
     "comingSoon": "More projects coming soon.",
     "card": {
@@ -75,7 +80,7 @@
     },
     "submit": "Send message",
     "submitting": "Sending…",
-    "success": "Thanks! Your message has been sent — I'll get back to you soon.",
+    "success": "Thanks! Your message has been sent. I'll get back to you soon.",
     "error": "Something went wrong sending your message. Please try again, or email me directly.",
     "errorRateLimited": "Too many messages sent recently. Please try again in a little while."
   },

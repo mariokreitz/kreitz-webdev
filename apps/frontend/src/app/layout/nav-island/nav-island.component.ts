@@ -19,6 +19,7 @@ import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faCheck, faDownload } from '@fortawesome/free-solid-svg-icons';
+import { TranslatePipe } from '@ngx-translate/core';
 import { filter } from 'rxjs';
 import { CvAvailabilityService } from '../../core/cv';
 import { ThemeService, type Theme } from '../../core/theme';
@@ -35,7 +36,7 @@ const CV_DOWNLOAD_CONFIRM_MS = 1800;
 @Component({
   selector: 'kwd-frontend-nav-island',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FontAwesomeModule, RouterLink, BlipMascot],
+  imports: [FontAwesomeModule, RouterLink, BlipMascot, TranslatePipe],
   templateUrl: './nav-island.component.html',
 })
 export class NavIsland {
