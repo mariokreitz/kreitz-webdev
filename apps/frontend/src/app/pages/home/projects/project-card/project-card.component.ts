@@ -31,6 +31,8 @@ const DESCRIPTION_COMPACT_CLASSES = 'text-body-sm text-(--color-on-surface-varia
 const LINKS_FEATURE_CLASSES = 'mt-1 flex flex-wrap items-center gap-3';
 const LINKS_COMPACT_CLASSES = 'mt-auto flex flex-wrap gap-3 pt-1 text-body-sm';
 
+const MAX_VISIBLE_FEATURE_TAGS = 4;
+
 @Component({
   selector: 'kwd-frontend-project-card',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,6 +50,14 @@ export class ProjectCard {
 
   protected readonly tagChips: Signal<readonly TagChip[]> = computed(() =>
     this.project().tags.map((tag) => ({ name: tag, icon: resolveTagIcon(tag) })),
+  );
+
+  protected readonly visibleTagChips: Signal<readonly TagChip[]> = computed(() =>
+    this.tagChips().slice(0, MAX_VISIBLE_FEATURE_TAGS),
+  );
+
+  protected readonly hiddenTagCount: Signal<number> = computed(() =>
+    Math.max(this.tagChips().length - MAX_VISIBLE_FEATURE_TAGS, 0),
   );
 
   protected readonly imageSizes: Signal<string> = computed(() =>

@@ -24,7 +24,7 @@
 
     @if (isFeature() && tagChips().length) {
       <ul class="flex flex-wrap gap-1.5" [attr.aria-label]="'projects.card.builtWith' | translate">
-        @for (tag of tagChips(); track tag.name) {
+        @for (tag of visibleTagChips(); track tag.name) {
           <li
             class="inline-flex items-center gap-1.5 rounded-full border border-(--color-outline-variant) bg-(--color-surface-container-high) px-2.5 py-1 text-code-sm text-(--color-on-surface-variant)">
             @if (tag.icon.kind === 'brand') {
@@ -33,6 +33,12 @@
               <fa-icon class="shrink-0 text-[0.65rem]" [icon]="tag.icon.icon" [attr.aria-hidden]="true" />
             }
             {{ tag.name }}
+          </li>
+        }
+        @if (hiddenTagCount() > 0) {
+          <li
+            class="inline-flex items-center rounded-full border border-(--color-outline-variant) bg-(--color-surface-container-high) px-2.5 py-1 text-code-sm text-(--color-on-surface-variant)">
+            +{{ hiddenTagCount() }}
           </li>
         }
       </ul>
