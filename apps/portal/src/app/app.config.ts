@@ -11,6 +11,7 @@ import {
   provideRouter,
   RedirectCommand,
   Router,
+  TitleStrategy,
   withComponentInputBinding,
   withNavigationErrorHandler,
   withViewTransitions,
@@ -24,6 +25,7 @@ import { LanguageService } from './core/language';
 import { ERROR_ROUTE, type ErrorPageQueryParams } from './core/error';
 import { errorInterceptor } from './core/http';
 import { avatarImageLoader } from './core/image';
+import { TranslatedTitleStrategy } from './core/title';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -54,5 +56,6 @@ export const appConfig: ApplicationConfig = {
     }),
     provideAppInitializer(() => inject(LanguageService).initialize()),
     { provide: IMAGE_LOADER, useValue: avatarImageLoader },
+    { provide: TitleStrategy, useClass: TranslatedTitleStrategy },
   ],
 };

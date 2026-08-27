@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal, type Signal } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Card } from '@shared/ui';
@@ -22,12 +22,17 @@ export default class Login {
   private readonly router: Router = inject(Router);
   private readonly title: Title = inject(Title);
   private readonly translate: TranslateService = inject(TranslateService);
+  private readonly titleKey: Signal<string> = computed(() =>
+    this.mode() === 'register' ? 'auth.title.register' : 'auth.title.login',
+  );
 
   constructor() {
-    effect(() => {
-      this.title.setTitle(
-        this.translate.instant(this.mode() === 'register' ? 'auth.title.register' : 'auth.title.login'),
-      );
+    effect((onCleanup) => {
+      const subscription = this.translate.stream(this.titleKey()).subscribe((value: string) => {
+        this.title.setTitle(value);
+      });
+
+      onCleanup(() => subscription.unsubscribe());
     });
   }
 

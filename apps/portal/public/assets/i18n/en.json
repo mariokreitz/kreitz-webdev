@@ -28,7 +28,7 @@
     },
     "info": {
       "checkEmail": "Check your email at {{email}} to verify your account, then sign in.",
-      "verifyEmail": "Please verify your email before signing in — check your inbox."
+      "verifyEmail": "Please verify your email before signing in: check your inbox."
     },
     "login": {
       "submit": "Sign in",
@@ -40,8 +40,8 @@
       "submitting": "Creating account…"
     },
     "title": {
-      "login": "Sign in — Kreitz-WebDev",
-      "register": "Create account — Kreitz-WebDev"
+      "login": "Sign in | Kreitz-WebDev",
+      "register": "Create account | Kreitz-WebDev"
     },
     "toggle": {
       "createOne": "Create one",
@@ -200,6 +200,23 @@
   "notFound": {
     "message": "This page doesn't exist."
   },
+  "portal": {
+    "title": {
+      "dashboard": "Dashboard | Kreitz-WebDev",
+      "error": "Error | Kreitz-WebDev",
+      "imprint": "Imprint | Kreitz-WebDev",
+      "logout": "Signing out | Kreitz-WebDev",
+      "notFound": "Not Found | Kreitz-WebDev",
+      "profile": "Profile | Kreitz-WebDev",
+      "projectDetail": "Project | Kreitz-WebDev",
+      "projectImport": "Import from GitHub | Kreitz-WebDev",
+      "projectNew": "New Project | Kreitz-WebDev",
+      "projects": "Projects | Kreitz-WebDev",
+      "termsOfService": "Terms of Service | Kreitz-WebDev",
+      "websiteDetail": "Website | Kreitz-WebDev",
+      "websites": "Websites | Kreitz-WebDev"
+    }
+  },
   "profile": {
     "cv": {
       "empty": "You haven't uploaded a CV yet.",
@@ -225,7 +242,7 @@
     },
     "dangerZone": {
       "deleteAccount": "Delete Account",
-      "description": "Deleting your account is permanent and cannot be undone. This feature isn't available yet — reach out to us if you need your account removed.",
+      "description": "Deleting your account is permanent and cannot be undone. This feature isn't available yet. Reach out to us if you need your account removed.",
       "notAvailable": "Account deletion is not yet available.",
       "title": "Danger Zone"
     },
@@ -269,7 +286,7 @@
       "noDescription": "No description yet."
     },
     "create": {
-      "subtitle": "Add a project by hand — you can always import one from GitHub later.",
+      "subtitle": "Add a project by hand: you can always import one from GitHub later.",
       "title": "New Project"
     },
     "deleteDialog": {
@@ -539,7 +556,7 @@
       "reveal": {
         "neverShownAgain": "For your security, we only show the full token once.",
         "title": "Token created",
-        "warning": "Copy this token now — you won't be able to see it again."
+        "warning": "Copy this token now. You won't be able to see it again."
       },
       "title": "Tokens",
       "toast": {

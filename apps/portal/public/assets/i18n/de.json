@@ -28,7 +28,7 @@
     },
     "info": {
       "checkEmail": "Überprüfe dein Postfach unter {{email}}, um dein Konto zu bestätigen, und melde dich anschließend an.",
-      "verifyEmail": "Bitte bestätige deine E-Mail-Adresse, bevor du dich anmeldest — überprüfe dein Postfach."
+      "verifyEmail": "Bitte bestätige deine E-Mail-Adresse, bevor du dich anmeldest: Überprüfe dein Postfach."
     },
     "login": {
       "submit": "Anmelden",
@@ -40,8 +40,8 @@
       "submitting": "Konto wird erstellt…"
     },
     "title": {
-      "login": "Anmelden — Kreitz-WebDev",
-      "register": "Konto erstellen — Kreitz-WebDev"
+      "login": "Anmelden | Kreitz-WebDev",
+      "register": "Konto erstellen | Kreitz-WebDev"
     },
     "toggle": {
       "createOne": "Konto erstellen",
@@ -200,6 +200,23 @@
   "notFound": {
     "message": "Diese Seite existiert nicht."
   },
+  "portal": {
+    "title": {
+      "dashboard": "Dashboard | Kreitz-WebDev",
+      "error": "Fehler | Kreitz-WebDev",
+      "imprint": "Impressum | Kreitz-WebDev",
+      "logout": "Abmelden | Kreitz-WebDev",
+      "notFound": "Nicht gefunden | Kreitz-WebDev",
+      "profile": "Profil | Kreitz-WebDev",
+      "projectDetail": "Projekt | Kreitz-WebDev",
+      "projectImport": "Von GitHub importieren | Kreitz-WebDev",
+      "projectNew": "Neues Projekt | Kreitz-WebDev",
+      "projects": "Projekte | Kreitz-WebDev",
+      "termsOfService": "Allgemeine Geschäftsbedingungen | Kreitz-WebDev",
+      "websiteDetail": "Website | Kreitz-WebDev",
+      "websites": "Websites | Kreitz-WebDev"
+    }
+  },
   "profile": {
     "cv": {
       "empty": "Du hast noch keinen Lebenslauf hochgeladen.",
@@ -225,7 +242,7 @@
     },
     "dangerZone": {
       "deleteAccount": "Konto löschen",
-      "description": "Das Löschen deines Kontos ist endgültig und kann nicht rückgängig gemacht werden. Diese Funktion ist noch nicht verfügbar — melde dich bei uns, wenn du dein Konto entfernen lassen möchtest.",
+      "description": "Das Löschen deines Kontos ist endgültig und kann nicht rückgängig gemacht werden. Diese Funktion ist noch nicht verfügbar. Melde dich bei uns, wenn du dein Konto entfernen lassen möchtest.",
       "notAvailable": "Das Löschen von Konten ist noch nicht verfügbar.",
       "title": "Gefahrenzone"
     },
@@ -248,7 +265,7 @@
     },
     "identity": {
       "editProfile": "Profil bearbeiten",
-      "managedNotice": "Kontodetails werden über deinen Anmeldeanbieter verwaltet und können nicht direkt bearbeitet werden — mit Ausnahme deines Anzeigenamens.",
+      "managedNotice": "Kontodetails werden über deinen Anmeldeanbieter verwaltet und können nicht direkt bearbeitet werden, mit Ausnahme deines Anzeigenamens.",
       "verifiedAccount": "Bestätigtes Konto"
     },
     "subtitle": "Verwalte deine Kontoidentität und technische Details.",
@@ -269,7 +286,7 @@
       "noDescription": "Noch keine Beschreibung."
     },
     "create": {
-      "subtitle": "Füge ein Projekt manuell hinzu — du kannst später jederzeit eines von GitHub importieren.",
+      "subtitle": "Füge ein Projekt manuell hinzu: Du kannst später jederzeit eines von GitHub importieren.",
       "title": "Neues Projekt"
     },
     "deleteDialog": {
@@ -539,7 +556,7 @@
       "reveal": {
         "neverShownAgain": "Aus Sicherheitsgründen zeigen wir den vollständigen Token nur einmal an.",
         "title": "Token erstellt",
-        "warning": "Kopiere diesen Token jetzt — du wirst ihn danach nicht mehr sehen können."
+        "warning": "Kopiere diesen Token jetzt. Du wirst ihn danach nicht mehr sehen können."
       },
       "title": "Tokens",
       "toast": {
