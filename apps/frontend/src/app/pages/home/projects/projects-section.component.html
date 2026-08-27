@@ -1,43 +1,43 @@
-<section
-  id="projects"
-  class="mx-auto max-w-(--spacing-max-width) px-(--spacing-margin-mobile) py-16 sm:px-(--spacing-margin-desktop) 2xl:py-24">
-  <div class="flex flex-col gap-2">
-    <h2 class="text-headline-md text-(--color-on-surface)">{{ 'projects.heading' | translate }}</h2>
-    <p class="max-w-prose text-body-md text-(--color-on-surface-variant)">
-      {{ 'projects.description' | translate }}
-    </p>
-  </div>
+<section id="projects" class="bg-(--color-surface) py-16 2xl:py-24">
+  <div class="mx-auto max-w-(--spacing-max-width) px-(--spacing-margin-mobile) sm:px-(--spacing-margin-desktop)">
+    <div class="flex flex-col gap-2">
+      <h2 class="text-headline-md text-(--color-on-surface)">{{ 'projects.heading' | translate }}</h2>
+      <p class="max-w-prose text-body-md text-(--color-on-surface-variant)">
+        {{ 'projects.description' | translate }}
+      </p>
+    </div>
 
-  @if (projects().length) {
-    @if (liveProjects().length) {
-      <div class="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-2">
-        @for (project of liveProjects(); track project.id) {
-          <kwd-frontend-project-card variant="feature" [project]="project" />
-        }
-      </div>
-    }
-
-    @if (demoProjects().length) {
-      <div [class]="liveProjects().length ? 'mt-12 border-t border-(--color-outline-variant) pt-8' : 'mt-8'">
-        @if (liveProjects().length) {
-          <div class="mb-6 flex flex-col gap-1">
-            <h3 class="font-mono text-label-caps uppercase text-(--color-on-surface-variant)">
-              {{ 'projects.alsoBuilt.heading' | translate }}
-            </h3>
-            <p class="text-body-sm text-(--color-on-surface-variant)">
-              {{ 'projects.alsoBuilt.description' | translate }}
-            </p>
-          </div>
-        }
-
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          @for (project of demoProjects(); track project.id) {
-            <kwd-frontend-project-card variant="compact" [project]="project" />
+    @if (projects().length) {
+      @if (liveProjects().length) {
+        <div class="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-2">
+          @for (project of liveProjects(); track project.id) {
+            <kwd-frontend-project-card variant="feature" [project]="project" />
           }
         </div>
-      </div>
+      }
+
+      @if (demoProjects().length) {
+        <div [class]="liveProjects().length ? 'mt-12 border-t border-(--color-outline-variant) pt-8' : 'mt-8'">
+          @if (liveProjects().length) {
+            <div class="mb-6 flex flex-col gap-1">
+              <h3 class="font-mono text-label-caps uppercase text-(--color-on-surface-variant)">
+                {{ 'projects.alsoBuilt.heading' | translate }}
+              </h3>
+              <p class="text-body-sm text-(--color-on-surface-variant)">
+                {{ 'projects.alsoBuilt.description' | translate }}
+              </p>
+            </div>
+          }
+
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            @for (project of demoProjects(); track project.id) {
+              <kwd-frontend-project-card variant="compact" [project]="project" />
+            }
+          </div>
+        </div>
+      }
+    } @else {
+      <p class="mt-6 text-body-md text-(--color-on-surface-variant)">{{ 'projects.comingSoon' | translate }}</p>
     }
-  } @else {
-    <p class="mt-6 text-body-md text-(--color-on-surface-variant)">{{ 'projects.comingSoon' | translate }}</p>
-  }
+  </div>
 </section>

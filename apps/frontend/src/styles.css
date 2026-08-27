@@ -8,3 +8,23 @@
 
 @source './';
 @source '../../../libs/ui/src';
+
+@layer components {
+  .section-glow-companies {
+    background-image: radial-gradient(
+      120% 60% at 18% -25%,
+      color-mix(in srgb, var(--color-primary) 8%, transparent) 0%,
+      color-mix(in srgb, var(--color-primary) 3%, transparent) 45%,
+      transparent 75%
+    );
+  }
+
+  .section-glow-contact {
+    background-image: radial-gradient(
+      110% 55% at 82% 0%,
+      color-mix(in srgb, var(--color-primary) 7%, transparent) 0%,
+      color-mix(in srgb, white 3%, transparent) 40%,
+      transparent 70%
+    );
+  }
+}

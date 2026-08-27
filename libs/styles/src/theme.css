@@ -7,6 +7,8 @@
   --color-surface: #09090b;
   --color-surface-dim: #09090b;
   --color-surface-bright: #3f3f46;
+  /* Second near-black tier for section-to-section alternation (Vercel-style two-tier bg) */
+  --color-surface-raised: #0d0d10;
   --color-surface-container-lowest: #09090b;
   --color-surface-container-low: #131316;
   --color-surface-container: #18181b;
@@ -17,7 +19,8 @@
   --color-inverse-surface: #fafafa;
   --color-inverse-on-surface: #18181b;
   --color-outline: #52525b;
-  --color-outline-variant: #27272a;
+  /* Translucent overlay reads correctly against every surface tier, unlike a flat hex */
+  --color-outline-variant: color-mix(in srgb, white 13%, transparent);
   --color-surface-tint: #60a5fa;
 
   --color-primary: #60a5fa;
@@ -147,6 +150,7 @@
     --color-surface: #fafafa;
     --color-surface-dim: #e4e4e7;
     --color-surface-bright: #fafafa;
+    --color-surface-raised: #f4f4f5;
     --color-surface-container-lowest: #ffffff;
     --color-surface-container-low: #f4f4f5;
     --color-surface-container: #ffffff;
@@ -187,6 +191,7 @@
   --color-surface: #fafafa;
   --color-surface-dim: #e4e4e7;
   --color-surface-bright: #fafafa;
+  --color-surface-raised: #f4f4f5;
   --color-surface-container-lowest: #ffffff;
   --color-surface-container-low: #f4f4f5;
   --color-surface-container: #ffffff;
