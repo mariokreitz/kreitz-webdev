@@ -1,0 +1,36 @@
+<li
+  class="flex h-full flex-col items-center gap-4 rounded-(--radius-xl) border border-(--color-outline-variant) bg-(--color-surface-container-low) p-6 text-center transition-colors hover:border-(--color-outline) hover:bg-(--color-surface-container)">
+  @if (company().logoUrl) {
+    <div
+      class="relative size-20 shrink-0 overflow-hidden rounded-(--radius-lg) border border-black/10 bg-white p-3 shadow-sm">
+      <img class="object-contain" fill [ngSrc]="company().logoUrl ?? ''" [alt]="company().name" />
+    </div>
+  } @else {
+    <div
+      class="flex size-20 shrink-0 items-center justify-center rounded-(--radius-lg) border border-black/10 bg-white p-3 text-headline-md text-gray-600 shadow-sm">
+      {{ initials() }}
+    </div>
+  }
+
+  <div class="flex min-w-0 flex-col items-center gap-1">
+    <span class="truncate font-serif text-lg font-semibold text-(--color-on-surface)">{{ company().name }}</span>
+    @if (company().role) {
+      <span class="truncate text-body-sm text-(--color-on-surface-variant)">{{ company().role }}</span>
+    }
+  </div>
+
+  @if (dateRange(); as range) {
+    <span [class]="dateClasses()">
+      @if (isCurrent()) {
+        <span class="size-1.5 shrink-0 rounded-full bg-(--color-secondary)" aria-hidden="true"></span>
+      }
+      @if (range.end === null) {
+        {{ range.start }} – {{ 'companies.present' | translate }}
+      } @else if (range.start === range.end) {
+        {{ range.start }}
+      } @else {
+        {{ range.start }} – {{ range.end }}
+      }
+    </span>
+  }
+</li>

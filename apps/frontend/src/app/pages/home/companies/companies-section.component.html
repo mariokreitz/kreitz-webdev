@@ -10,11 +10,11 @@
     </div>
 
     <ol
-      class="relative mt-8 flex max-w-2xl flex-col gap-10 before:absolute before:inset-y-2 before:left-[17px] before:w-px before:bg-(--color-outline-variant) before:content-['']"
+      class="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
       role="list"
       [attr.aria-label]="'companies.heading' | translate">
       @for (company of companies(); track company.id) {
-        <kwd-frontend-company-row [company]="company" />
+        <kwd-frontend-company-card [company]="company" />
       }
     </ol>
   </section>
