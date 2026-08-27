@@ -19,11 +19,21 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { CONTACT_EMAIL, GITHUB_URL, LINKEDIN_URL } from '../../../core/contact';
 import type { Theme } from '../../../core/theme';
 import { ConstellationBackground } from './constellation-background/constellation-background.component';
-import type { ConstellationConfig, ExclusionZone } from './constellation-background/constellation-background.types';
+import type {
+  ConstellationConfig,
+  ExclusionZone,
+  Skill,
+} from './constellation-background/constellation-background.types';
 
 const TEXT_EXCLUSION_PADDING_PX = 20;
 const NAV_EXCLUSION_PADDING_PX = 12;
 const NAV_SELECTOR = '#site-nav';
+const MOBILE_BREAKPOINT_PX = 640;
+const MOBILE_SKILL_STRIDE = 2;
+
+function selectMobileSkills(skills: readonly Skill[]): readonly Skill[] {
+  return skills.filter((_, index) => index % MOBILE_SKILL_STRIDE === 0);
+}
 
 @Component({
   selector: 'kwd-frontend-hero',
@@ -46,6 +56,7 @@ export class Hero {
 
   private readonly measuredTextZone: WritableSignal<ExclusionZone | null> = signal(null);
   private readonly measuredNavZone: WritableSignal<ExclusionZone | null> = signal(null);
+  private readonly isMobileSkillSubset: WritableSignal<boolean> = signal(false);
   private resizeObserver: ResizeObserver | null = null;
 
   protected readonly effectiveConfig: Signal<ConstellationConfig> = computed(() => {
@@ -53,6 +64,7 @@ export class Hero {
 
     return {
       ...config,
+      skills: this.isMobileSkillSubset() ? selectMobileSkills(config.skills) : config.skills,
       textExclusionZone: this.measuredTextZone() ?? config.textExclusionZone,
       navExclusionZone: this.measuredNavZone() ?? config.navExclusionZone,
     };
@@ -64,6 +76,7 @@ export class Hero {
   }
 
   private initializeExclusionZones(): void {
+    this.isMobileSkillSubset.set(this.isMobileViewport());
     this.measureExclusionZones();
 
     this.resizeObserver = new ResizeObserver(() => this.measureExclusionZones());
@@ -85,6 +98,10 @@ export class Hero {
 
     this.measuredTextZone.set(this.measureTextZone(sectionRect));
     this.measuredNavZone.set(this.measureNavZone(sectionRect));
+  }
+
+  private isMobileViewport(): boolean {
+    return window.innerWidth < MOBILE_BREAKPOINT_PX;
   }
 
   private measureTextZone(sectionRect: DOMRect): ExclusionZone | null {

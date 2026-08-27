@@ -229,9 +229,7 @@ export class ConstellationBackground {
   }
 
   private settleInitialLayout(): void {
-    const iterations = this.reducedMotion ? SETTLE_ITERATIONS : 1;
-
-    for (let i = 0; i < iterations; i++) {
+    for (let i = 0; i < SETTLE_ITERATIONS; i++) {
       this.stepSimulation();
     }
   }
