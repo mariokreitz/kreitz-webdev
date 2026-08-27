@@ -66,13 +66,13 @@
           `relative z-10 flex h-11 shrink-0 items-center gap-2 rounded-(--radius-full) transition-[color,scale] duration-200 motion-reduce:transition-none hover:opacity-80 active:scale-95 motion-reduce:active:scale-100 ${cvDownloadConfirmed() ? 'text-(--color-primary)' : 'text-(--color-on-surface) hover:text-(--color-primary)'}`
         "
         (click)="onCvDownloadClick()">
+        <span class="text-body-sm font-medium whitespace-nowrap">CV</span>
         <span
           [class]="
             `grid h-11 w-11 shrink-0 place-items-center rounded-(--radius-full) transition-transform duration-(--duration-panel-expand) ease-(--ease-spring) motion-reduce:transition-none motion-reduce:scale-100 ${cvDownloadConfirmed() ? 'scale-110' : 'scale-100'}`
           ">
           <fa-icon class="text-base" [icon]="downloadIcon()" />
         </span>
-        <span class="text-body-sm font-medium whitespace-nowrap">CV</span>
       </a>
     </div>
   }
