@@ -30,11 +30,17 @@ export class SettingsFab {
   protected readonly expanded: Signal<boolean> = computed(() => this.hoveredSignal() || this.pinnedOpenSignal());
   protected readonly gearIcon: IconDefinition = faGear;
 
-  protected onPointerEnter(): void {
+  protected onPointerEnter(event: PointerEvent): void {
+    if (event.pointerType !== 'mouse') {
+      return;
+    }
     this.hoveredSignal.set(true);
   }
 
-  protected onPointerLeave(): void {
+  protected onPointerLeave(event: PointerEvent): void {
+    if (event.pointerType !== 'mouse') {
+      return;
+    }
     this.hoveredSignal.set(false);
   }
 
