@@ -33,6 +33,8 @@ const LINKS_COMPACT_CLASSES = 'mt-auto flex flex-wrap gap-3 pt-1 text-body-sm';
 
 const MAX_VISIBLE_FEATURE_TAGS = 4;
 
+const FEATURE_IMAGE_SIZES = '(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw';
+
 @Component({
   selector: 'kwd-frontend-project-card',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -60,9 +62,7 @@ export class ProjectCard {
     Math.max(this.tagChips().length - MAX_VISIBLE_FEATURE_TAGS, 0),
   );
 
-  protected readonly imageSizes: Signal<string> = computed(() =>
-    this.isFeature() ? '(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw' : '80px',
-  );
+  protected readonly imageSizes: string = FEATURE_IMAGE_SIZES;
 
   protected readonly articleClasses: Signal<string> = computed(() =>
     this.isFeature() ? ARTICLE_FEATURE_CLASSES : ARTICLE_COMPACT_CLASSES,

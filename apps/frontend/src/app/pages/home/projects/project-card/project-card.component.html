@@ -1,7 +1,11 @@
 <article [class]="articleClasses()">
   <div [class]="imageWrapperClasses()">
     @if (project().imageUrl) {
-      <img class="object-cover" fill [sizes]="imageSizes()" [ngSrc]="project().imageUrl ?? ''" [alt]="project().name" />
+      @if (isFeature()) {
+        <img class="object-cover" fill [sizes]="imageSizes" [ngSrc]="project().imageUrl ?? ''" [alt]="project().name" />
+      } @else {
+        <img class="object-cover" fill [ngSrc]="project().imageUrl ?? ''" [alt]="project().name" />
+      }
     } @else {
       <div class="flex h-full w-full items-center justify-center">
         <fa-icon [class]="placeholderIconClasses()" [icon]="placeholderIcon" />
