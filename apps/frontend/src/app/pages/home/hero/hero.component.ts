@@ -14,9 +14,12 @@ import {
   type Signal,
   type WritableSignal,
 } from '@angular/core';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { faChevronDown, faDownload } from '@fortawesome/free-solid-svg-icons';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { CONTACT_EMAIL, GITHUB_URL, LINKEDIN_URL } from '../../../core/contact';
+import { CvAvailabilityService } from '../../../core/cv';
 import type { Theme } from '../../../core/theme';
 import { ConstellationBackground } from './constellation-background/constellation-background.component';
 import type {
@@ -38,16 +41,18 @@ function selectMobileSkills(skills: readonly Skill[]): readonly Skill[] {
 @Component({
   selector: 'kwd-frontend-hero',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TranslatePipe, ConstellationBackground, NgOptimizedImage],
+  imports: [TranslatePipe, ConstellationBackground, NgOptimizedImage, FontAwesomeModule],
   templateUrl: './hero.component.html',
 })
 export class Hero {
   public readonly constellationConfig = input.required<ConstellationConfig>();
   public readonly theme = input.required<Theme>();
 
-  protected readonly contactEmail: string = CONTACT_EMAIL;
-  protected readonly githubUrl: string = GITHUB_URL;
-  protected readonly linkedinUrl: string = LINKEDIN_URL;
+  protected readonly downloadIcon: IconDefinition = faDownload;
+  protected readonly scrollHintIcon: IconDefinition = faChevronDown;
+
+  private readonly cvAvailabilityService: CvAvailabilityService = inject(CvAvailabilityService);
+  protected readonly cvAvailable: Signal<boolean> = this.cvAvailabilityService.available;
 
   private readonly sectionRef = viewChild.required<ElementRef<HTMLElement>>('heroSection');
   private readonly textRef = viewChild.required<ElementRef<HTMLElement>>('heroText');

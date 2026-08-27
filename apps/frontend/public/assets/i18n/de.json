@@ -29,7 +29,8 @@
   "hero": {
     "role": "Full-Stack-Entwickler",
     "tagline": "Ich baue Full-Stack-Produkte, von Postgres-Schemas und NestJS-APIs bis zu barrierefreien, signalbasierten Angular-Oberflächen.",
-    "introduction": "Ich baue lieber Code, den du auch in einem Jahr noch verstehst und erweitern kannst, als den schnellsten Hack. Wenn du gerade an so einem Produkt arbeitest, melde dich einfach."
+    "introduction": "Ich baue lieber Code, den du auch in einem Jahr noch verstehst und erweitern kannst, als den schnellsten Hack. Wenn du gerade an so einem Produkt arbeitest, melde dich einfach.",
+    "downloadCv": "Lebenslauf herunterladen"
   },
   "companies": {
     "heading": "Unternehmen, mit denen ich zusammengearbeitet habe",

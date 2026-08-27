@@ -18,10 +18,10 @@ import type { ConstellationConfig, Skill, SkillIcon } from './constellation-back
 
 const CATEGORY_ACCENTS = {
   frontend: '--color-primary',
-  backend: '--color-secondary',
-  ai: '--color-tertiary',
-  testing: '--color-warning',
-  tooling: '--color-info',
+  backend: '--color-primary-200',
+  ai: '--color-primary-300',
+  testing: '--color-primary-400',
+  tooling: '--color-primary-500',
 } as const;
 
 function fontAwesomeIcon(icon: IconDefinition): SkillIcon {
