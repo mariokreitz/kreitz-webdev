@@ -2,41 +2,57 @@
   <kwd-frontend-constellation-background class="z-0" [config]="effectiveConfig()" [theme]="theme()" />
 
   <div
-    class="relative z-10 mx-auto flex w-full max-w-(--spacing-max-width) flex-col gap-6 px-(--spacing-margin-mobile) pt-48 pb-40 sm:px-(--spacing-margin-desktop) sm:pt-32 sm:pb-24 2xl:pt-40 2xl:pb-32">
-    <div #heroText class="relative z-10 flex flex-col gap-6">
-      <p class="text-label-caps text-(--color-primary)">{{ 'hero.role' | translate }}</p>
+    class="pointer-events-none relative z-10 mx-auto flex w-full max-w-(--spacing-max-width) flex-col gap-6 px-(--spacing-margin-mobile) pt-48 pb-40 sm:px-(--spacing-margin-desktop) sm:pt-32 sm:pb-24 2xl:pt-40 2xl:pb-32">
+    <div
+      #heroText
+      class="pointer-events-auto relative z-10 grid grid-cols-1 items-center gap-8 sm:grid-cols-[auto_1fr] sm:gap-12">
+      <img
+        ngSrc="assets/images/me_pp.jpeg"
+        width="200"
+        height="200"
+        priority
+        class="h-32 w-32 rounded-full object-cover ring-1 ring-(--color-outline-variant) sm:h-40 sm:w-40"
+        alt="Mario Kreitz" />
 
-      <h1 class="text-headline-lg text-(--color-on-surface) sm:text-6xl 2xl:text-7xl">Mario Kreitz</h1>
+      <div class="flex flex-col gap-6">
+        <p class="text-label-caps text-(--color-primary)">{{ 'hero.role' | translate }}</p>
 
-      <p class="max-w-2xl text-body-md text-(--color-on-surface-variant)">
-        {{ 'hero.tagline' | translate }}
-      </p>
+        <h1 class="text-headline-lg text-(--color-on-surface) sm:text-6xl 2xl:text-7xl">Mario Kreitz</h1>
 
-      <div class="flex flex-wrap gap-4 pt-2">
-        <a
-          class="rounded-(--radius-lg) bg-(--color-primary) px-5 py-2.5 text-body-sm font-medium text-(--color-on-primary) transition-opacity hover:opacity-90"
-          target="_blank"
-          rel="noopener noreferrer"
-          data-umami-event="github-link"
-          [href]="githubUrl">
-          GitHub
-        </a>
+        <p class="max-w-2xl text-body-md text-(--color-on-surface-variant)">
+          {{ 'hero.tagline' | translate }}
+        </p>
 
-        <a
-          class="rounded-(--radius-lg) border border-(--color-outline-variant) px-5 py-2.5 text-body-sm font-medium text-(--color-on-surface) transition-colors hover:bg-(--color-surface-container)"
-          target="_blank"
-          rel="noopener noreferrer"
-          data-umami-event="linkedin-link"
-          [href]="linkedinUrl">
-          LinkedIn
-        </a>
+        <p class="max-w-2xl text-body-md text-(--color-on-surface-variant)">
+          {{ 'hero.introduction' | translate }}
+        </p>
 
-        <a
-          class="rounded-(--radius-lg) border border-(--color-outline-variant) px-5 py-2.5 text-body-sm font-medium text-(--color-on-surface) transition-colors hover:bg-(--color-surface-container)"
-          data-umami-event="email-link"
-          [href]="`mailto:${contactEmail}`">
-          {{ contactEmail }}
-        </a>
+        <div class="flex flex-wrap gap-4 pt-2">
+          <a
+            class="rounded-(--radius-lg) bg-(--color-primary) px-5 py-2.5 text-body-sm font-medium text-(--color-on-primary) transition-opacity hover:opacity-90"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-umami-event="github-link"
+            [href]="githubUrl">
+            GitHub
+          </a>
+
+          <a
+            class="rounded-(--radius-lg) border border-(--color-outline-variant) px-5 py-2.5 text-body-sm font-medium text-(--color-on-surface) transition-colors hover:bg-(--color-surface-container)"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-umami-event="linkedin-link"
+            [href]="linkedinUrl">
+            LinkedIn
+          </a>
+
+          <a
+            class="rounded-(--radius-lg) border border-(--color-outline-variant) px-5 py-2.5 text-body-sm font-medium text-(--color-on-surface) transition-colors hover:bg-(--color-surface-container)"
+            data-umami-event="email-link"
+            [href]="`mailto:${contactEmail}`">
+            {{ contactEmail }}
+          </a>
+        </div>
       </div>
     </div>
   </div>

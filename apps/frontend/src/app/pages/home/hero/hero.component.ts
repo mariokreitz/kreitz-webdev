@@ -1,4 +1,4 @@
-import { isPlatformBrowser } from '@angular/common';
+import { NgOptimizedImage, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,7 +28,7 @@ const NAV_SELECTOR = '#site-nav';
 @Component({
   selector: 'kwd-frontend-hero',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TranslatePipe, ConstellationBackground],
+  imports: [TranslatePipe, ConstellationBackground, NgOptimizedImage],
   templateUrl: './hero.component.html',
 })
 export class Hero {

@@ -28,7 +28,8 @@
   },
   "hero": {
     "role": "Full-Stack Developer",
-    "tagline": "I build full-stack products, from Postgres schemas and NestJS APIs to accessible, signal-driven Angular UIs."
+    "tagline": "I build full-stack products, from Postgres schemas and NestJS APIs to accessible, signal-driven Angular UIs.",
+    "introduction": "I care less about the fastest hack than about code you can still understand and extend a year later. If you're building something like that right now, just reach out."
   },
   "companies": {
     "heading": "Companies I've worked with",
