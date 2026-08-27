@@ -36,6 +36,8 @@ export function setupSwagger(app: INestApplication, context: BootstrapContext): 
     .addTag('Projects', "Manage the authenticated user's projects")
     .addTag('GitHub Import', "Browse and import the signed-in user's GitHub repositories as portfolio projects")
     .addTag('Public Projects', 'Public, website-token-authenticated read access to published projects')
+    .addTag('Social Links', 'Manage social links attached to a website')
+    .addTag('Public Social Links', 'Public, website-token-authenticated read access to social links')
     .addTag('Dashboard', "Aggregate read-only metrics for the authenticated user's dashboard")
     .addTag('Health', 'Liveness and readiness probes')
     .addBearerAuth(

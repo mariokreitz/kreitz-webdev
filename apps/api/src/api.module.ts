@@ -8,6 +8,8 @@ import { PublicCompanyModule } from '@app/modules/public-companies';
 import { PublicContactModule } from '@app/modules/public-contact';
 import { PublicCvModule } from '@app/modules/public-cv';
 import { PublicProjectModule } from '@app/modules/public-projects';
+import { PublicSocialLinkModule } from '@app/modules/public-social-links';
+import { SocialLinkModule } from '@app/modules/social-link';
 import { WebsiteModule } from '@app/modules/website';
 import { WebsiteDomainModule } from '@app/modules/website-domain';
 import { WebsiteProjectModule } from '@app/modules/website-project';
@@ -26,6 +28,8 @@ import { Module } from '@nestjs/common';
     PublicContactModule,
     CompanyModule,
     PublicCompanyModule,
+    SocialLinkModule,
+    PublicSocialLinkModule,
     CvDocumentModule,
     PublicCvModule,
     GithubImportModule,
