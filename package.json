@@ -8,7 +8,7 @@
     "serve": "nx run-many -t serve -p api,frontend,portal",
     "serve:api": "nx serve api",
     "serve:frontend": "nx serve frontend",
-    "serve:frontend:ssr": "nx run frontend:serve-ssr",
+    "serve:frontend:ssr": "nx run frontend:serve-ssr --configuration=development",
     "serve:portal": "nx serve portal",
     "build": "nx run-many -t build --all",
     "build:prod": "nx run-many -t build --all -c production",
