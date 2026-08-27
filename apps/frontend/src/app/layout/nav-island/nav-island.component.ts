@@ -18,7 +18,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { faDownload } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faDownload } from '@fortawesome/free-solid-svg-icons';
 import { filter } from 'rxjs';
 import { CvAvailabilityService } from '../../core/cv';
 import { ThemeService, type Theme } from '../../core/theme';
@@ -30,6 +30,7 @@ const ANCHOR_SCROLL_OFFSET_PX = 96;
 const SCROLLED_THRESHOLD_PX = 24;
 const SECTION_IDS: readonly SectionId[] = ['projects', 'contact'];
 const SECTION_ROOT_MARGIN = '-40% 0px -55% 0px';
+const CV_DOWNLOAD_CONFIRM_MS = 1800;
 
 @Component({
   selector: 'kwd-frontend-nav-island',
@@ -48,6 +49,7 @@ export class NavIsland {
   private readonly scrolledSignal: WritableSignal<boolean> = signal(false);
   private readonly activeSectionSignal: WritableSignal<SectionId | null> = signal(null);
   private readonly navBounceSignal: WritableSignal<boolean> = signal(false);
+  private readonly cvDownloadConfirmedSignal: WritableSignal<boolean> = signal(false);
   private readonly intersectingSections = new Set<SectionId>();
 
   private readonly blip = viewChild.required(BlipMascot);
@@ -56,11 +58,15 @@ export class NavIsland {
   private stopScrollTracking: (() => void) | null = null;
 
   private navBounceTimer: ReturnType<typeof setTimeout> | undefined;
+  private cvDownloadConfirmTimer: ReturnType<typeof setTimeout> | undefined;
 
   protected readonly scrolled: Signal<boolean> = this.scrolledSignal.asReadonly();
   protected readonly activeSection: Signal<SectionId | null> = this.activeSectionSignal.asReadonly();
   protected readonly cvAvailable: Signal<boolean> = this.cvAvailabilityService.available;
-  protected readonly downloadIcon: IconDefinition = faDownload;
+  protected readonly cvDownloadConfirmed: Signal<boolean> = this.cvDownloadConfirmedSignal.asReadonly();
+  protected readonly downloadIcon: Signal<IconDefinition> = computed(() =>
+    this.cvDownloadConfirmedSignal() ? faCheck : faDownload,
+  );
   protected readonly theme: Signal<Theme> = computed(() => this.themeService.theme());
   protected readonly navBounce: Signal<boolean> = this.navBounceSignal.asReadonly();
 
@@ -85,6 +91,7 @@ export class NavIsland {
       this.stopScrollTracking?.();
       this.sectionObserver?.disconnect();
       clearTimeout(this.navBounceTimer);
+      clearTimeout(this.cvDownloadConfirmTimer);
     });
   }
 
@@ -94,6 +101,13 @@ export class NavIsland {
 
   protected onNavLinkClick(): void {
     this.triggerNavBounce();
+  }
+
+  protected onCvDownloadClick(): void {
+    this.triggerNavBounce();
+    clearTimeout(this.cvDownloadConfirmTimer);
+    this.cvDownloadConfirmedSignal.set(true);
+    this.cvDownloadConfirmTimer = setTimeout(() => this.cvDownloadConfirmedSignal.set(false), CV_DOWNLOAD_CONFIRM_MS);
   }
 
   protected onNavLinkPointerEnter(event: MouseEvent): void {
