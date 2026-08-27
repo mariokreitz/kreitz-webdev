@@ -10,12 +10,12 @@ import type { ProjectCardVariant, TagChip } from './project-card.types';
 import { resolveTagIcon } from './tag-icon.config';
 
 const ARTICLE_FEATURE_CLASSES =
-  'grid gap-4 overflow-hidden rounded-(--radius-lg) border border-(--color-outline-variant) bg-(--color-surface-container-low) p-4 sm:grid-cols-2 sm:items-center sm:p-5';
+  'grid gap-4 overflow-hidden rounded-(--radius-lg) border border-(--color-outline-variant) bg-(--color-surface-container-low) p-4 sm:h-72 sm:grid-cols-2 sm:items-center sm:p-5';
 const ARTICLE_COMPACT_CLASSES =
   'flex gap-4 overflow-hidden rounded-(--radius-lg) border border-(--color-outline-variant) bg-(--color-surface-container-low) p-4';
 
 const IMAGE_WRAPPER_FEATURE_CLASSES =
-  'relative aspect-video shrink-0 overflow-hidden rounded-(--radius-md) bg-(--color-surface-container-high)';
+  'relative aspect-video max-h-56 shrink-0 overflow-hidden rounded-(--radius-md) bg-(--color-surface-container-high)';
 const IMAGE_WRAPPER_COMPACT_CLASSES =
   'relative h-20 w-20 shrink-0 overflow-hidden rounded-(--radius-md) bg-(--color-surface-container-high)';
 
@@ -25,7 +25,7 @@ const PLACEHOLDER_ICON_COMPACT_CLASSES = 'text-xl text-(--color-on-surface-varia
 const BODY_FEATURE_CLASSES = 'flex flex-col gap-2';
 const BODY_COMPACT_CLASSES = 'flex min-w-0 flex-1 flex-col gap-1.5';
 
-const DESCRIPTION_FEATURE_CLASSES = 'max-w-prose text-body-sm text-(--color-on-surface-variant)';
+const DESCRIPTION_FEATURE_CLASSES = 'line-clamp-2 max-w-prose text-body-sm text-(--color-on-surface-variant)';
 const DESCRIPTION_COMPACT_CLASSES = 'text-body-sm text-(--color-on-surface-variant)';
 
 const LINKS_FEATURE_CLASSES = 'mt-1 flex flex-wrap items-center gap-3';
@@ -51,7 +51,7 @@ export class ProjectCard {
   );
 
   protected readonly imageSizes: Signal<string> = computed(() =>
-    this.isFeature() ? '(min-width: 640px) 50vw, 100vw' : '80px',
+    this.isFeature() ? '(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw' : '80px',
   );
 
   protected readonly articleClasses: Signal<string> = computed(() =>
