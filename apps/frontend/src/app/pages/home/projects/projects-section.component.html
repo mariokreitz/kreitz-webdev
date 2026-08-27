@@ -30,7 +30,7 @@
           </div>
         }
 
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           @for (project of demoProjects(); track project.id) {
             <kwd-frontend-project-card variant="compact" [project]="project" />
           }
