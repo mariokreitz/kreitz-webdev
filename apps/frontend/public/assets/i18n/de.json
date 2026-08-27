@@ -54,10 +54,19 @@
       "source": "Quellcode"
     }
   },
-  "contact": {
+  "footer": {
+    "tagline": "Ich entwickle mit Leidenschaft und bin immer offen für neue Projekte.",
     "links": {
+      "heading": "Direkt zu",
+      "projects": "Projekte",
+      "contact": "Kontakt",
       "imprint": "Impressum",
       "privacyPolicy": "Datenschutz"
+    },
+    "social": {
+      "heading": "Verbinden",
+      "github": "GitHub",
+      "linkedin": "LinkedIn"
     }
   },
   "contactForm": {

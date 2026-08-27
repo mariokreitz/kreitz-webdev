@@ -54,10 +54,19 @@
       "source": "Source"
     }
   },
-  "contact": {
+  "footer": {
+    "tagline": "I build with care and I'm always up for a new project.",
     "links": {
+      "heading": "Quick links",
+      "projects": "Projects",
+      "contact": "Contact",
       "imprint": "Imprint",
       "privacyPolicy": "Privacy Policy"
+    },
+    "social": {
+      "heading": "Connect",
+      "github": "GitHub",
+      "linkedin": "LinkedIn"
     }
   },
   "contactForm": {
