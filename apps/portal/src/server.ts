@@ -12,26 +12,25 @@ import { fileURLToPath } from 'node:url';
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
 
+function toHostname(candidate: string): string {
+  try {
+    return new URL(candidate).hostname;
+  } catch {
+    return candidate;
+  }
+}
+
 const app = express();
 const port = Number(process.env['PORTAL_PORT']) || 4201;
 const allowedHostsEnv = process.env['NG_ALLOWED_HOSTS'] || process.env['APP_BASE_URL'];
 const parsedHosts: string[] = [];
 if (allowedHostsEnv) {
-  if (allowedHostsEnv.includes(',')) {
-    parsedHosts.push(
-      ...allowedHostsEnv
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean),
-    );
-  } else {
-    try {
-      const u = new URL(allowedHostsEnv);
-      parsedHosts.push(u.hostname);
-    } catch {
-      parsedHosts.push(allowedHostsEnv.trim());
-    }
-  }
+  parsedHosts.push(
+    ...allowedHostsEnv
+      .split(',')
+      .map((host) => toHostname(host.trim()))
+      .filter(Boolean),
+  );
 }
 const defaultLocal = ['localhost', `localhost:${port}`, '127.0.0.1', `127.0.0.1:${port}`, '[::1]', `[::1]:${port}`];
 const allowList = Array.from(new Set([...defaultLocal, ...parsedHosts]));
