@@ -4,6 +4,7 @@ export * from './types/cv';
 export * from './types/domains-summary';
 export * from './types/github-repo-summary';
 export * from './types/project';
+export * from './types/social-link';
 export * from './types/website';
 export * from './types/website-domain';
 export * from './types/website-project';

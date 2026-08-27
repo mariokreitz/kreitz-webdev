@@ -1,0 +1,95 @@
+<div class="flex items-center justify-between gap-4">
+  <h2 class="text-headline-md text-(--color-on-surface)">{{ 'websites.socialLinks.title' | translate }}</h2>
+  @if (!isAddFormOpen()) {
+    <button
+      class="flex items-center gap-1 text-code-sm uppercase text-(--color-primary) transition-colors hover:brightness-125"
+      type="button"
+      (click)="onAddRequested()">
+      <fa-icon [icon]="addIcon" />
+      {{ 'websites.socialLinks.add' | translate }}
+    </button>
+  }
+</div>
+
+@if (isAddFormOpen()) {
+  <div class="mt-4">
+    <kwd-portal-social-link-form
+      mode="create"
+      [initialValue]="emptyFormValue"
+      [loading]="creating()"
+      (formSubmitted)="onAddSubmit($event)"
+      (cancelled)="onAddCancelled()" />
+  </div>
+}
+
+@if (socialLinksResource.isLoading()) {
+  <div class="mt-4">
+    <kwd-ui-skeleton variant="activity" [rows]="3" />
+  </div>
+} @else if (socialLinksResource.error()) {
+  <p class="mt-4 text-body-sm text-(--color-error)">{{ 'websites.socialLinks.loadError' | translate }}</p>
+} @else {
+  <ul class="mt-4 flex flex-col gap-3">
+    @for (socialLink of socialLinksResource.value(); track socialLink.id) {
+      <li class="flex flex-col gap-3 border-b border-(--color-outline-variant) pb-3 last:border-0 last:pb-0">
+        @if (editingId() === socialLink.id) {
+          <kwd-portal-social-link-form
+            mode="edit"
+            [initialValue]="initialValueFor(socialLink)"
+            [loading]="updating()"
+            (formSubmitted)="onEditSubmit(socialLink, $event)"
+            (cancelled)="onEditCancelled()" />
+        } @else {
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <fa-icon class="text-(--color-on-surface-variant)" [icon]="iconFor(socialLink.platform)" />
+              <div class="flex flex-col">
+                <span class="text-body-md text-(--color-on-surface)">
+                  @if (socialLink.label) {
+                    {{ socialLink.label }}
+                  } @else {
+                    {{ socialLink.platform }}
+                  }
+                </span>
+                <a
+                  class="text-code-sm text-(--color-on-surface-variant) transition-colors hover:text-(--color-on-surface)"
+                  [href]="socialLink.url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >{{ socialLink.url }}</a
+                >
+              </div>
+            </div>
+            <div class="flex items-center gap-4">
+              <button
+                class="text-(--color-on-surface-variant) transition-colors hover:text-(--color-on-surface)"
+                type="button"
+                [attr.aria-label]="'websites.socialLinks.actions.edit' | translate"
+                (click)="onEditRequested(socialLink)">
+                <fa-icon [icon]="editIcon" />
+              </button>
+              <button
+                class="text-(--color-on-surface-variant) transition-colors hover:text-(--color-error)"
+                type="button"
+                [attr.aria-label]="'websites.actions.delete' | translate"
+                (click)="onDeleteRequested(socialLink)">
+                <fa-icon [icon]="deleteIcon" />
+              </button>
+            </div>
+          </div>
+        }
+      </li>
+    } @empty {
+      <li class="text-body-sm text-(--color-on-surface-variant)">{{ 'websites.socialLinks.empty' | translate }}</li>
+    }
+  </ul>
+}
+
+<kwd-ui-confirm-dialog
+  [open]="pendingDelete() !== null"
+  [title]="'websites.socialLinks.deleteDialog.title' | translate"
+  [message]="'websites.socialLinks.deleteDialog.message' | translate: { name: pendingDelete()?.platform }"
+  [confirmLabel]="'websites.actions.delete' | translate"
+  [busy]="deleting()"
+  (confirmed)="onDeleteConfirmed()"
+  (cancelled)="onDeleteCancelled()" />

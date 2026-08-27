@@ -524,6 +524,57 @@
       },
       "unpublished": "Nicht veröffentlicht"
     },
+    "socialLinks": {
+      "actions": {
+        "edit": "Bearbeiten"
+      },
+      "add": "Social-Link hinzufügen",
+      "deleteDialog": {
+        "message": "Der Link \"{{name}}\" wird von dieser Website entfernt.",
+        "title": "Social-Link löschen?"
+      },
+      "empty": "Noch keine Social-Links hinzugefügt.",
+      "form": {
+        "create": {
+          "submit": "Social-Link hinzufügen",
+          "submitting": "Wird hinzugefügt…"
+        },
+        "edit": {
+          "submit": "Speichern",
+          "submitting": "Wird gespeichert…"
+        },
+        "errors": {
+          "labelTooLong": "Das Label ist zu lang.",
+          "platformRequired": "Bitte wähle eine Plattform aus oder gib sie ein.",
+          "platformTooLong": "Die Plattform ist zu lang.",
+          "sortOrderInvalid": "Bitte gib eine Position von 0 oder höher ein.",
+          "urlInvalid": "Bitte gib eine gültige URL ein, inklusive https://."
+        },
+        "fields": {
+          "label": "Label",
+          "platform": "Plattform",
+          "platformCustom": "Plattformname",
+          "sortOrder": "Position",
+          "url": "URL"
+        }
+      },
+      "loadError": "Social-Links konnten nicht geladen werden. Bitte lade die Seite neu.",
+      "platforms": {
+        "email": "E-Mail",
+        "github": "GitHub",
+        "linkedin": "LinkedIn",
+        "mastodon": "Mastodon",
+        "other": "Andere",
+        "website": "Website",
+        "x": "X (Twitter)"
+      },
+      "title": "Social Links",
+      "toast": {
+        "created": "Social-Link hinzugefügt.",
+        "deleted": "Social-Link gelöscht.",
+        "updated": "Social-Link aktualisiert."
+      }
+    },
     "status": {
       "disabled": "Deaktiviert",
       "enabled": "Aktiviert"

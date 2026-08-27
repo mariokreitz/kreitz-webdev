@@ -21,6 +21,7 @@ import { WebsiteService } from '../../../core/websites';
 import { CompaniesSection } from './companies-section/companies-section.component';
 import { DomainsSection } from './domains-section/domains-section.component';
 import { ProjectsSection } from './projects-section/projects-section.component';
+import { SocialLinksSection } from './social-links-section/social-links-section.component';
 import { TokensSection } from './tokens-section/tokens-section.component';
 import { WebsiteEditForm, type WebsiteEditFormValue } from './website-edit-form/website-edit-form.component';
 
@@ -39,6 +40,7 @@ import { WebsiteEditForm, type WebsiteEditFormValue } from './website-edit-form/
     TokensSection,
     ProjectsSection,
     CompaniesSection,
+    SocialLinksSection,
   ],
   templateUrl: './website-detail.component.html',
 })

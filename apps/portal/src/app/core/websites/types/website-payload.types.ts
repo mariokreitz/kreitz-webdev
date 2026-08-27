@@ -51,3 +51,17 @@ export interface UpdateCompanyPayload {
   readonly endDate?: string;
   readonly sortOrder?: number;
 }
+
+export interface CreateSocialLinkPayload {
+  readonly platform: string;
+  readonly label?: string;
+  readonly url: string;
+  readonly sortOrder?: number;
+}
+
+export interface UpdateSocialLinkPayload {
+  readonly platform?: string;
+  readonly label?: string;
+  readonly url?: string;
+  readonly sortOrder?: number;
+}
