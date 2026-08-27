@@ -1,5 +1,6 @@
 import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, type Signal } from '@angular/core';
+import { Tooltip } from '@shared/ui';
 
 import type { PublicCompany } from '../../public-company.model';
 
@@ -17,7 +18,7 @@ function initialsOf(name: string): string {
   selector: 'kwd-frontend-company-logo',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'contents' },
-  imports: [NgOptimizedImage],
+  imports: [NgOptimizedImage, Tooltip],
   templateUrl: './company-logo.component.html',
 })
 export class CompanyLogo {

@@ -3,14 +3,18 @@
     <img
       class="object-contain opacity-65 grayscale transition-[filter,opacity] duration-300 hover:opacity-100 hover:grayscale-0"
       fill
+      tabindex="0"
       [ngSrc]="company().logoUrl ?? ''"
-      [alt]="company().name" />
+      [alt]="company().name"
+      [kwdUiTooltip]="company().name" />
   </div>
 } @else {
   <div
     class="flex h-12 w-[150px] items-center justify-center text-headline-md font-semibold text-(--color-on-surface-variant) opacity-65 transition-opacity duration-300 hover:opacity-100"
     role="img"
-    [attr.aria-label]="company().name">
+    tabindex="0"
+    [attr.aria-label]="company().name"
+    [kwdUiTooltip]="company().name">
     <span aria-hidden="true">{{ initials() }}</span>
   </div>
 }
