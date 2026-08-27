@@ -11,17 +11,7 @@
     <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport" />
     <link href="favicon.ico" rel="icon" type="image/x-icon" />
     <script>
-      (function () {
-        try {
-          var stored = JSON.parse(localStorage.getItem('kwd-frontend-page-preferences'));
-          var theme = stored && stored.theme;
-          if (theme === 'light' || theme === 'dark') {
-            document.documentElement.setAttribute('data-theme', theme);
-          } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.documentElement.setAttribute('data-theme', 'dark');
-          }
-        } catch (e) {}
-      })();
+      document.documentElement.setAttribute('data-theme', 'dark');
     </script>
     <script
       defer

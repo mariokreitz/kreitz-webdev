@@ -18,7 +18,6 @@ import { asHomeRequestContext } from '../../core/ssr';
 import { ThemeService, type Theme } from '../../core/theme';
 import { CompaniesSection } from './companies/companies-section.component';
 import { ContactSection } from './contact-section/contact-section.component';
-import { SiteFooter } from './footer/site-footer.component';
 import { Hero } from './hero/hero.component';
 import { heroConstellationConfig } from './hero/hero.config';
 import { ProjectsSection } from './projects/projects-section.component';
@@ -33,7 +32,7 @@ const COMPANIES_STATE_KEY: StateKey<readonly PublicCompany[]> =
 @Component({
   selector: 'kwd-frontend-home',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Hero, CompaniesSection, ProjectsSection, ContactSection, SiteFooter],
+  imports: [Hero, CompaniesSection, ProjectsSection, ContactSection],
   templateUrl: './home.component.html',
 })
 export class Home {
