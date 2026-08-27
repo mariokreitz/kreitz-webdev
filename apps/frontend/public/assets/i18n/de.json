@@ -15,7 +15,7 @@
   "seo": {
     "home": {
       "title": "Mario Kreitz | Full-Stack-Entwickler",
-      "description": "Portfolio von Mario Kreitz, Full-Stack-Entwickler. Ich baue Full-Stack-Produkte, von Postgres-Schemas und NestJS-APIs bis zu barrierefreien, signalbasierten Angular-Oberflächen."
+      "description": "Portfolio von Mario Kreitz, Full-Stack-Entwickler. Hier findest du mehr über mich, meine Projekte und meine Erfahrung in der Webentwicklung."
     },
     "imprint": {
       "title": "Impressum | Mario Kreitz",
@@ -28,13 +28,13 @@
   },
   "hero": {
     "role": "Full-Stack-Entwickler",
-    "tagline": "Ich baue Full-Stack-Produkte, von Postgres-Schemas und NestJS-APIs bis zu barrierefreien, signalbasierten Angular-Oberflächen.",
-    "introduction": "Ich baue lieber Code, den du auch in einem Jahr noch verstehst und erweitern kannst, als den schnellsten Hack. Wenn du gerade an so einem Produkt arbeitest, melde dich einfach.",
+    "tagline": "Ich entwickle Webanwendungen und kümmere mich dabei um Frontend, Backend und alles, was dazwischen liegt.",
+    "introduction": "Mir ist wichtig, dass Software nicht nur funktioniert, sondern auch ordentlich gemacht ist und man später noch gut damit arbeiten kann.",
     "downloadCv": "Lebenslauf herunterladen"
   },
   "companies": {
-    "heading": "Unternehmen, mit denen ich zusammengearbeitet habe",
-    "description": "Teams und Unternehmen, mit denen ich Produkte ausgeliefert habe.",
+    "heading": "Unternehmen, mit denen ich gearbeitet habe",
+    "description": "Ein paar Unternehmen und Teams, bei denen ich bisher mitgearbeitet habe.",
     "comingSoon": "Weitere Unternehmen folgen in Kürze."
   },
   "cv": {
@@ -42,22 +42,22 @@
   },
   "projects": {
     "heading": "Projekte",
-    "description": "Was ich tatsächlich veröffentlicht habe: Live-Produkte, die du dir direkt ansehen kannst, sowie ein paar kleinere Dinge, die nebenbei entstanden sind.",
+    "description": "Hier findest du Projekte, an denen ich gearbeitet habe. Darunter sind fertige Sachen, die du dir direkt anschauen kannst, und kleinere Projekte, die ich nebenbei gemacht habe.",
     "alsoBuilt": {
       "heading": "Außerdem gebaut",
-      "description": "Kleinere Demos und Experimente: gebaut, um etwas zu lernen oder eine Idee auszuprobieren, nicht als laufende Produkte."
+      "description": "Kleinere Projekte und Experimente, die ich gebaut habe, um etwas auszuprobieren oder einfach eine Idee umzusetzen."
     },
     "comingSoon": "Weitere Projekte folgen in Kürze.",
     "card": {
       "builtWith": "Entwickelt mit",
       "viewLiveSite": "Live-Website ansehen",
-      "tryIt": "Ausprobieren",
-      "viewSource": "Quellcode ansehen",
-      "source": "Quellcode"
+      "tryIt": "Demo",
+      "viewSource": "Zu GitHub",
+      "source": "GitHub"
     }
   },
   "footer": {
-    "tagline": "Ich entwickle mit Leidenschaft und bin immer offen für neue Projekte.",
+    "tagline": "Stuttgart, Deutschland",
     "links": {
       "heading": "Direkt zu",
       "projects": "Projekte",
@@ -66,21 +66,21 @@
       "privacyPolicy": "Datenschutz"
     },
     "social": {
-      "heading": "Verbinden",
+      "heading": "Soziale Netzwerke",
       "github": "GitHub",
       "linkedin": "LinkedIn"
     }
   },
   "contactForm": {
-    "heading": "Kontakt aufnehmen",
-    "subheading": "Ein Projekt im Kopf oder einfach nur Hallo sagen? Schick mir eine Nachricht, ich melde mich zurück.",
+    "heading": "Kontakt",
+    "subheading": "Du möchtest mehr über mich oder meine bisherigen Projekte wissen? Schreib mir gerne.",
     "fields": {
       "name": "Name",
       "namePlaceholder": "Dein Name",
       "email": "E-Mail",
       "emailPlaceholder": "du@beispiel.de",
       "message": "Nachricht",
-      "messagePlaceholder": "Erzähl mir von deinem Projekt…"
+      "messagePlaceholder": "Um was geht es…"
     },
     "errors": {
       "nameRequired": "Bitte gib deinen Namen ein.",
@@ -91,19 +91,20 @@
     },
     "submit": "Nachricht senden",
     "submitting": "Wird gesendet…",
-    "success": "Danke! Deine Nachricht wurde gesendet. Ich melde mich bald bei dir.",
-    "error": "Beim Senden deiner Nachricht ist etwas schiefgelaufen. Bitte versuche es erneut oder schreib mir direkt eine E-Mail.",
+    "success": "Danke für deine Nachricht! Ich melde mich bald bei dir.",
+    "error": "Beim Senden ist etwas schiefgelaufen. Bitte versuche es nochmal oder schreib mir direkt eine E-Mail.",
     "errorRateLimited": "Zuletzt wurden zu viele Nachrichten gesendet. Bitte versuche es in Kürze erneut.",
     "availability": {
-      "status": "Offen für neue Projekte",
-      "framing": "Am liebsten arbeite ich an Produkten, bei denen Code-Qualität und eine durchdachte Architektur wirklich zählen, von der ersten API bis zum fertigen Interface. Ob Freelance-Projekt, Teilzeit-Mitarbeit oder einfach ein spannendes Produkt, das du gerade baust: ich höre mir jede Idee an.",
+      "status": "Auf der Suche nach einer neuen Stelle",
+      "framing": "Ich suche aktuell eine neue Stelle als Entwickler. Wenn du denkst, dass mein Profil zu eurem Team passen könnte, freue ich mich über eine Nachricht. Gerne kannst du mich auch kontaktieren, wenn du einfach mehr über mich und meine Projekte erfahren möchtest.",
       "directEmail": "Du kannst mir auch einfach direkt eine E-Mail schreiben an",
       "chips": {
         "email": "E-Mail",
         "github": "GitHub",
         "linkedin": "LinkedIn"
       }
-    }
+    },
+    "messagePlaceholder": "Deine Nachricht…"
   },
   "imprint": {
     "title": "Impressum",

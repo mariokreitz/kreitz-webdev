@@ -6,18 +6,22 @@
     <div
       #heroText
       class="pointer-events-auto relative z-10 grid max-w-xl grid-cols-1 items-center gap-6 sm:max-w-2xl sm:grid-cols-[auto_1fr] sm:gap-8">
-      <img
-        ngSrc="assets/images/me_pp.jpeg"
-        width="200"
-        height="200"
-        priority
-        class="h-20 w-20 rounded-full object-cover ring-1 ring-(--color-outline-variant) sm:h-24 sm:w-24"
-        alt="Mario Kreitz" />
-
-      <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-8">
         <p class="text-label-caps text-(--color-primary)">{{ 'hero.role' | translate }}</p>
 
-        <h1 class="text-headline-lg text-(--color-on-surface) sm:text-6xl 2xl:text-7xl">Mario Kreitz</h1>
+        <div class="flex gap-4">
+          <img
+            alt="Mario Kreitz"
+            class="h-20 w-20 rounded-full object-cover ring-1 ring-(--color-outline-variant) sm:h-24 sm:w-24"
+            height="200"
+            ngSrc="assets/images/me_pp.jpeg"
+            priority
+            width="200" />
+
+          <h1 class="text-headline-lg text-(--color-on-surface) sm:text-6xl 2xl:text-7xl flex items-center">
+            Mario Kreitz
+          </h1>
+        </div>
 
         <p class="max-w-2xl text-body-md text-(--color-on-surface-variant)">
           {{ 'hero.tagline' | translate }}
@@ -31,9 +35,9 @@
           <div class="flex flex-wrap items-center gap-4 pt-2">
             <a
               class="inline-flex items-center gap-2 rounded-(--radius-lg) bg-(--color-primary) px-5 py-2.5 text-body-sm font-medium text-(--color-on-primary) transition-opacity hover:opacity-90"
-              href="/api/cv/download"
-              data-umami-event="cv-download-link">
-              <fa-icon [icon]="downloadIcon" [attr.aria-hidden]="true" />
+              data-umami-event="cv-download-link"
+              href="/api/cv/download">
+              <fa-icon [attr.aria-hidden]="true" [icon]="downloadIcon" />
               {{ 'hero.downloadCv' | translate }}
             </a>
           </div>
@@ -42,7 +46,7 @@
     </div>
   </div>
 
-  <div class="pointer-events-none absolute inset-x-0 bottom-6 z-10 flex justify-center sm:bottom-10" aria-hidden="true">
+  <div aria-hidden="true" class="pointer-events-none absolute inset-x-0 bottom-6 z-10 flex justify-center sm:bottom-10">
     <fa-icon
       class="text-lg text-(--color-on-surface-variant)/60 motion-safe:animate-bounce motion-reduce:animate-none"
       [icon]="scrollHintIcon" />

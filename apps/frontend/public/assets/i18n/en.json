@@ -15,7 +15,7 @@
   "seo": {
     "home": {
       "title": "Mario Kreitz | Full-Stack Developer",
-      "description": "Portfolio of Mario Kreitz, a Full-Stack Developer building full-stack products, from Postgres schemas and NestJS APIs to accessible, signal-driven Angular UIs."
+      "description": "Portfolio of Mario Kreitz, Full-Stack Developer. Here you can learn more about me, my projects, and my experience in web development."
     },
     "imprint": {
       "title": "Imprint | Mario Kreitz",
@@ -28,13 +28,13 @@
   },
   "hero": {
     "role": "Full-Stack Developer",
-    "tagline": "I build full-stack products, from Postgres schemas and NestJS APIs to accessible, signal-driven Angular UIs.",
-    "introduction": "I care less about the fastest hack than about code you can still understand and extend a year later. If you're building something like that right now, just reach out.",
+    "tagline": "I build web applications and work on the frontend, backend, and everything in between.",
+    "introduction": "I care about building software that not only works, but is also clean and easy to work with later on. I'm currently looking for a new position as a developer.",
     "downloadCv": "Download CV"
   },
   "companies": {
     "heading": "Companies I've worked with",
-    "description": "Teams and companies I've shipped with.",
+    "description": "A few of the companies and teams I've worked with so far.",
     "comingSoon": "More companies coming soon."
   },
   "cv": {
@@ -42,10 +42,10 @@
   },
   "projects": {
     "heading": "Projects",
-    "description": "What I've actually shipped: live products you can click through right now, plus a few smaller things built along the way.",
+    "description": "Here you'll find projects I've worked on. Some are finished projects you can check out, while others are smaller things I built along the way.",
     "alsoBuilt": {
       "heading": "Also built",
-      "description": "Smaller demos and experiments: built to learn something or try an idea, not running as products."
+      "description": "Smaller projects and experiments I built to try something out or simply turn an idea into something real."
     },
     "comingSoon": "More projects coming soon.",
     "card": {
@@ -57,7 +57,7 @@
     }
   },
   "footer": {
-    "tagline": "I build with care and I'm always up for a new project.",
+    "tagline": "I'm currently looking for a new position as a developer and I'm always happy to hear about interesting opportunities.",
     "links": {
       "heading": "Quick links",
       "projects": "Projects",
@@ -73,7 +73,7 @@
   },
   "contactForm": {
     "heading": "Get in touch",
-    "subheading": "Have a project in mind or just want to say hello? Send a message and I'll get back to you.",
+    "subheading": "Want to know more about me or some of my projects? Feel free to send me a message.",
     "fields": {
       "name": "Name",
       "namePlaceholder": "Your name",
@@ -91,19 +91,20 @@
     },
     "submit": "Send message",
     "submitting": "Sending…",
-    "success": "Thanks! Your message has been sent. I'll get back to you soon.",
-    "error": "Something went wrong sending your message. Please try again, or email me directly.",
+    "success": "Thanks for your message! I'll get back to you soon.",
+    "error": "Something went wrong while sending your message. Please try again or email me directly.",
     "errorRateLimited": "Too many messages sent recently. Please try again in a little while.",
     "availability": {
-      "status": "Open for new projects",
-      "framing": "I like working on products where code quality and a thoughtful architecture actually matter, from the first API to the finished interface. Freelance work, part-time collaboration, or just an interesting product you're building: I'm happy to hear about it.",
+      "status": "Looking for a new position",
+      "framing": "I'm currently looking for a new position as a developer. If you think I could be a good fit for your team, I'd be happy to hear from you. You can also get in touch if you simply want to learn more about me and my projects.",
       "directEmail": "You can also just email me directly at",
       "chips": {
         "email": "Email",
         "github": "GitHub",
         "linkedin": "LinkedIn"
       }
-    }
+    },
+    "messagePlaceholder": "Your message…"
   },
   "imprint": {
     "title": "Imprint",
