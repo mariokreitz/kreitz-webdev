@@ -93,7 +93,17 @@
     "submitting": "Sending…",
     "success": "Thanks! Your message has been sent. I'll get back to you soon.",
     "error": "Something went wrong sending your message. Please try again, or email me directly.",
-    "errorRateLimited": "Too many messages sent recently. Please try again in a little while."
+    "errorRateLimited": "Too many messages sent recently. Please try again in a little while.",
+    "availability": {
+      "status": "Open for new projects",
+      "framing": "I like working on products where code quality and a thoughtful architecture actually matter, from the first API to the finished interface. Freelance work, part-time collaboration, or just an interesting product you're building: I'm happy to hear about it.",
+      "directEmail": "You can also just email me directly at",
+      "chips": {
+        "email": "Email",
+        "github": "GitHub",
+        "linkedin": "LinkedIn"
+      }
+    }
   },
   "imprint": {
     "title": "Imprint",

@@ -1,5 +1,7 @@
 @if (status() === 'success') {
-  <p class="mb-4 text-body-md text-(--color-on-surface)" role="status">
+  <p
+    class="mb-4 text-body-md text-(--color-on-surface) opacity-100 transition-all duration-(--duration-panel-expand) ease-(--ease-spring) starting:scale-95 starting:opacity-0"
+    role="status">
     {{ 'contactForm.success' | translate }}
   </p>
 }
@@ -21,7 +23,7 @@
       </label>
       <input
         autocomplete="name"
-        class="rounded-(--radius) border border-(--color-outline-variant) bg-(--color-surface-container-lowest) px-3 py-2.5 text-body-md text-(--color-on-surface) outline-none transition-colors focus:border-(--color-primary)"
+        class="rounded-(--radius) border border-(--color-outline-variant) bg-(--color-surface-container-lowest) px-3 py-2.5 text-body-md text-(--color-on-surface) outline-none transition-colors focus:border-(--color-primary) focus:ring-2 focus:ring-(--color-primary)/20"
         id="contact-form-name"
         type="text"
         [placeholder]="'contactForm.fields.namePlaceholder' | translate"
@@ -41,7 +43,7 @@
       </label>
       <input
         autocomplete="email"
-        class="rounded-(--radius) border border-(--color-outline-variant) bg-(--color-surface-container-lowest) px-3 py-2.5 text-body-md text-(--color-on-surface) outline-none transition-colors focus:border-(--color-primary)"
+        class="rounded-(--radius) border border-(--color-outline-variant) bg-(--color-surface-container-lowest) px-3 py-2.5 text-body-md text-(--color-on-surface) outline-none transition-colors focus:border-(--color-primary) focus:ring-2 focus:ring-(--color-primary)/20"
         id="contact-form-email"
         type="email"
         [placeholder]="'contactForm.fields.emailPlaceholder' | translate"
@@ -61,7 +63,7 @@
       {{ 'contactForm.fields.message' | translate }}
     </label>
     <textarea
-      class="min-h-32 resize-y rounded-(--radius) border border-(--color-outline-variant) bg-(--color-surface-container-lowest) px-3 py-2.5 text-body-md text-(--color-on-surface) outline-none transition-colors focus:border-(--color-primary)"
+      class="min-h-32 resize-y rounded-(--radius) border border-(--color-outline-variant) bg-(--color-surface-container-lowest) px-3 py-2.5 text-body-md text-(--color-on-surface) outline-none transition-colors focus:border-(--color-primary) focus:ring-2 focus:ring-(--color-primary)/20"
       id="contact-form-message"
       [placeholder]="'contactForm.fields.messagePlaceholder' | translate"
       [formField]="contactForm.message"></textarea>

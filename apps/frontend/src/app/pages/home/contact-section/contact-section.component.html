@@ -1,14 +1,60 @@
-<section
-  id="contact"
-  class="mx-auto flex max-w-(--spacing-max-width) flex-col gap-6 px-(--spacing-margin-mobile) py-16 sm:px-(--spacing-margin-desktop) 2xl:py-24">
-  <div class="flex flex-col gap-2">
-    <h2 class="text-headline-md text-(--color-on-surface)">{{ 'contactForm.heading' | translate }}</h2>
-    <p class="max-w-prose text-body-md text-(--color-on-surface-variant)">
-      {{ 'contactForm.subheading' | translate }}
-    </p>
-  </div>
+<section id="contact" class="section-glow-contact bg-(--color-surface-raised) py-16 2xl:py-24">
+  <div
+    class="mx-auto flex max-w-(--spacing-max-width) flex-col gap-6 px-(--spacing-margin-mobile) sm:px-(--spacing-margin-desktop)">
+    <div class="flex flex-col gap-2">
+      <h2 class="text-headline-md text-(--color-on-surface)">{{ 'contactForm.heading' | translate }}</h2>
+      <p class="max-w-prose text-body-md text-(--color-on-surface-variant)">
+        {{ 'contactForm.subheading' | translate }}
+      </p>
+    </div>
 
-  <div class="max-w-2xl">
-    <kwd-frontend-contact-form [status]="status()" (submitted)="onSubmit($event)" />
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-[1.2fr_1fr] lg:items-start">
+      <div
+        class="rounded-(--radius-lg) border border-(--color-outline-variant) bg-(--color-surface-container-low) p-5 sm:p-6">
+        <kwd-frontend-contact-form [status]="status()" (submitted)="onSubmit($event)" />
+      </div>
+
+      <div class="flex flex-col gap-5">
+        <div
+          class="inline-flex w-fit items-center gap-2 rounded-full border border-(--color-outline-variant) bg-(--color-surface-container-high) px-3 py-1.5 text-code-sm text-(--color-on-surface-variant)">
+          <span class="h-2 w-2 shrink-0 rounded-full bg-(--color-secondary)" aria-hidden="true"></span>
+          {{ 'contactForm.availability.status' | translate }}
+        </div>
+
+        <p class="max-w-prose text-body-md text-(--color-on-surface-variant)">
+          {{ 'contactForm.availability.framing' | translate }}
+        </p>
+
+        @if (socialLinks().length) {
+          <ul class="flex flex-wrap gap-2">
+            @for (link of socialLinks(); track link.id) {
+              <li>
+                <a
+                  class="inline-flex items-center gap-1.5 rounded-full border border-(--color-outline-variant) bg-(--color-surface-container-high) px-2.5 py-1 text-code-sm text-(--color-on-surface-variant) transition-colors hover:text-(--color-on-surface)"
+                  [attr.target]="targetFor(link)"
+                  [attr.rel]="targetFor(link) ? 'noopener noreferrer' : null"
+                  [attr.data-umami-event]="umamiEventFor(link)"
+                  [href]="hrefFor(link)">
+                  <fa-icon class="shrink-0" [icon]="iconFor(link)" [attr.aria-hidden]="true" />
+                  {{ labelFor(link) }}
+                </a>
+              </li>
+            }
+          </ul>
+        }
+
+        @if (emailLink(); as email) {
+          <p class="text-body-sm text-(--color-on-surface-variant)">
+            {{ 'contactForm.availability.directEmail' | translate }}
+            <a
+              class="font-medium text-(--color-on-surface) underline decoration-(--color-outline-variant) underline-offset-4 hover:text-(--color-primary)"
+              data-umami-event="contact-direct-email"
+              [href]="hrefFor(email)">
+              {{ emailAddressFor(email) }}
+            </a>
+          </p>
+        }
+      </div>
+    </div>
   </div>
 </section>

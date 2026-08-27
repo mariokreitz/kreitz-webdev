@@ -37,34 +37,22 @@
         </a>
       </nav>
 
-      <div class="flex flex-col gap-3">
-        <p class="text-label-caps text-(--color-on-surface-variant)">{{ 'footer.social.heading' | translate }}</p>
-        <a
-          class="inline-flex w-fit items-center gap-2 text-body-sm text-(--color-on-surface-variant) hover:text-(--color-on-surface)"
-          data-umami-event="email-link"
-          [href]="`mailto:${contactEmail}`">
-          <fa-icon class="shrink-0" [icon]="faEnvelope" [attr.aria-hidden]="true" />
-          {{ contactEmail }}
-        </a>
-        <a
-          class="inline-flex w-fit items-center gap-2 text-body-sm text-(--color-on-surface-variant) hover:text-(--color-on-surface)"
-          target="_blank"
-          rel="noopener noreferrer"
-          data-umami-event="github-link"
-          [href]="githubUrl">
-          <fa-icon class="shrink-0" [icon]="faGithub" [attr.aria-hidden]="true" />
-          {{ 'footer.social.github' | translate }}
-        </a>
-        <a
-          class="inline-flex w-fit items-center gap-2 text-body-sm text-(--color-on-surface-variant) hover:text-(--color-on-surface)"
-          target="_blank"
-          rel="noopener noreferrer"
-          data-umami-event="linkedin-link"
-          [href]="linkedinUrl">
-          <fa-icon class="shrink-0" [icon]="faLinkedin" [attr.aria-hidden]="true" />
-          {{ 'footer.social.linkedin' | translate }}
-        </a>
-      </div>
+      @if (socialLinks().length) {
+        <div class="flex flex-col gap-3">
+          <p class="text-label-caps text-(--color-on-surface-variant)">{{ 'footer.social.heading' | translate }}</p>
+          @for (link of socialLinks(); track link.id) {
+            <a
+              class="inline-flex w-fit items-center gap-2 text-body-sm text-(--color-on-surface-variant) hover:text-(--color-on-surface)"
+              [attr.data-umami-event]="umamiEventFor(link)"
+              [attr.target]="targetFor(link)"
+              [attr.rel]="targetFor(link) ? 'noopener noreferrer' : null"
+              [href]="hrefFor(link)">
+              <fa-icon class="shrink-0" [icon]="iconFor(link)" [attr.aria-hidden]="true" />
+              {{ labelFor(link) }}
+            </a>
+          }
+        </div>
+      }
     </div>
 
     <p class="border-t border-(--color-outline-variant) pt-6 text-code-sm text-(--color-on-surface-variant)">

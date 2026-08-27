@@ -3,12 +3,15 @@ import type { Express, NextFunction, Request, Response } from 'express';
 
 import { APP_ROUTE_PATHS } from '../../app/core/routing';
 import type { HomeRequestContext } from '../../app/core/ssr';
+import type { PublicSocialLink } from '../../app/pages/home/public-social-link.model';
 import { fetchCvAvailable } from '../fetch-cv-status';
 import { fetchPublicCompanies } from '../fetch-public-companies';
 import { fetchPublicProjects } from '../fetch-public-projects';
+import { fetchPublicSocialLinks } from '../fetch-public-social-links';
 
 interface AppRequestContext extends Partial<HomeRequestContext> {
   readonly cvAvailable: boolean;
+  readonly socialLinks: readonly PublicSocialLink[];
 }
 
 const KNOWN_APP_PATHS: ReadonlySet<string> = new Set(
@@ -38,12 +41,13 @@ async function handleRequest(
     const normalizedPath = req.path.length > 1 ? req.path.replace(/\/+$/, '') : req.path;
     const isKnownAppPath = KNOWN_APP_PATHS.has(normalizedPath);
 
-    const [cvAvailable, homeContext] = await Promise.all([
+    const [cvAvailable, socialLinks, homeContext] = await Promise.all([
       isKnownAppPath ? fetchCvAvailable(apiBaseUrl) : Promise.resolve(false),
+      isKnownAppPath ? fetchPublicSocialLinks(apiBaseUrl) : Promise.resolve([]),
       normalizedPath === '/' ? buildHomeRequestContext(apiBaseUrl) : Promise.resolve(undefined),
     ]);
 
-    const requestContext: AppRequestContext = { cvAvailable, ...homeContext };
+    const requestContext: AppRequestContext = { cvAvailable, socialLinks, ...homeContext };
 
     const response = await angularApp.handle(req, requestContext);
 

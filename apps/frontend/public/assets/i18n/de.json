@@ -93,7 +93,17 @@
     "submitting": "Wird gesendet…",
     "success": "Danke! Deine Nachricht wurde gesendet. Ich melde mich bald bei dir.",
     "error": "Beim Senden deiner Nachricht ist etwas schiefgelaufen. Bitte versuche es erneut oder schreib mir direkt eine E-Mail.",
-    "errorRateLimited": "Zuletzt wurden zu viele Nachrichten gesendet. Bitte versuche es in Kürze erneut."
+    "errorRateLimited": "Zuletzt wurden zu viele Nachrichten gesendet. Bitte versuche es in Kürze erneut.",
+    "availability": {
+      "status": "Offen für neue Projekte",
+      "framing": "Am liebsten arbeite ich an Produkten, bei denen Code-Qualität und eine durchdachte Architektur wirklich zählen, von der ersten API bis zum fertigen Interface. Ob Freelance-Projekt, Teilzeit-Mitarbeit oder einfach ein spannendes Produkt, das du gerade baust: ich höre mir jede Idee an.",
+      "directEmail": "Du kannst mir auch einfach direkt eine E-Mail schreiben an",
+      "chips": {
+        "email": "E-Mail",
+        "github": "GitHub",
+        "linkedin": "LinkedIn"
+      }
+    }
   },
   "imprint": {
     "title": "Impressum",
