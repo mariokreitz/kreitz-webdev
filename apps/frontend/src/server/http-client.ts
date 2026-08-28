@@ -11,6 +11,10 @@ export type AuthenticatedFetchResult =
   | { readonly outcome: 'fetch-error'; readonly error: unknown }
   | { readonly outcome: 'response'; readonly response: Response };
 
+export function buildForwardedHeaders(clientIp: string | undefined): Readonly<Record<string, string>> {
+  return clientIp ? { 'X-Forwarded-For': clientIp } : {};
+}
+
 export async function authenticatedFetch(
   url: string,
   timeoutMs: number,

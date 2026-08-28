@@ -25,6 +25,11 @@ const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
 
 const app = express();
+
+if (environment.production) {
+  app.set('trust proxy', 1);
+}
+
 const port = Number(process.env['FRONTEND_PORT']) || 4000;
 const apiBaseUrl = environment.api.kreitzWebdev;
 const engineOptions: AngularNodeAppEngineOptions = {

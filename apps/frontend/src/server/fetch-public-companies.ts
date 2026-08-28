@@ -1,9 +1,14 @@
 import { isPublicCompany, type PublicCompany } from '../app/pages/home/public-company.model';
 import { RENDER_BLOCKING_TIMEOUT_MS, WEBSITE_TOKEN_ENV_VAR } from './config';
-import { authenticatedFetch, isEnvelopeOf } from './http-client';
+import { authenticatedFetch, buildForwardedHeaders, isEnvelopeOf } from './http-client';
 
-export async function fetchPublicCompanies(apiBaseUrl: string): Promise<readonly PublicCompany[]> {
-  const result = await authenticatedFetch(`${apiBaseUrl}/public/companies`, RENDER_BLOCKING_TIMEOUT_MS);
+export async function fetchPublicCompanies(
+  apiBaseUrl: string,
+  clientIp: string | undefined,
+): Promise<readonly PublicCompany[]> {
+  const result = await authenticatedFetch(`${apiBaseUrl}/public/companies`, RENDER_BLOCKING_TIMEOUT_MS, {
+    headers: buildForwardedHeaders(clientIp),
+  });
 
   if (result.outcome === 'missing-token') {
     console.error(`[frontend] ${WEBSITE_TOKEN_ENV_VAR} is not set, rendering the home page without live companies.`);

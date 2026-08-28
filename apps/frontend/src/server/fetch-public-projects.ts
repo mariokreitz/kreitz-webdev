@@ -1,9 +1,14 @@
 import { isPublicProject, type PublicProject } from '../app/pages/home/public-project.model';
 import { RENDER_BLOCKING_TIMEOUT_MS, WEBSITE_TOKEN_ENV_VAR } from './config';
-import { authenticatedFetch, isEnvelopeOf } from './http-client';
+import { authenticatedFetch, buildForwardedHeaders, isEnvelopeOf } from './http-client';
 
-export async function fetchPublicProjects(apiBaseUrl: string): Promise<readonly PublicProject[]> {
-  const result = await authenticatedFetch(`${apiBaseUrl}/public/projects`, RENDER_BLOCKING_TIMEOUT_MS);
+export async function fetchPublicProjects(
+  apiBaseUrl: string,
+  clientIp: string | undefined,
+): Promise<readonly PublicProject[]> {
+  const result = await authenticatedFetch(`${apiBaseUrl}/public/projects`, RENDER_BLOCKING_TIMEOUT_MS, {
+    headers: buildForwardedHeaders(clientIp),
+  });
 
   if (result.outcome === 'missing-token') {
     console.error(`[frontend] ${WEBSITE_TOKEN_ENV_VAR} is not set, rendering the home page without live projects.`);

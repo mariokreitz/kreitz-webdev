@@ -24,8 +24,11 @@ export function registerSsrRoute(app: Express, angularApp: AngularNodeAppEngine,
   });
 }
 
-async function buildHomeRequestContext(apiBaseUrl: string): Promise<HomeRequestContext> {
-  const [projects, companies] = await Promise.all([fetchPublicProjects(apiBaseUrl), fetchPublicCompanies(apiBaseUrl)]);
+async function buildHomeRequestContext(apiBaseUrl: string, clientIp: string | undefined): Promise<HomeRequestContext> {
+  const [projects, companies] = await Promise.all([
+    fetchPublicProjects(apiBaseUrl, clientIp),
+    fetchPublicCompanies(apiBaseUrl, clientIp),
+  ]);
 
   return { projects, companies };
 }
@@ -40,11 +43,12 @@ async function handleRequest(
   try {
     const normalizedPath = req.path.length > 1 ? req.path.replace(/\/+$/, '') : req.path;
     const isKnownAppPath = KNOWN_APP_PATHS.has(normalizedPath);
+    const clientIp = req.ip;
 
     const [cvAvailable, socialLinks, homeContext] = await Promise.all([
-      isKnownAppPath ? fetchCvAvailable(apiBaseUrl) : Promise.resolve(false),
-      isKnownAppPath ? fetchPublicSocialLinks(apiBaseUrl) : Promise.resolve([]),
-      normalizedPath === '/' ? buildHomeRequestContext(apiBaseUrl) : Promise.resolve(undefined),
+      isKnownAppPath ? fetchCvAvailable(apiBaseUrl, clientIp) : Promise.resolve(false),
+      isKnownAppPath ? fetchPublicSocialLinks(apiBaseUrl, clientIp) : Promise.resolve([]),
+      normalizedPath === '/' ? buildHomeRequestContext(apiBaseUrl, clientIp) : Promise.resolve(undefined),
     ]);
 
     const requestContext: AppRequestContext = { cvAvailable, socialLinks, ...homeContext };
