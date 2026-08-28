@@ -12,6 +12,7 @@ import { fileURLToPath } from 'node:url';
 import { resolveAllowedHosts } from './server/allowed-hosts';
 import { registerContactFormRoute } from './server/routes/contact-form.route';
 import { registerCvDownloadRoute } from './server/routes/cv-download.route';
+import { registerHealthRoute } from './server/routes/health.route';
 import { registerSsrRoute } from './server/routes/ssr.route';
 
 try {
@@ -65,6 +66,7 @@ app.use(
 
 registerContactFormRoute(app, apiBaseUrl);
 registerCvDownloadRoute(app, apiBaseUrl);
+registerHealthRoute(app);
 registerSsrRoute(app, angularApp, apiBaseUrl);
 
 if (isMainModule(import.meta.url) || process.env['pm_id']) {
