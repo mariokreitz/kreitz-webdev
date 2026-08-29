@@ -11,10 +11,21 @@ import { fileURLToPath } from 'node:url';
 
 const serverDistFolder: string = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder: string = resolve(serverDistFolder, '../browser');
+const port = process.env['PORT'] || 4000;
+
+const defaultHosts: string[] = [
+  'localhost',
+  `localhost:${port}`,
+  '127.0.0.1',
+  `127.0.0.1:${port}`,
+  '::1',
+];
+const customHosts: string[] = ['www.kreitz-webdev.de'];
+const allowedHosts = Array.from(new Set([...defaultHosts, ...customHosts]));
 
 const options: AngularNodeAppEngineOptions = {
-  allowedHosts: ['localhost'],
-  trustProxyHeaders: ['forwarded"'],
+  allowedHosts,
+  trustProxyHeaders: true,
 };
 const angularApp = new AngularNodeAppEngine(options);
 const app: Express = express();
@@ -37,7 +48,6 @@ app.use('/**', (req, res, next) => {
 });
 
 if (isMainModule(import.meta.url) || process.env['pm_id']) {
-  const port = process.env['PORT'] || 4000;
   app.listen(port, () => {
     console.log(`Node Express server listening on http://localhost:${port}`);
   });

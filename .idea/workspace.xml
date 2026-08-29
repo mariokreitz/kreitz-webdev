@@ -7,12 +7,10 @@
     <option name="selectedModelId" value="auto" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="27296389-19a3-480c-bdbb-1f39da9628be" name="Changes" comment="ci(actions): adds reusable actions and docker workflow">
-      <change afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docker/kwd.web.Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/build.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/build.yml" afterDir="false" />
+    <list default="true" id="27296389-19a3-480c-bdbb-1f39da9628be" name="Changes" comment="ci(docker): adds missing Dockerfile and related files and updates deploy.yml">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/web/src/server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/web/src/server.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,61 +61,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.00254168331148" />
-      <entry key="MS500" value="1.3053361280356035" />
-      <entry key="S2" value="2.1740472601090577" />
-      <entry key="S5" value="3.24634925190394" />
-      <entry key="S10" value="3.9555071277731186" />
-      <entry key="S30" value="4.611504210583664" />
-      <entry key="S60" value="5.140282707962509" />
-      <entry key="M2" value="8.055821063605496" />
-      <entry key="M5" value="17.556730393953252" />
-      <entry key="M10" value="26.33460302148539" />
-      <entry key="M15" value="33.49327425649756" />
-      <entry key="M30" value="55.04336445416745" />
-      <entry key="H1" value="87.40334278699696" />
-      <entry key="H2" value="125.49003717447039" />
-      <entry key="H4" value="177.7222401885371" />
-      <entry key="D1" value="372.5779124110439" />
-      <entry key="W1" value="457.80616181872966" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0000000991482727" />
+      <entry key="S2" value="1.0242714928916705" />
+      <entry key="S5" value="1.3718472908310424" />
+      <entry key="S10" value="2.1375162049644754" />
+      <entry key="S30" value="4.237352912710717" />
+      <entry key="S60" value="7.415401985433355" />
+      <entry key="M2" value="14.576355758360359" />
+      <entry key="M5" value="34.22130315857363" />
+      <entry key="M10" value="57.53851340414833" />
+      <entry key="M15" value="73.29080926465518" />
+      <entry key="M30" value="106.01234970436036" />
+      <entry key="H1" value="146.9537282294244" />
+      <entry key="H2" value="192.08807169457992" />
+      <entry key="H4" value="249.0964608067531" />
+      <entry key="D1" value="450.50340500909675" />
+      <entry key="W1" value="538.2751984903421" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="0.0" />
-      <entry key="S2" value="0.0" />
-      <entry key="S5" value="5.301606488809463E-196" />
-      <entry key="S10" value="3.2178935845178823E-98" />
-      <entry key="S30" value="5.035482629234672E-33" />
-      <entry key="S60" value="1.0032025468379764E-16" />
-      <entry key="M2" value="1.4163565486282033E-8" />
-      <entry key="M5" value="0.0011004679368435057" />
-      <entry key="M10" value="0.048456877244988275" />
-      <entry key="M15" value="0.18314859071567471" />
-      <entry key="M30" value="0.8653945351298203" />
-      <entry key="H1" value="2.37026155797291" />
-      <entry key="H2" value="4.37864618907531" />
-      <entry key="H4" value="6.314969281993313" />
-      <entry key="D1" value="9.72830913513757" />
-      <entry key="W1" value="10.796102600644518" />
+      <entry key="MS500" value="5.717753722506041E-258" />
+      <entry key="S2" value="4.889971875793495E-65" />
+      <entry key="S5" value="1.8867855635713269E-26" />
+      <entry key="S10" value="1.3736355291676888E-13" />
+      <entry key="S30" value="5.4203959583827595E-5" />
+      <entry key="S60" value="0.010074318088284785" />
+      <entry key="M2" value="0.18866897292683926" />
+      <entry key="M5" value="1.2934042896886042" />
+      <entry key="M10" value="2.543220383936161" />
+      <entry key="M15" value="3.2574774495827117" />
+      <entry key="M30" value="4.582917463129238" />
+      <entry key="H1" value="6.441779005473489" />
+      <entry key="H2" value="8.726560838867496" />
+      <entry key="H4" value="10.89831517596732" />
+      <entry key="D1" value="14.63246046822731" />
+      <entry key="W1" value="15.781237513934029" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.010193300340468045" />
-      <entry key="MS500" value="0.5221530090803266" />
-      <entry key="S2" value="1.7516107126072749" />
-      <entry key="S5" value="2.999234064281457" />
-      <entry key="S10" value="3.808204870061438" />
-      <entry key="S30" value="4.555345048504074" />
-      <entry key="S60" value="5.110257104896339" />
-      <entry key="M2" value="8.036335521938263" />
-      <entry key="M5" value="17.544375142300623" />
-      <entry key="M10" value="26.37387121249108" />
-      <entry key="M15" value="33.66914460103839" />
-      <entry key="M30" value="55.90332818896018" />
-      <entry key="H1" value="89.76895573799298" />
-      <entry key="H2" value="129.86503517396255" />
-      <entry key="H4" value="184.03476027499082" />
-      <entry key="D1" value="382.3056402509627" />
-      <entry key="W1" value="468.6021739173729" />
+      <entry key="MS100" value="0.04152143169051598" />
+      <entry key="MS500" value="0.5292422132121427" />
+      <entry key="S2" value="0.8700133141084297" />
+      <entry key="S5" value="1.266893832196217" />
+      <entry key="S10" value="2.042053374530088" />
+      <entry key="S30" value="4.17073820692037" />
+      <entry key="S60" value="7.372424384675343" />
+      <entry key="M2" value="14.721755333975405" />
+      <entry key="M5" value="35.48176368074303" />
+      <entry key="M10" value="60.056844389774824" />
+      <entry key="M15" value="76.52822945196259" />
+      <entry key="M30" value="110.58197918958862" />
+      <entry key="H1" value="153.38650893241288" />
+      <entry key="H2" value="200.8086416213346" />
+      <entry key="H4" value="259.9910806843493" />
+      <entry key="D1" value="465.135059308399" />
+      <entry key="W1" value="554.0563127670459" />
     </decayedShown>
   </component>
   <component name="OptimizeOnSaveOptions">
@@ -165,97 +163,82 @@
     <option name="openDirectoriesWithSingleClick" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Docker.docker-compose.yml.postgres: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.docker-compose.yml.redis: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.docker-compose.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;KEY_CHAT_IN_TOOLWINDOW&quot;: &quot;false&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;code.cleanup.on.save&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;copilot.chat.legacySessionMetadata.migrated&quot;: &quot;true&quot;,
-    &quot;dev.nx.console.last_ai_check_notification_timestamp&quot;: &quot;1787282000915&quot;,
-    &quot;dev.nx.console.last_ai_configure_notification_timestamp&quot;: &quot;1787355580097&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/api/src/modules/website-domain&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
-    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;npm.build:all.executor&quot;: &quot;Run&quot;,
-    &quot;npm.build:prod.executor&quot;: &quot;Run&quot;,
-    &quot;npm.docker:db:up.executor&quot;: &quot;Run&quot;,
-    &quot;npm.format.executor&quot;: &quot;Run&quot;,
-    &quot;npm.format:api.executor&quot;: &quot;Run&quot;,
-    &quot;npm.format:check.executor&quot;: &quot;Run&quot;,
-    &quot;npm.graph.executor&quot;: &quot;Run&quot;,
-    &quot;npm.lint.executor&quot;: &quot;Run&quot;,
-    &quot;npm.lint:all:fix.executor&quot;: &quot;Run&quot;,
-    &quot;npm.lint:api.executor&quot;: &quot;Run&quot;,
-    &quot;npm.lint:fix.executor&quot;: &quot;Run&quot;,
-    &quot;npm.prisma:generate.executor&quot;: &quot;Run&quot;,
-    &quot;npm.prisma:migrate.executor&quot;: &quot;Run&quot;,
-    &quot;npm.prisma:reset.executor&quot;: &quot;Run&quot;,
-    &quot;npm.prisma:studio.executor&quot;: &quot;Run&quot;,
-    &quot;npm.projects.executor&quot;: &quot;Run&quot;,
-    &quot;npm.serve:api.executor&quot;: &quot;Run&quot;,
-    &quot;npm.serve:ssr.executor&quot;: &quot;Run&quot;,
-    &quot;npm.test:api.executor&quot;: &quot;Run&quot;,
-    &quot;npm.typecheck.executor&quot;: &quot;Run&quot;,
-    &quot;npm.typecheck:api.executor&quot;: &quot;Run&quot;,
-    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/mariokreitz/dev/github/kreitz-webdev/node_modules/prettier&quot;,
-    &quot;rearrange.code.on.save&quot;: &quot;true&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;actions.on.save&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/mariokreitz/dev/github/kreitz-webdev/node_modules/typescript/lib&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Docker.docker-compose.yml.postgres: Compose Deployment.executor": "Run",
+    "Docker.docker-compose.yml.redis: Compose Deployment.executor": "Run",
+    "Docker.docker-compose.yml: Compose Deployment.executor": "Run",
+    "KEY_CHAT_IN_TOOLWINDOW": "false",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "code.cleanup.on.save": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "copilot.chat.legacySessionMetadata.migrated": "true",
+    "dev.nx.console.last_ai_check_notification_timestamp": "1787282000915",
+    "dev.nx.console.last_ai_configure_notification_timestamp": "1788001307922",
+    "git-widget-placeholder": "main",
+    "javascript.preferred.runtime.type.id": "node",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "/Users/mariokreitz/dev/github/kreitz-webdev/apps/api/src/modules/website-domain",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
+    "node.js.detected.package.standard": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
+    "node.js.selected.package.standard": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "npm.build:all.executor": "Run",
+    "npm.build:prod.executor": "Run",
+    "npm.docker:db:up.executor": "Run",
+    "npm.format.executor": "Run",
+    "npm.format:api.executor": "Run",
+    "npm.format:check.executor": "Run",
+    "npm.graph.executor": "Run",
+    "npm.lint.executor": "Run",
+    "npm.lint:all:fix.executor": "Run",
+    "npm.lint:api.executor": "Run",
+    "npm.lint:fix.executor": "Run",
+    "npm.prisma:generate.executor": "Run",
+    "npm.prisma:migrate.executor": "Run",
+    "npm.prisma:reset.executor": "Run",
+    "npm.prisma:studio.executor": "Run",
+    "npm.projects.executor": "Run",
+    "npm.serve:api.executor": "Run",
+    "npm.serve:ssr.executor": "Run",
+    "npm.test:api.executor": "Run",
+    "npm.typecheck.executor": "Run",
+    "npm.typecheck:api.executor": "Run",
+    "prettierjs.PrettierConfiguration.Package": "/Users/mariokreitz/dev/github/kreitz-webdev/node_modules/prettier",
+    "rearrange.code.on.save": "true",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "actions.on.save",
+    "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "/Users/mariokreitz/dev/github/kreitz-webdev/node_modules/typescript/lib"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ],
-    &quot;dev.nx.console.project_details_files&quot;: [
-      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/api/project.json&quot;,
-      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/api/package.json&quot;,
-      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/api/eslint.config.mjs&quot;,
-      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/api/webpack.config.js&quot;,
-      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/api/jest.config.cts&quot;,
-      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/frontend/project.json&quot;,
-      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/frontend/package.json&quot;,
-      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/frontend/eslint.config.mjs&quot;,
-      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/nx.json#targetDefaults.@angular/build:application&quot;,
-      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/nx.json#targetDefaults.@angular/package.json&quot;,
-      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/portal/project.json&quot;,
-      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/portal/package.json&quot;,
-      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/portal/eslint.config.mjs&quot;,
-      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/libs/environments/project.json&quot;,
-      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/libs/environments/package.json&quot;,
-      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/eslint.config.mjs&quot;,
-      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/libs/ui/project.json&quot;,
-      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/libs/ui/package.json&quot;,
-      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/libs/ui/eslint.config.mjs&quot;,
-      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/nx.json#targetDefaults.@nx/angular:ng-packagr-lite&quot;,
-      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/nx.json#targetDefaults.@nx/package.json&quot;,
-      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/libs/styles/project.json&quot;,
-      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/libs/styles/package.json&quot;
+    "dev.nx.console.project_details_files": [
+      "/Users/mariokreitz/dev/github/kreitz-webdev/apps/web/project.json",
+      "/Users/mariokreitz/dev/github/kreitz-webdev/apps/web/package.json",
+      "/Users/mariokreitz/dev/github/kreitz-webdev/apps/web/eslint.config.mjs",
+      "/Users/mariokreitz/dev/github/kreitz-webdev/nx.json#targetDefaults.@nx/eslint:lint",
+      "/Users/mariokreitz/dev/github/kreitz-webdev/nx.json#targetDefaults.@nx/package.json",
+      "/Users/mariokreitz/dev/github/kreitz-webdev/nx.json#targetDefaults.@angular/build:application",
+      "/Users/mariokreitz/dev/github/kreitz-webdev/nx.json#targetDefaults.@angular/package.json",
+      "/Users/mariokreitz/dev/github/kreitz-webdev/nx.json#targetDefaults.@angular/build:unit-test",
+      "/Users/mariokreitz/dev/github/kreitz-webdev/package.json"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/apps/api/src/modules/website-domain" />
@@ -273,25 +256,25 @@
     </key>
   </component>
   <component name="RunManager" selected="npm.format">
-    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+    <configuration default="true" factoryName="docker-compose.yml" temporary="true" type="docker-deploy">
       <deployment type="docker-compose.yml">
         <settings />
       </deployment>
       <method v="2" />
     </configuration>
-    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+    <configuration default="true" factoryName="docker-compose.yml" temporary="true" type="docker-deploy">
       <deployment type="docker-compose.yml">
         <settings />
       </deployment>
       <method v="2" />
     </configuration>
-    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+    <configuration default="true" factoryName="docker-compose.yml" temporary="true" type="docker-deploy">
       <deployment type="docker-compose.yml">
         <settings />
       </deployment>
       <method v="2" />
     </configuration>
-    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+    <configuration default="true" factoryName="docker-compose.yml" temporary="true" type="docker-deploy">
       <deployment type="docker-compose.yml">
         <settings />
       </deployment>
@@ -319,7 +302,7 @@
       <envs />
       <method v="2" />
     </configuration>
-    <configuration name="build:all" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+    <configuration name="build:all" nameIsGenerated="true" temporary="true" type="js.build_tools.npm">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
       <scripts>
@@ -329,7 +312,7 @@
       <envs />
       <method v="2" />
     </configuration>
-    <configuration name="build:all" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+    <configuration name="build:all" nameIsGenerated="true" temporary="true" type="js.build_tools.npm">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
       <scripts>
@@ -359,7 +342,7 @@
       <envs />
       <method v="2" />
     </configuration>
-    <configuration name="format" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+    <configuration name="format" nameIsGenerated="true" temporary="true" type="js.build_tools.npm">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
       <scripts>
@@ -369,7 +352,7 @@
       <envs />
       <method v="2" />
     </configuration>
-    <configuration name="format" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+    <configuration name="format" nameIsGenerated="true" temporary="true" type="js.build_tools.npm">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
       <scripts>
@@ -511,15 +494,9 @@
       <workItem from="1787820684009" duration="555000" />
       <workItem from="1787821701240" duration="264000" />
       <workItem from="1787881889703" duration="11208000" />
-      <workItem from="1787995644918" duration="4887000" />
-    </task>
-    <task id="LOCAL-00009" summary="feat(logging): implement request ID middleware and logging module">
-      <option name="closed" value="true" />
-      <created>1787273273054</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1787273273054</updated>
+      <workItem from="1787995644918" duration="5303000" />
+      <workItem from="1788001125550" duration="191000" />
+      <workItem from="1788001377002" duration="910000" />
     </task>
     <task id="LOCAL-00010" summary="refactor(middleware): reorganize middleware imports">
       <option name="closed" value="true" />
@@ -905,7 +882,15 @@
       <option name="project" value="LOCAL" />
       <updated>1788000047027</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="ci(docker): adds missing Dockerfile and related files and updates deploy.yml">
+      <option name="closed" value="true" />
+      <created>1788000637857</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1788000637858</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -923,7 +908,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat(server): configure allowed hosts for Angular app" />
     <MESSAGE value="feat(server): update allowed hosts configuration" />
     <MESSAGE value="feat(server): configure dynamic allowed hosts for Angular app" />
     <MESSAGE value="fix(environment): correct authBaseUrl format" />
@@ -948,7 +932,8 @@
     <MESSAGE value="fix: adds trusted proxy to express for ip passthrough" />
     <MESSAGE value="feat: nx init and angular boilerplate code" />
     <MESSAGE value="ci(actions): adds reusable actions and docker workflow" />
-    <option name="LAST_COMMIT_MESSAGE" value="ci(actions): adds reusable actions and docker workflow" />
+    <MESSAGE value="ci(docker): adds missing Dockerfile and related files and updates deploy.yml" />
+    <option name="LAST_COMMIT_MESSAGE" value="ci(docker): adds missing Dockerfile and related files and updates deploy.yml" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

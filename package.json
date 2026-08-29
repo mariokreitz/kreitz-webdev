@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "start:web": "nx serve web",
-    "start:web:ssr": "node dist/apps/web/server/server.mjs",
+    "start:web:ssr": "nx build web && node dist/apps/web/server/server.mjs",
     "build:web": "nx build web",
     "build:web:prod": "nx build web --configuration=production",
     "lint:web": "nx lint web",
