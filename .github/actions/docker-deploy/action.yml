@@ -1,0 +1,86 @@
+name: Deploy Docker Compose
+
+description: Deploy Docker Compose services using an image from GHCR
+
+inputs:
+  host:
+    description: VPS hostname or IP address
+    required: true
+
+  username:
+    description: SSH username
+    required: true
+
+  private-key:
+    description: SSH private key
+    required: true
+
+  ssh-port:
+    description: SSH port
+    required: false
+    default: "22"
+
+  registry:
+    description: Container registry
+    required: false
+    default: ghcr.io
+
+  registry-username:
+    description: Container registry username
+    required: true
+
+  registry-password:
+    description: Container registry password/token
+    required: true
+
+  working-directory:
+    description: Directory containing docker-compose.yml
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - name: Deploy Docker Compose
+      uses: ./.github/actions/vps-ssh
+      env:
+        REGISTRY: ${{ inputs.registry }}
+        REGISTRY_USERNAME: ${{ inputs.registry-username }}
+        REGISTRY_PASSWORD: ${{ inputs.registry-password }}
+        WORKING_DIRECTORY: ${{ inputs.working-directory }}
+
+      with:
+        host: ${{ inputs.host }}
+        username: ${{ inputs.username }}
+        private-key: ${{ inputs.private-key }}
+        port: ${{ inputs.ssh-port }}
+
+        env: |
+          REGISTRY
+          REGISTRY_USERNAME
+          REGISTRY_PASSWORD
+          WORKING_DIRECTORY
+
+        script: |
+          set -euo pipefail
+          
+          cd "${WORKING_DIRECTORY}"
+          
+          echo "Logging into ${REGISTRY}..."
+          
+          printf '%s' "${REGISTRY_PASSWORD}" | \
+            docker login "${REGISTRY}" \
+              --username "${REGISTRY_USERNAME}" \
+              --password-stdin
+          
+          echo "Pulling images..."
+          docker compose pull
+          
+          echo "Starting services..."
+          docker compose up -d --remove-orphans
+          
+          echo "Removing unused images..."
+          docker image prune -f
+          
+          echo "Deployment complete."
+          docker compose ps docker compose ps

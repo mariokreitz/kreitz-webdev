@@ -1,0 +1,44 @@
+name: SSH to VPS
+
+description: Execute a shell script on a remote VPS over SSH
+
+inputs:
+  host:
+    description: VPS hostname or IP address
+    required: true
+
+  username:
+    description: SSH username
+    required: true
+
+  private-key:
+    description: SSH private key
+    required: true
+
+  port:
+    description: SSH port
+    required: false
+    default: "22"
+
+  script:
+    description: Shell script to execute on the VPS
+    required: true
+
+  env:
+    description: Environment variables to pass to the remote script
+    required: false
+    default: ""
+
+runs:
+  using: composite
+
+  steps:
+    - name: Execute remote script
+      uses: appleboy/ssh-action@v1
+      with:
+        host: ${{ inputs.host }}
+        username: ${{ inputs.username }}
+        key: ${{ inputs.private-key }}
+        port: ${{ inputs.port }}
+        script: ${{ inputs.script }}
+        envs: ${{ inputs.env }}
