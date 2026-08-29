@@ -21,7 +21,9 @@ const defaultHosts: string[] = [
   '::1',
 ];
 const customHosts: string[] = ['www.kreitz-webdev.de'];
-const allowedHosts = Array.from(new Set([...defaultHosts, ...customHosts]));
+const allowedHosts: string[] = Array.from(
+  new Set([...defaultHosts, ...customHosts]),
+);
 
 const options: AngularNodeAppEngineOptions = {
   allowedHosts,
