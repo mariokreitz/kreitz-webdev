@@ -1,0 +1,956 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="BackgroundAgentGlobalSettings">
+    <option name="selectedModelId" value="auto" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="27296389-19a3-480c-bdbb-1f39da9628be" name="Changes" comment="fix: adds trusted proxy to express for ip passthrough">
+      <change afterPath="$PROJECT_DIR$/.github/actions/docker-build-push/action.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.github/actions/docker-deploy/action.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.github/actions/vps-ssh/action.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.github/workflows/build.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.github/workflows/deploy.yml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_/Users/mariokreitz/dev/github/kreitz-webdev" value="3HvYbQxAi9m9iZzCXS9SlhCF9f0" />
+    </persistenceIdMap>
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="4607" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="GitHub Action" />
+        <option value="GitHub Workflow" />
+      </list>
+    </option>
+  </component>
+  <component name="FormatOnSaveOptions">
+    <option name="myAllFileTypesSelected" value="true" />
+    <option name="mySelectedFileTypes">
+      <set />
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;mariokreitz&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/mariokreitz/kreitz-webdev.git&quot;,
+    &quot;accountId&quot;: &quot;2c86717d-db1a-4c38-9bd9-cfc815180c23&quot;
+  }
+}</component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0004304102333532" />
+      <entry key="S2" value="1.1440358656714555" />
+      <entry key="S5" value="1.460668226496085" />
+      <entry key="S10" value="1.6787254634064221" />
+      <entry key="S30" value="1.8902520139014531" />
+      <entry key="S60" value="2.258126461227709" />
+      <entry key="M2" value="3.8127597998690823" />
+      <entry key="M5" value="9.793410217670125" />
+      <entry key="M10" value="21.07169596776805" />
+      <entry key="M15" value="32.13023980185076" />
+      <entry key="M30" value="56.918738613314574" />
+      <entry key="H1" value="83.65702106637734" />
+      <entry key="H2" value="112.91607924722953" />
+      <entry key="H4" value="158.565070020894" />
+      <entry key="D1" value="342.17659180982656" />
+      <entry key="W1" value="421.9746252328751" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="8.47664050290037E-130" />
+      <entry key="S5" value="3.345412072838202E-52" />
+      <entry key="S10" value="2.5561877148242238E-26" />
+      <entry key="S30" value="4.663530168652712E-9" />
+      <entry key="S60" value="9.65440404067099E-5" />
+      <entry key="M2" value="0.013894439017510134" />
+      <entry key="M5" value="0.274311972058358" />
+      <entry key="M10" value="0.7650487456868641" />
+      <entry key="M15" value="1.152637392043893" />
+      <entry key="M30" value="2.170994433067632" />
+      <entry key="H1" value="3.7542099268134685" />
+      <entry key="H2" value="5.510626728579017" />
+      <entry key="H4" value="7.0843794162267875" />
+      <entry key="D1" value="9.916516169491235" />
+      <entry key="W1" value="10.825695974059869" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="0.9592641193252643" />
+      <entry key="MS500" value="0.9921447608756546" />
+      <entry key="S2" value="1.1417590469031238" />
+      <entry key="S5" value="1.459581417816127" />
+      <entry key="S10" value="1.6781215049179272" />
+      <entry key="S30" value="1.8900113800069236" />
+      <entry key="S60" value="2.2577946514689997" />
+      <entry key="M2" value="3.825355030096296" />
+      <entry key="M5" value="10.064069549538619" />
+      <entry key="M10" value="21.832406261787764" />
+      <entry key="M15" value="33.278605365953226" />
+      <entry key="M30" value="59.08534730435732" />
+      <entry key="H1" value="87.40695447197359" />
+      <entry key="H2" value="118.42337656043524" />
+      <entry key="H4" value="165.64727246397945" />
+      <entry key="D1" value="352.0926029073044" />
+      <entry key="W1" value="432.8002427744998" />
+    </decayedShown>
+  </component>
+  <component name="OptimizeOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3HvMMBu9THaifMuqCf6gBK9Ov6h" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectSessionTemplates">
+    <option name="inlineTemplate">
+      <template>
+        <option name="modeId" value="InlineAgent" />
+        <option name="model">
+          <model>
+            <option name="modelType" value="builtin_id" />
+            <option name="modelValue" value="auto" />
+          </model>
+        </option>
+        <option name="targetType" value="LOCAL" />
+      </template>
+    </option>
+    <option name="panelTemplate">
+      <template>
+        <option name="modeId" value="Agent" />
+        <option name="model">
+          <model>
+            <option name="modelType" value="builtin_id" />
+            <option name="modelValue" value="auto" />
+          </model>
+        </option>
+        <option name="targetType" value="BACKGROUND" />
+        <option name="worktreeMode" value="WORKSPACE" />
+      </template>
+    </option>
+  </component>
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="autoscrollToSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="openDirectoriesWithSingleClick" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Docker.docker-compose.yml.postgres: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.docker-compose.yml.redis: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.docker-compose.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;KEY_CHAT_IN_TOOLWINDOW&quot;: &quot;false&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;code.cleanup.on.save&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;copilot.chat.legacySessionMetadata.migrated&quot;: &quot;true&quot;,
+    &quot;dev.nx.console.last_ai_check_notification_timestamp&quot;: &quot;1787282000915&quot;,
+    &quot;dev.nx.console.last_ai_configure_notification_timestamp&quot;: &quot;1787355580097&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/api/src/modules/website-domain&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.build:all.executor&quot;: &quot;Run&quot;,
+    &quot;npm.build:prod.executor&quot;: &quot;Run&quot;,
+    &quot;npm.docker:db:up.executor&quot;: &quot;Run&quot;,
+    &quot;npm.format.executor&quot;: &quot;Run&quot;,
+    &quot;npm.format:api.executor&quot;: &quot;Run&quot;,
+    &quot;npm.format:check.executor&quot;: &quot;Run&quot;,
+    &quot;npm.graph.executor&quot;: &quot;Run&quot;,
+    &quot;npm.lint.executor&quot;: &quot;Run&quot;,
+    &quot;npm.lint:all:fix.executor&quot;: &quot;Run&quot;,
+    &quot;npm.lint:api.executor&quot;: &quot;Run&quot;,
+    &quot;npm.lint:fix.executor&quot;: &quot;Run&quot;,
+    &quot;npm.prisma:generate.executor&quot;: &quot;Run&quot;,
+    &quot;npm.prisma:migrate.executor&quot;: &quot;Run&quot;,
+    &quot;npm.prisma:reset.executor&quot;: &quot;Run&quot;,
+    &quot;npm.prisma:studio.executor&quot;: &quot;Run&quot;,
+    &quot;npm.projects.executor&quot;: &quot;Run&quot;,
+    &quot;npm.serve:api.executor&quot;: &quot;Run&quot;,
+    &quot;npm.serve:ssr.executor&quot;: &quot;Run&quot;,
+    &quot;npm.test:api.executor&quot;: &quot;Run&quot;,
+    &quot;npm.typecheck.executor&quot;: &quot;Run&quot;,
+    &quot;npm.typecheck:api.executor&quot;: &quot;Run&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/mariokreitz/dev/github/kreitz-webdev/node_modules/prettier&quot;,
+    &quot;rearrange.code.on.save&quot;: &quot;true&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;actions.on.save&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/mariokreitz/dev/github/kreitz-webdev/node_modules/typescript/lib&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
+    ],
+    &quot;dev.nx.console.project_details_files&quot;: [
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/api/project.json&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/api/package.json&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/api/eslint.config.mjs&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/api/webpack.config.js&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/api/jest.config.cts&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/frontend/project.json&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/frontend/package.json&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/frontend/eslint.config.mjs&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/nx.json#targetDefaults.@angular/build:application&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/nx.json#targetDefaults.@angular/package.json&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/portal/project.json&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/portal/package.json&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/portal/eslint.config.mjs&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/libs/environments/project.json&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/libs/environments/package.json&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/eslint.config.mjs&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/libs/ui/project.json&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/libs/ui/package.json&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/libs/ui/eslint.config.mjs&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/nx.json#targetDefaults.@nx/angular:ng-packagr-lite&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/nx.json#targetDefaults.@nx/package.json&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/libs/styles/project.json&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/libs/styles/package.json&quot;
+    ]
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/apps/api/src/modules/website-domain" />
+      <recent name="$PROJECT_DIR$/apps/api/src/modules/website" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/apps/api/src/bootstrap" />
+      <recent name="$PROJECT_DIR$/apps/api" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/apps/frontend/public/assets" />
+      <recent name="$PROJECT_DIR$/apps/frontend/public/assets/images" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/apps/portal/public/assets/images" />
+      <recent name="$PROJECT_DIR$/apps/api/src/database/types" />
+    </key>
+  </component>
+  <component name="RunManager" selected="npm.format">
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="build:all" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build:all" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="build:all" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build:all" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="build:all" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build:all" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="build:prod" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build:prod" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="format" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="format" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="format" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="format" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="format" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="format" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="lint:all:fix" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="lint:all:fix" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="lint:fix" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="lint:fix" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="serve:ssr" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="serve:ssr" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.format" />
+        <item itemvalue="npm.serve:ssr" />
+        <item itemvalue="npm.build:prod" />
+        <item itemvalue="npm.build:all" />
+        <item itemvalue="npm.lint:all:fix" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-WS-262.9437.145" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="27296389-19a3-480c-bdbb-1f39da9628be" name="Changes" comment="" />
+      <created>1786744039704</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1786744039704</updated>
+      <workItem from="1786744040937" duration="1406000" />
+      <workItem from="1786745460303" duration="3972000" />
+      <workItem from="1786749707093" duration="2230000" />
+      <workItem from="1786751961405" duration="637000" />
+      <workItem from="1786752616368" duration="3092000" />
+      <workItem from="1786755728590" duration="695000" />
+      <workItem from="1786756441126" duration="71000" />
+      <workItem from="1786756526391" duration="1935000" />
+      <workItem from="1786758477750" duration="4501000" />
+      <workItem from="1786906960426" duration="4764000" />
+      <workItem from="1786911755127" duration="22691000" />
+      <workItem from="1786934549238" duration="7647000" />
+      <workItem from="1786972638759" duration="72000" />
+      <workItem from="1786974243201" duration="6000" />
+      <workItem from="1786974557883" duration="5000" />
+      <workItem from="1786980846934" duration="1130000" />
+      <workItem from="1787268455598" duration="12861000" />
+      <workItem from="1787281821211" duration="3993000" />
+      <workItem from="1787285848128" duration="2092000" />
+      <workItem from="1787287968086" duration="75000" />
+      <workItem from="1787288059110" duration="1514000" />
+      <workItem from="1787289609131" duration="6539000" />
+      <workItem from="1787297004443" duration="1262000" />
+      <workItem from="1787298487502" duration="766000" />
+      <workItem from="1787299658993" duration="2355000" />
+      <workItem from="1787302149530" duration="139000" />
+      <workItem from="1787302322430" duration="1776000" />
+      <workItem from="1787304252914" duration="1576000" />
+      <workItem from="1787305850187" duration="1110000" />
+      <workItem from="1787306972591" duration="2455000" />
+      <workItem from="1787309839845" duration="451000" />
+      <workItem from="1787310367845" duration="357000" />
+      <workItem from="1787310874270" duration="2871000" />
+      <workItem from="1787352977175" duration="177000" />
+      <workItem from="1787355397159" duration="469000" />
+      <workItem from="1787368660357" duration="3824000" />
+      <workItem from="1787373023589" duration="147000" />
+      <workItem from="1787373191708" duration="430000" />
+      <workItem from="1787373848395" duration="256000" />
+      <workItem from="1787453752266" duration="99000" />
+      <workItem from="1787453862724" duration="4585000" />
+      <workItem from="1787458479299" duration="82000" />
+      <workItem from="1787458620026" duration="1795000" />
+      <workItem from="1787460448401" duration="904000" />
+      <workItem from="1787461357256" duration="2694000" />
+      <workItem from="1787464059540" duration="45000" />
+      <workItem from="1787464117720" duration="2224000" />
+      <workItem from="1787466359908" duration="266000" />
+      <workItem from="1787466630086" duration="2659000" />
+      <workItem from="1787469308958" duration="18000" />
+      <workItem from="1787469329286" duration="1621000" />
+      <workItem from="1787470958921" duration="176000" />
+      <workItem from="1787471155947" duration="1081000" />
+      <workItem from="1787472241094" duration="795000" />
+      <workItem from="1787473042074" duration="566000" />
+      <workItem from="1787473671621" duration="232000" />
+      <workItem from="1787473912530" duration="84000" />
+      <workItem from="1787474004300" duration="85000" />
+      <workItem from="1787474179767" duration="2583000" />
+      <workItem from="1787476928859" duration="277000" />
+      <workItem from="1787477208749" duration="813000" />
+      <workItem from="1787503534399" duration="35279000" />
+      <workItem from="1787540770211" duration="4090000" />
+      <workItem from="1787545568032" duration="8543000" />
+      <workItem from="1787555888508" duration="573000" />
+      <workItem from="1787597758339" duration="19051000" />
+      <workItem from="1787620230649" duration="4250000" />
+      <workItem from="1787625856834" duration="5000" />
+      <workItem from="1787626048035" duration="6000" />
+      <workItem from="1787628034866" duration="36040000" />
+      <workItem from="1787697053419" duration="16719000" />
+      <workItem from="1787721956513" duration="28405000" />
+      <workItem from="1787818440146" duration="193000" />
+      <workItem from="1787819749560" duration="153000" />
+      <workItem from="1787820471762" duration="27000" />
+      <workItem from="1787820684009" duration="555000" />
+      <workItem from="1787821701240" duration="264000" />
+      <workItem from="1787881889703" duration="11208000" />
+      <workItem from="1787995644918" duration="4136000" />
+    </task>
+    <task id="LOCAL-00007" summary="feat(prisma): add migration reset and deploy scripts">
+      <option name="closed" value="true" />
+      <created>1786935344715</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1786935344715</updated>
+    </task>
+    <task id="LOCAL-00008" summary="feat(arcjet): add trusted proxies support and email notice">
+      <option name="closed" value="true" />
+      <created>1786969250068</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1786969250068</updated>
+    </task>
+    <task id="LOCAL-00009" summary="feat(logging): implement request ID middleware and logging module">
+      <option name="closed" value="true" />
+      <created>1787273273054</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1787273273054</updated>
+    </task>
+    <task id="LOCAL-00010" summary="refactor(middleware): reorganize middleware imports">
+      <option name="closed" value="true" />
+      <created>1787278016628</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1787278016628</updated>
+    </task>
+    <task id="LOCAL-00011" summary="feat(pre-commit): add lint-staged and typecheck scripts&#10;&#10;chore(prettier): update ignore patterns for agents directory&#10;&#10;chore(eslint): exclude agents directory from linting&#10;&#10;chore(lint-staged): configure linting and formatting for staged files&#10;&#10;chore(nx): add test scripts for different applications&#10;&#10;refactor(logging): update import paths for request ID middleware">
+      <option name="closed" value="true" />
+      <created>1787279225065</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1787279225065</updated>
+    </task>
+    <task id="LOCAL-00012" summary="refactor(logging): make middleware methods public">
+      <option name="closed" value="true" />
+      <created>1787279994473</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1787279994473</updated>
+    </task>
+    <task id="LOCAL-00013" summary="feat(routes): add imprint and terms of service components">
+      <option name="closed" value="true" />
+      <created>1787281750599</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1787281750599</updated>
+    </task>
+    <task id="LOCAL-00014" summary="feat(routes): add login route and update component imports">
+      <option name="closed" value="true" />
+      <created>1787282985274</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1787282985274</updated>
+    </task>
+    <task id="LOCAL-00015" summary="feat(auth): add authentication service and login component">
+      <option name="closed" value="true" />
+      <created>1787285818325</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1787285818325</updated>
+    </task>
+    <task id="LOCAL-00016" summary="feat(auth): add apiKey to auth configuration and update imports">
+      <option name="closed" value="true" />
+      <created>1787289082197</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1787289082197</updated>
+    </task>
+    <task id="LOCAL-00017" summary="feat(env): add PROXY_HOPS configuration variable">
+      <option name="closed" value="true" />
+      <created>1787289883229</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1787289883229</updated>
+    </task>
+    <task id="LOCAL-00018" summary="feat(docker): add Docker configuration and .dockerignore">
+      <option name="closed" value="true" />
+      <created>1787290449536</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1787290449536</updated>
+    </task>
+    <task id="LOCAL-00019" summary="feat(docker): add production Docker Compose configuration">
+      <option name="closed" value="true" />
+      <created>1787291821634</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1787291821634</updated>
+    </task>
+    <task id="LOCAL-00020" summary="feat(docker): update production Docker Compose configuration">
+      <option name="closed" value="true" />
+      <created>1787292346044</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1787292346044</updated>
+    </task>
+    <task id="LOCAL-00021" summary="feat(auth): add trustedProxies and errorUrl to auth options">
+      <option name="closed" value="true" />
+      <created>1787295810414</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1787295810414</updated>
+    </task>
+    <task id="LOCAL-00022" summary="feat(database): add issuer column and unique index to account">
+      <option name="closed" value="true" />
+      <created>1787296045534</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1787296045534</updated>
+    </task>
+    <task id="LOCAL-00023" summary="feat(auth): add session storage option in database">
+      <option name="closed" value="true" />
+      <created>1787297957081</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1787297957081</updated>
+    </task>
+    <task id="LOCAL-00024" summary="refactor(config): remove throttle configuration and schema">
+      <option name="closed" value="true" />
+      <created>1787298208068</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1787298208068</updated>
+    </task>
+    <task id="LOCAL-00025" summary="style(auth): disable eslint rules for function return type">
+      <option name="closed" value="true" />
+      <created>1787298265216</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1787298265216</updated>
+    </task>
+    <task id="LOCAL-00026" summary="feat(arcjet): add ARCJET_TRUSTED_PROXIES configuration">
+      <option name="closed" value="true" />
+      <created>1787299236535</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1787299236535</updated>
+    </task>
+    <task id="LOCAL-00027" summary="feat(auth): add GitHub login and improve routing guards">
+      <option name="closed" value="true" />
+      <created>1787302011244</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1787302011244</updated>
+    </task>
+    <task id="LOCAL-00028" summary="chore: add TypeScript build info to ignore files">
+      <option name="closed" value="true" />
+      <created>1787302594090</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1787302594090</updated>
+    </task>
+    <task id="LOCAL-00029" summary="feat(docker): add portal service to docker configuration">
+      <option name="closed" value="true" />
+      <created>1787303991330</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1787303991330</updated>
+    </task>
+    <task id="LOCAL-00030" summary="refactor(config): streamline environment imports and usage">
+      <option name="closed" value="true" />
+      <created>1787307603333</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1787307603333</updated>
+    </task>
+    <task id="LOCAL-00031" summary="feat(environment): add environment configuration files">
+      <option name="closed" value="true" />
+      <created>1787309272888</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1787309272888</updated>
+    </task>
+    <task id="LOCAL-00032" summary="feat(server): configure allowed hosts for Angular app">
+      <option name="closed" value="true" />
+      <created>1787310017020</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1787310017020</updated>
+    </task>
+    <task id="LOCAL-00033" summary="feat(server): update allowed hosts configuration">
+      <option name="closed" value="true" />
+      <created>1787310195596</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1787310195596</updated>
+    </task>
+    <task id="LOCAL-00034" summary="feat(server): update allowed hosts configuration">
+      <option name="closed" value="true" />
+      <created>1787310692772</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1787310692772</updated>
+    </task>
+    <task id="LOCAL-00035" summary="feat(server): configure dynamic allowed hosts for Angular app">
+      <option name="closed" value="true" />
+      <created>1787311188260</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1787311188260</updated>
+    </task>
+    <task id="LOCAL-00036" summary="fix(environment): correct authBaseUrl format">
+      <option name="closed" value="true" />
+      <created>1787312066715</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1787312066715</updated>
+    </task>
+    <task id="LOCAL-00037" summary="feat(prisma): adds new db schema.prisma models related to users website and project">
+      <option name="closed" value="true" />
+      <created>1787456054677</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1787456054677</updated>
+    </task>
+    <task id="LOCAL-00038" summary="feat(website): adds website module with CRUD">
+      <option name="closed" value="true" />
+      <created>1787462424474</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1787462424474</updated>
+    </task>
+    <task id="LOCAL-00039" summary="feat(website-domain): adds website-domain module with CRUD">
+      <option name="closed" value="true" />
+      <created>1787463936484</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1787463936484</updated>
+    </task>
+    <task id="LOCAL-00040" summary="fix(website-domain): fix imports">
+      <option name="closed" value="true" />
+      <created>1787464482093</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1787464482093</updated>
+    </task>
+    <task id="LOCAL-00041" summary="fix(website-domain): adds CRUD">
+      <option name="closed" value="true" />
+      <created>1787465592290</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1787465592290</updated>
+    </task>
+    <task id="LOCAL-00042" summary="fix(website-token): adds website token identifier per user and website">
+      <option name="closed" value="true" />
+      <created>1787468182286</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1787468182286</updated>
+    </task>
+    <task id="LOCAL-00043" summary="feat(project): adds project CRUD to manage user projects">
+      <option name="closed" value="true" />
+      <created>1787473510234</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1787473510234</updated>
+    </task>
+    <task id="LOCAL-00044" summary="chore(skills): cleanse skills">
+      <option name="closed" value="true" />
+      <created>1787504653096</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1787504653096</updated>
+    </task>
+    <task id="LOCAL-00045" summary="chore(ai): adds new rules and code-reviewer agent">
+      <option name="closed" value="true" />
+      <created>1787518270759</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1787518270759</updated>
+    </task>
+    <task id="LOCAL-00046" summary="feat(dashboard): adds new shell and sidebar, updates dashboard, 404 and auth error page">
+      <option name="closed" value="true" />
+      <created>1787537619451</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1787537619451</updated>
+    </task>
+    <task id="LOCAL-00047" summary="feat(dashboard): adds api calls to show real data and adds a logout screen/page">
+      <option name="closed" value="true" />
+      <created>1787539505450</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1787539505450</updated>
+    </task>
+    <task id="LOCAL-00048" summary="feat(security): protect all controller with arcjet rate-limit">
+      <option name="closed" value="true" />
+      <created>1787541910902</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1787541910902</updated>
+    </task>
+    <task id="LOCAL-00049" summary="feat: adds http error handling with toast messages">
+      <option name="closed" value="true" />
+      <created>1787544850175</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1787544850175</updated>
+    </task>
+    <task id="LOCAL-00050" summary="chore: formatting and linting">
+      <option name="closed" value="true" />
+      <created>1787818630437</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1787818630439</updated>
+    </task>
+    <task id="LOCAL-00051" summary="chore: updates .well-known">
+      <option name="closed" value="true" />
+      <created>1787819898999</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1787819899000</updated>
+    </task>
+    <task id="LOCAL-00052" summary="hotfix: quick fix for allowed hosts">
+      <option name="closed" value="true" />
+      <created>1787821198790</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1787821198790</updated>
+    </task>
+    <task id="LOCAL-00053" summary="docs: replacing">
+      <option name="closed" value="true" />
+      <created>1787821958913</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1787821958914</updated>
+    </task>
+    <task id="LOCAL-00054" summary="feat: adds healtz endpoint">
+      <option name="closed" value="true" />
+      <created>1787883634368</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1787883634368</updated>
+    </task>
+    <task id="LOCAL-00055" summary="fix: adds trusted proxy to express for ip passthrough">
+      <option name="closed" value="true" />
+      <created>1787885636516</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1787885636516</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="refactor(config): streamline environment imports and usage" />
+    <MESSAGE value="feat(environment): add environment configuration files" />
+    <MESSAGE value="feat(server): configure allowed hosts for Angular app" />
+    <MESSAGE value="feat(server): update allowed hosts configuration" />
+    <MESSAGE value="feat(server): configure dynamic allowed hosts for Angular app" />
+    <MESSAGE value="fix(environment): correct authBaseUrl format" />
+    <MESSAGE value="feat(prisma): adds new db schema.prisma models related to users website and project" />
+    <MESSAGE value="feat(website): adds website module with CRUD" />
+    <MESSAGE value="feat(website-domain): adds website-domain module with CRUD" />
+    <MESSAGE value="fix(website-domain): fix imports" />
+    <MESSAGE value="fix(website-domain): adds CRUD" />
+    <MESSAGE value="fix(website-token): adds website token identifier per user and website" />
+    <MESSAGE value="feat(project): adds project CRUD to manage user projects" />
+    <MESSAGE value="chore(skills): cleanse skills" />
+    <MESSAGE value="chore(ai): adds new rules and code-reviewer agent" />
+    <MESSAGE value="feat(dashboard): adds new shell and sidebar, updates dashboard, 404 and auth error page" />
+    <MESSAGE value="feat(dashboard): adds api calls to show real data and adds a logout screen/page" />
+    <MESSAGE value="feat(security): protect all controller with arcjet rate-limit" />
+    <MESSAGE value="feat: adds http error handling with toast messages" />
+    <MESSAGE value="chore: formatting and linting" />
+    <MESSAGE value="chore: updates .well-known" />
+    <MESSAGE value="hotfix: quick fix for allowed hosts" />
+    <MESSAGE value="docs: replacing" />
+    <MESSAGE value="feat: adds healtz endpoint" />
+    <MESSAGE value="fix: adds trusted proxy to express for ip passthrough" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: adds trusted proxy to express for ip passthrough" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
