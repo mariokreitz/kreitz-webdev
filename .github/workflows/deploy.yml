@@ -1,0 +1,36 @@
+name: Build and Deploy Web
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build and push Docker image
+        uses: ./.github/actions/docker-build-push
+        with:
+          image: ghcr.io/${{ github.repository }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          dockerfile: ./docker/kwd.web.Dockerfile
+
+      - name: Deploy to VPS
+        uses: ./.github/actions/docker-deploy
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          private-key: ${{ secrets.VPS_SSH_KEY }}
+          working-directory: ~/kwd-web
+          registry-username: ${{ secrets.GHCR_USERNAME }}
+          registry-password: ${{ secrets.GHCR_TOKEN }}
