@@ -7,12 +7,12 @@
     <option name="selectedModelId" value="auto" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="27296389-19a3-480c-bdbb-1f39da9628be" name="Changes" comment="fix: adds trusted proxy to express for ip passthrough">
-      <change afterPath="$PROJECT_DIR$/.github/actions/docker-build-push/action.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.github/actions/docker-deploy/action.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.github/actions/vps-ssh/action.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.github/workflows/build.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.github/workflows/deploy.yml" afterDir="false" />
+    <list default="true" id="27296389-19a3-480c-bdbb-1f39da9628be" name="Changes" comment="ci(actions): adds reusable actions and docker workflow">
+      <change afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docker/kwd.web.Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/build.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/build.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,6 +32,7 @@
       <list>
         <option value="GitHub Action" />
         <option value="GitHub Workflow" />
+        <option value="Dockerfile" />
       </list>
     </option>
   </component>
@@ -62,61 +63,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0004304102333532" />
-      <entry key="S2" value="1.1440358656714555" />
-      <entry key="S5" value="1.460668226496085" />
-      <entry key="S10" value="1.6787254634064221" />
-      <entry key="S30" value="1.8902520139014531" />
-      <entry key="S60" value="2.258126461227709" />
-      <entry key="M2" value="3.8127597998690823" />
-      <entry key="M5" value="9.793410217670125" />
-      <entry key="M10" value="21.07169596776805" />
-      <entry key="M15" value="32.13023980185076" />
-      <entry key="M30" value="56.918738613314574" />
-      <entry key="H1" value="83.65702106637734" />
-      <entry key="H2" value="112.91607924722953" />
-      <entry key="H4" value="158.565070020894" />
-      <entry key="D1" value="342.17659180982656" />
-      <entry key="W1" value="421.9746252328751" />
+      <entry key="MS100" value="1.00254168331148" />
+      <entry key="MS500" value="1.3053361280356035" />
+      <entry key="S2" value="2.1740472601090577" />
+      <entry key="S5" value="3.24634925190394" />
+      <entry key="S10" value="3.9555071277731186" />
+      <entry key="S30" value="4.611504210583664" />
+      <entry key="S60" value="5.140282707962509" />
+      <entry key="M2" value="8.055821063605496" />
+      <entry key="M5" value="17.556730393953252" />
+      <entry key="M10" value="26.33460302148539" />
+      <entry key="M15" value="33.49327425649756" />
+      <entry key="M30" value="55.04336445416745" />
+      <entry key="H1" value="87.40334278699696" />
+      <entry key="H2" value="125.49003717447039" />
+      <entry key="H4" value="177.7222401885371" />
+      <entry key="D1" value="372.5779124110439" />
+      <entry key="W1" value="457.80616181872966" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
       <entry key="MS500" value="0.0" />
-      <entry key="S2" value="8.47664050290037E-130" />
-      <entry key="S5" value="3.345412072838202E-52" />
-      <entry key="S10" value="2.5561877148242238E-26" />
-      <entry key="S30" value="4.663530168652712E-9" />
-      <entry key="S60" value="9.65440404067099E-5" />
-      <entry key="M2" value="0.013894439017510134" />
-      <entry key="M5" value="0.274311972058358" />
-      <entry key="M10" value="0.7650487456868641" />
-      <entry key="M15" value="1.152637392043893" />
-      <entry key="M30" value="2.170994433067632" />
-      <entry key="H1" value="3.7542099268134685" />
-      <entry key="H2" value="5.510626728579017" />
-      <entry key="H4" value="7.0843794162267875" />
-      <entry key="D1" value="9.916516169491235" />
-      <entry key="W1" value="10.825695974059869" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="5.301606488809463E-196" />
+      <entry key="S10" value="3.2178935845178823E-98" />
+      <entry key="S30" value="5.035482629234672E-33" />
+      <entry key="S60" value="1.0032025468379764E-16" />
+      <entry key="M2" value="1.4163565486282033E-8" />
+      <entry key="M5" value="0.0011004679368435057" />
+      <entry key="M10" value="0.048456877244988275" />
+      <entry key="M15" value="0.18314859071567471" />
+      <entry key="M30" value="0.8653945351298203" />
+      <entry key="H1" value="2.37026155797291" />
+      <entry key="H2" value="4.37864618907531" />
+      <entry key="H4" value="6.314969281993313" />
+      <entry key="D1" value="9.72830913513757" />
+      <entry key="W1" value="10.796102600644518" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9592641193252643" />
-      <entry key="MS500" value="0.9921447608756546" />
-      <entry key="S2" value="1.1417590469031238" />
-      <entry key="S5" value="1.459581417816127" />
-      <entry key="S10" value="1.6781215049179272" />
-      <entry key="S30" value="1.8900113800069236" />
-      <entry key="S60" value="2.2577946514689997" />
-      <entry key="M2" value="3.825355030096296" />
-      <entry key="M5" value="10.064069549538619" />
-      <entry key="M10" value="21.832406261787764" />
-      <entry key="M15" value="33.278605365953226" />
-      <entry key="M30" value="59.08534730435732" />
-      <entry key="H1" value="87.40695447197359" />
-      <entry key="H2" value="118.42337656043524" />
-      <entry key="H4" value="165.64727246397945" />
-      <entry key="D1" value="352.0926029073044" />
-      <entry key="W1" value="432.8002427744998" />
+      <entry key="MS100" value="0.010193300340468045" />
+      <entry key="MS500" value="0.5221530090803266" />
+      <entry key="S2" value="1.7516107126072749" />
+      <entry key="S5" value="2.999234064281457" />
+      <entry key="S10" value="3.808204870061438" />
+      <entry key="S30" value="4.555345048504074" />
+      <entry key="S60" value="5.110257104896339" />
+      <entry key="M2" value="8.036335521938263" />
+      <entry key="M5" value="17.544375142300623" />
+      <entry key="M10" value="26.37387121249108" />
+      <entry key="M15" value="33.66914460103839" />
+      <entry key="M30" value="55.90332818896018" />
+      <entry key="H1" value="89.76895573799298" />
+      <entry key="H2" value="129.86503517396255" />
+      <entry key="H4" value="184.03476027499082" />
+      <entry key="D1" value="382.3056402509627" />
+      <entry key="W1" value="468.6021739173729" />
     </decayedShown>
   </component>
   <component name="OptimizeOnSaveOptions">
@@ -510,23 +511,7 @@
       <workItem from="1787820684009" duration="555000" />
       <workItem from="1787821701240" duration="264000" />
       <workItem from="1787881889703" duration="11208000" />
-      <workItem from="1787995644918" duration="4136000" />
-    </task>
-    <task id="LOCAL-00007" summary="feat(prisma): add migration reset and deploy scripts">
-      <option name="closed" value="true" />
-      <created>1786935344715</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1786935344715</updated>
-    </task>
-    <task id="LOCAL-00008" summary="feat(arcjet): add trusted proxies support and email notice">
-      <option name="closed" value="true" />
-      <created>1786969250068</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1786969250068</updated>
+      <workItem from="1787995644918" duration="4887000" />
     </task>
     <task id="LOCAL-00009" summary="feat(logging): implement request ID middleware and logging module">
       <option name="closed" value="true" />
@@ -904,7 +889,23 @@
       <option name="project" value="LOCAL" />
       <updated>1787885636516</updated>
     </task>
-    <option name="localTasksCounter" value="56" />
+    <task id="LOCAL-00056" summary="feat: nx init and angular boilerplate code">
+      <option name="closed" value="true" />
+      <created>1788000022832</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1788000022832</updated>
+    </task>
+    <task id="LOCAL-00057" summary="ci(actions): adds reusable actions and docker workflow">
+      <option name="closed" value="true" />
+      <created>1788000047027</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1788000047027</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -922,8 +923,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="refactor(config): streamline environment imports and usage" />
-    <MESSAGE value="feat(environment): add environment configuration files" />
     <MESSAGE value="feat(server): configure allowed hosts for Angular app" />
     <MESSAGE value="feat(server): update allowed hosts configuration" />
     <MESSAGE value="feat(server): configure dynamic allowed hosts for Angular app" />
@@ -947,7 +946,9 @@
     <MESSAGE value="docs: replacing" />
     <MESSAGE value="feat: adds healtz endpoint" />
     <MESSAGE value="fix: adds trusted proxy to express for ip passthrough" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: adds trusted proxy to express for ip passthrough" />
+    <MESSAGE value="feat: nx init and angular boilerplate code" />
+    <MESSAGE value="ci(actions): adds reusable actions and docker workflow" />
+    <option name="LAST_COMMIT_MESSAGE" value="ci(actions): adds reusable actions and docker workflow" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

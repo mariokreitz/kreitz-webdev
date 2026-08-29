@@ -1,0 +1,6 @@
+services:
+  web:
+    image: ghcr.io/mariokreitz/kreitz-webdev:latest
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
