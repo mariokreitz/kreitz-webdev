@@ -55,32 +55,28 @@ runs:
         private-key: ${{ inputs.private-key }}
         port: ${{ inputs.ssh-port }}
 
-        env: |
-          REGISTRY
-          REGISTRY_USERNAME
-          REGISTRY_PASSWORD
-          WORKING_DIRECTORY
+        env: REGISTRY,REGISTRY_USERNAME,REGISTRY_PASSWORD,WORKING_DIRECTORY
 
         script: |
           set -euo pipefail
-          
+
           cd "${WORKING_DIRECTORY}"
-          
+
           echo "Logging into ${REGISTRY}..."
-          
+
           printf '%s' "${REGISTRY_PASSWORD}" | \
             docker login "${REGISTRY}" \
               --username "${REGISTRY_USERNAME}" \
               --password-stdin
-          
+
           echo "Pulling images..."
           docker compose pull
-          
+
           echo "Starting services..."
           docker compose up -d --remove-orphans
-          
+
           echo "Removing unused images..."
           docker image prune -f
-          
+
           echo "Deployment complete."
-          docker compose ps docker compose ps
+          docker compose ps

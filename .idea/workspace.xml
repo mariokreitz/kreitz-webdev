@@ -8,11 +8,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="27296389-19a3-480c-bdbb-1f39da9628be" name="Changes" comment="fix(web): adds missing allowedHosts in server.ts">
-      <change afterPath="$PROJECT_DIR$/.github/workflows/deploy.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/build.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/actions/docker-deploy/action.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/actions/docker-deploy/action.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/web/src/server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/web/src/server.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -165,82 +162,82 @@
     <option name="openDirectoriesWithSingleClick" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Docker.docker-compose.yml.postgres: Compose Deployment.executor": "Run",
-    "Docker.docker-compose.yml.redis: Compose Deployment.executor": "Run",
-    "Docker.docker-compose.yml: Compose Deployment.executor": "Run",
-    "KEY_CHAT_IN_TOOLWINDOW": "false",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "code.cleanup.on.save": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "copilot.chat.legacySessionMetadata.migrated": "true",
-    "dev.nx.console.last_ai_check_notification_timestamp": "1787282000915",
-    "dev.nx.console.last_ai_configure_notification_timestamp": "1788001307922",
-    "git-widget-placeholder": "main",
-    "javascript.preferred.runtime.type.id": "node",
-    "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "/Users/mariokreitz/dev/github/kreitz-webdev/apps/api/src/modules/website-domain",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.jshint": "true",
-    "node.js.detected.package.standard": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.jshint": "",
-    "node.js.selected.package.standard": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "npm.build:all.executor": "Run",
-    "npm.build:prod.executor": "Run",
-    "npm.docker:db:up.executor": "Run",
-    "npm.format.executor": "Run",
-    "npm.format:api.executor": "Run",
-    "npm.format:check.executor": "Run",
-    "npm.graph.executor": "Run",
-    "npm.lint.executor": "Run",
-    "npm.lint:all:fix.executor": "Run",
-    "npm.lint:api.executor": "Run",
-    "npm.lint:fix.executor": "Run",
-    "npm.prisma:generate.executor": "Run",
-    "npm.prisma:migrate.executor": "Run",
-    "npm.prisma:reset.executor": "Run",
-    "npm.prisma:studio.executor": "Run",
-    "npm.projects.executor": "Run",
-    "npm.serve:api.executor": "Run",
-    "npm.serve:ssr.executor": "Run",
-    "npm.test:api.executor": "Run",
-    "npm.typecheck.executor": "Run",
-    "npm.typecheck:api.executor": "Run",
-    "prettierjs.PrettierConfiguration.Package": "/Users/mariokreitz/dev/github/kreitz-webdev/node_modules/prettier",
-    "rearrange.code.on.save": "true",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "actions.on.save",
-    "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "/Users/mariokreitz/dev/github/kreitz-webdev/node_modules/typescript/lib"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Docker.docker-compose.yml.postgres: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.docker-compose.yml.redis: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.docker-compose.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;KEY_CHAT_IN_TOOLWINDOW&quot;: &quot;false&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;code.cleanup.on.save&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;copilot.chat.legacySessionMetadata.migrated&quot;: &quot;true&quot;,
+    &quot;dev.nx.console.last_ai_check_notification_timestamp&quot;: &quot;1787282000915&quot;,
+    &quot;dev.nx.console.last_ai_configure_notification_timestamp&quot;: &quot;1788001307922&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/api/src/modules/website-domain&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.build:all.executor&quot;: &quot;Run&quot;,
+    &quot;npm.build:prod.executor&quot;: &quot;Run&quot;,
+    &quot;npm.docker:db:up.executor&quot;: &quot;Run&quot;,
+    &quot;npm.format.executor&quot;: &quot;Run&quot;,
+    &quot;npm.format:api.executor&quot;: &quot;Run&quot;,
+    &quot;npm.format:check.executor&quot;: &quot;Run&quot;,
+    &quot;npm.graph.executor&quot;: &quot;Run&quot;,
+    &quot;npm.lint.executor&quot;: &quot;Run&quot;,
+    &quot;npm.lint:all:fix.executor&quot;: &quot;Run&quot;,
+    &quot;npm.lint:api.executor&quot;: &quot;Run&quot;,
+    &quot;npm.lint:fix.executor&quot;: &quot;Run&quot;,
+    &quot;npm.prisma:generate.executor&quot;: &quot;Run&quot;,
+    &quot;npm.prisma:migrate.executor&quot;: &quot;Run&quot;,
+    &quot;npm.prisma:reset.executor&quot;: &quot;Run&quot;,
+    &quot;npm.prisma:studio.executor&quot;: &quot;Run&quot;,
+    &quot;npm.projects.executor&quot;: &quot;Run&quot;,
+    &quot;npm.serve:api.executor&quot;: &quot;Run&quot;,
+    &quot;npm.serve:ssr.executor&quot;: &quot;Run&quot;,
+    &quot;npm.test:api.executor&quot;: &quot;Run&quot;,
+    &quot;npm.typecheck.executor&quot;: &quot;Run&quot;,
+    &quot;npm.typecheck:api.executor&quot;: &quot;Run&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/mariokreitz/dev/github/kreitz-webdev/node_modules/prettier&quot;,
+    &quot;rearrange.code.on.save&quot;: &quot;true&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;actions.on.save&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/mariokreitz/dev/github/kreitz-webdev/node_modules/typescript/lib&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ],
-    "dev.nx.console.project_details_files": [
-      "/Users/mariokreitz/dev/github/kreitz-webdev/apps/web/project.json",
-      "/Users/mariokreitz/dev/github/kreitz-webdev/apps/web/package.json",
-      "/Users/mariokreitz/dev/github/kreitz-webdev/apps/web/eslint.config.mjs",
-      "/Users/mariokreitz/dev/github/kreitz-webdev/nx.json#targetDefaults.@nx/eslint:lint",
-      "/Users/mariokreitz/dev/github/kreitz-webdev/nx.json#targetDefaults.@nx/package.json",
-      "/Users/mariokreitz/dev/github/kreitz-webdev/nx.json#targetDefaults.@angular/build:application",
-      "/Users/mariokreitz/dev/github/kreitz-webdev/nx.json#targetDefaults.@angular/package.json",
-      "/Users/mariokreitz/dev/github/kreitz-webdev/nx.json#targetDefaults.@angular/build:unit-test",
-      "/Users/mariokreitz/dev/github/kreitz-webdev/package.json"
+    &quot;dev.nx.console.project_details_files&quot;: [
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/web/project.json&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/web/package.json&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/apps/web/eslint.config.mjs&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/nx.json#targetDefaults.@nx/eslint:lint&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/nx.json#targetDefaults.@nx/package.json&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/nx.json#targetDefaults.@angular/build:application&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/nx.json#targetDefaults.@angular/package.json&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/nx.json#targetDefaults.@angular/build:unit-test&quot;,
+      &quot;/Users/mariokreitz/dev/github/kreitz-webdev/package.json&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/apps/api/src/modules/website-domain" />
@@ -276,7 +273,7 @@
       </deployment>
       <method v="2" />
     </configuration>
-    <configuration default="true" factoryName="docker-compose.yml" temporary="true" type="docker-deploy">
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
       <deployment type="docker-compose.yml">
         <settings />
       </deployment>
