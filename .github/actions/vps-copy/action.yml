@@ -1,0 +1,56 @@
+name: Copy Files to VPS
+
+description: Copy files from the GitHub Actions runner to a VPS over SCP
+
+inputs:
+  host:
+    description: VPS hostname or IP address
+    required: true
+
+  username:
+    description: SSH username
+    required: true
+
+  private-key:
+    description: SSH private key
+    required: true
+
+  port:
+    description: SSH port
+    required: false
+    default: "22"
+
+  source:
+    description: Local file or directory to copy
+    required: true
+
+  target:
+    description: Remote directory to copy the files into
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - name: Create remote directory
+      uses: ./.github/actions/vps-ssh
+      with:
+        host: ${{ inputs.host }}
+        username: ${{ inputs.username }}
+        private-key: ${{ inputs.private-key }}
+        port: ${{ inputs.port }}
+
+        script: |
+          set -euo pipefail
+
+          mkdir -p "${{ inputs.target }}"
+
+    - name: Copy files
+      uses: appleboy/scp-action@v1
+      with:
+        host: ${{ inputs.host }}
+        username: ${{ inputs.username }}
+        key: ${{ inputs.private-key }}
+        port: ${{ inputs.port }}
+        source: ${{ inputs.source }}
+        target: ${{ inputs.target }}

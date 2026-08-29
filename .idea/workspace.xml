@@ -7,9 +7,9 @@
     <option name="selectedModelId" value="auto" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="27296389-19a3-480c-bdbb-1f39da9628be" name="Changes" comment="ci(fix): fix docker-deploy action passing env">
-      <change beforePath="$PROJECT_DIR$/.github/actions/docker-deploy/action.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/actions/docker-deploy/action.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="27296389-19a3-480c-bdbb-1f39da9628be" name="Changes" comment="ci(fix): fix docker-deploy action directory">
+      <change afterPath="$PROJECT_DIR$/.github/actions/vps-copy/action.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/deploy.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/deploy.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,9 +27,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="GitHub Action" />
         <option value="Dockerfile" />
         <option value="GitHub Workflow" />
+        <option value="GitHub Action" />
       </list>
     </option>
   </component>
@@ -60,61 +60,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0406106907775503" />
-      <entry key="MS500" value="2.0840055838344167" />
-      <entry key="S2" value="4.515741264856956" />
-      <entry key="S5" value="7.209480563933459" />
-      <entry key="S10" value="9.249501907618926" />
-      <entry key="S30" value="11.456880001895716" />
-      <entry key="S60" value="12.246126135121186" />
-      <entry key="M2" value="13.635634017973643" />
-      <entry key="M5" value="23.10185962348423" />
-      <entry key="M10" value="44.27699333305519" />
-      <entry key="M15" value="62.620504732801336" />
-      <entry key="M30" value="102.55579529662411" />
-      <entry key="H1" value="151.24995497354226" />
-      <entry key="H2" value="203.2410949904068" />
-      <entry key="H4" value="265.0378825010495" />
-      <entry key="D1" value="472.7683574708102" />
-      <entry key="W1" value="562.8084029945733" />
+      <entry key="MS100" value="1.0246887909957305" />
+      <entry key="MS500" value="1.476979775273779" />
+      <entry key="S2" value="1.8310458615936478" />
+      <entry key="S5" value="1.9286455809969716" />
+      <entry key="S10" value="1.9636625866956605" />
+      <entry key="S30" value="1.9877618383646438" />
+      <entry key="S60" value="2.0115953544142027" />
+      <entry key="M2" value="2.5159814435128096" />
+      <entry key="M5" value="8.248539785219531" />
+      <entry key="M10" value="25.029003052849287" />
+      <entry key="M15" value="42.499648269211775" />
+      <entry key="M30" value="84.47620560393894" />
+      <entry key="H1" value="137.6374758250832" />
+      <entry key="H2" value="194.46590102967934" />
+      <entry key="H4" value="259.91648618563977" />
+      <entry key="D1" value="472.62709811795" />
+      <entry key="W1" value="564.4435416841346" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="2.965398709908631E-275" />
-      <entry key="S2" value="2.333569681051943E-69" />
-      <entry key="S5" value="3.5253992633631005E-28" />
-      <entry key="S10" value="1.877604661094316E-14" />
-      <entry key="S30" value="2.6578761906701052E-5" />
-      <entry key="S60" value="0.0051572667776189395" />
-      <entry key="M2" value="0.07432869508977906" />
-      <entry key="M5" value="0.5791146411625391" />
-      <entry key="M10" value="1.6639318795927436" />
-      <entry key="M15" value="2.5367590722433895" />
-      <entry key="M30" value="4.276685445963846" />
-      <entry key="H1" value="6.495127409041991" />
-      <entry key="H2" value="9.078348224971966" />
-      <entry key="H4" value="11.491866831753777" />
-      <entry key="D1" value="15.541420660891198" />
-      <entry key="W1" value="16.76721631112148" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="1.5871369418960506E-154" />
+      <entry key="S5" value="3.0216611451903594E-62" />
+      <entry key="S10" value="1.7382925948154873E-31" />
+      <entry key="S30" value="5.58094387707373E-11" />
+      <entry key="S60" value="7.473190475217966E-6" />
+      <entry key="M2" value="0.0028294350918703667" />
+      <entry key="M5" value="0.1566685542499494" />
+      <entry key="M10" value="0.8654543954984004" />
+      <entry key="M15" value="1.6406589771128326" />
+      <entry key="M30" value="3.4393538313907497" />
+      <entry key="H1" value="5.824685070835018" />
+      <entry key="H2" value="8.597045483121402" />
+      <entry key="H4" value="11.183088924403238" />
+      <entry key="D1" value="15.47103070090095" />
+      <entry key="W1" value="16.75634636280245" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9911756056700475" />
-      <entry key="MS500" value="1.8746647171513" />
-      <entry key="S2" value="4.286573021694863" />
-      <entry key="S5" value="7.082285768445329" />
-      <entry key="S10" value="9.177984127721528" />
-      <entry key="S30" value="11.430989308466584" />
-      <entry key="S60" value="12.237687118507923" />
-      <entry key="M2" value="13.700789014396031" />
-      <entry key="M5" value="23.669156193074837" />
-      <entry key="M10" value="45.926420246846234" />
-      <entry key="M15" value="65.14299854970373" />
-      <entry key="M30" value="106.820839151694" />
-      <entry key="H1" value="157.73639994116814" />
-      <entry key="H2" value="212.31340945461955" />
-      <entry key="H4" value="276.5259517359731" />
-      <entry key="D1" value="488.30893748069855" />
-      <entry key="W1" value="579.5754905475793" />
+      <entry key="MS100" value="0.9759950175538582" />
+      <entry key="MS500" value="1.4620619973807047" />
+      <entry key="S2" value="1.8263218297524464" />
+      <entry key="S5" value="1.9266463156172062" />
+      <entry key="S10" value="1.9626432814881265" />
+      <entry key="S30" value="1.9874175068995206" />
+      <entry key="S60" value="2.0114104148717846" />
+      <entry key="M2" value="2.5183751685787246" />
+      <entry key="M5" value="8.401976548620482" />
+      <entry key="M10" value="25.886895714182355" />
+      <entry key="M15" value="44.131069586047474" />
+      <entry key="M30" value="87.90619137422026" />
+      <entry key="H1" value="143.4543717885874" />
+      <entry key="H2" value="203.05723119723012" />
+      <entry key="H4" value="271.0958788297946" />
+      <entry key="D1" value="488.0972918549737" />
+      <entry key="W1" value="581.1997593551025" />
     </decayedShown>
   </component>
   <component name="OptimizeOnSaveOptions">
@@ -496,14 +496,6 @@
       <workItem from="1787995644918" duration="5303000" />
       <workItem from="1788001125550" duration="191000" />
       <workItem from="1788001377002" duration="1516000" />
-    </task>
-    <task id="LOCAL-00012" summary="refactor(logging): make middleware methods public">
-      <option name="closed" value="true" />
-      <created>1787279994473</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1787279994473</updated>
     </task>
     <task id="LOCAL-00013" summary="feat(routes): add imprint and terms of service components">
       <option name="closed" value="true" />
@@ -889,7 +881,15 @@
       <option name="project" value="LOCAL" />
       <updated>1788003958221</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="ci(fix): fix docker-deploy action directory">
+      <option name="closed" value="true" />
+      <created>1788004524088</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1788004524088</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -907,7 +907,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix(environment): correct authBaseUrl format" />
     <MESSAGE value="feat(prisma): adds new db schema.prisma models related to users website and project" />
     <MESSAGE value="feat(website): adds website module with CRUD" />
     <MESSAGE value="feat(website-domain): adds website-domain module with CRUD" />
@@ -932,7 +931,8 @@
     <MESSAGE value="ci(docker): adds missing Dockerfile and related files and updates deploy.yml" />
     <MESSAGE value="fix(web): adds missing allowedHosts in server.ts" />
     <MESSAGE value="ci(fix): fix docker-deploy action passing env" />
-    <option name="LAST_COMMIT_MESSAGE" value="ci(fix): fix docker-deploy action passing env" />
+    <MESSAGE value="ci(fix): fix docker-deploy action directory" />
+    <option name="LAST_COMMIT_MESSAGE" value="ci(fix): fix docker-deploy action directory" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+env:
+  DEPLOY_DIR: ~/kreitz-webdev
+
 permissions:
   contents: read
   packages: write
@@ -25,12 +28,21 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
           dockerfile: ./docker/kwd.web.Dockerfile
 
+      - name: Copy Docker Compose file
+        uses: ./.github/actions/vps-copy
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          private-key: ${{ secrets.VPS_SSH_KEY }}
+          source: ./docker-compose.yml
+          target: ${{ env.DEPLOY_DIR }}
+
       - name: Deploy to VPS
         uses: ./.github/actions/docker-deploy
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           private-key: ${{ secrets.VPS_SSH_KEY }}
-          working-directory: ~/kwd-web
+          working-directory: ${{ env.DEPLOY_DIR }}
           registry-username: ${{ secrets.GHCR_USERNAME }}
           registry-password: ${{ secrets.GHCR_TOKEN }}
