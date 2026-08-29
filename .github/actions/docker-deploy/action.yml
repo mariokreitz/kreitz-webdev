@@ -60,6 +60,10 @@ runs:
         script: |
           set -euo pipefail
 
+          WORKING_DIRECTORY="${WORKING_DIRECTORY/#\~/$HOME}"
+
+          echo "Using deployment directory: ${WORKING_DIRECTORY}"
+          mkdir -p "${WORKING_DIRECTORY}"
           cd "${WORKING_DIRECTORY}"
 
           echo "Logging into ${REGISTRY}..."
